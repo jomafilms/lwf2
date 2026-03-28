@@ -1,8 +1,11 @@
 node_modules/
 .next/
+dist/
+*.tsbuildinfo
 .env
 .env.local
 .env.production
 data/parcels/
 *.pdf
 .DS_Store
+.vercel
