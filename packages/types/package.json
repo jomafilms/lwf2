@@ -1,0 +1,7 @@
+{
+  "name": "@lwf/types",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./lwf.ts",
+  "types": "./lwf.ts"
+}

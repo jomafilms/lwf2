@@ -1,0 +1,18 @@
+{
+  "name": "lwf2",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run -w @lwf/web dev",
+    "build": "npm run -ws --if-present build",
+    "type-check": "npm run -ws --if-present type-check",
+    "db:generate": "npm run -w @lwf/database db:generate",
+    "db:migrate": "npm run -w @lwf/database db:migrate",
+    "db:push": "npm run -w @lwf/database db:push",
+    "db:studio": "npm run -w @lwf/database db:studio"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}
