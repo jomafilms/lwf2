@@ -1,0 +1,46 @@
+{
+  "nursery_name": "Flowerland Nursery",
+  "location": "Central Point, OR",
+  "website": "https://flowerlandnursery.net",
+  "scraped_date": "2026-03-28",
+  "note": "Flowerland grows their own plants and prices by container size, not by species. No individual plant inventory list available online. 10% off purchases over $300.",
+  "pricing": {
+    "outdoor_plants": {
+      "True 1 gallon Orange Tag pot": "$9.75",
+      "True 1 gallon Black pot": "$11.75",
+      "True 2 gallon": "$21.75",
+      "True 2 gallon squat": "$23.75",
+      "True 5 gallon Shrub": "$22.75",
+      "True 6 gallon Conifers": "$36.75",
+      "True 6 gallon Trees": "$41.75",
+      "True 6 gallon hybrid trees": "$47.75",
+      "True 7 gallon": "$55.75",
+      "True 9 gallon": "$67.75",
+      "13-15 gallon": "$89.00",
+      "True 20 gallon": "$109.00",
+      "True 27 gallon": "$149.00",
+      "24in box 36 gallon": "$199.00"
+    },
+    "bedding_plants": {
+      "4 and 6 PACK Annual": "$4.00",
+      "6 PACK Jumbo": "$5.25",
+      "6 PACK Blue Tag Jumbo": "$7.25",
+      "2in to 4in Pots": "$2.00",
+      "4in to 4.5in Black Pots": "$3.00",
+      "4in to 4.5in Red Pots": "$4.00",
+      "4in to 4.5in Green Pots": "$5.00",
+      "5in Black Pots square": "$9.00",
+      "1 Gallon Pots": "$10.75"
+    },
+    "hanging_baskets": {
+      "10in Brown Basket plastic hanger": "$25.75",
+      "10in Green Basket metal hanger": "$31.75",
+      "12in Brown Basket metal hanger": "$38.75"
+    },
+    "color_bowls": {
+      "Small": "$16.50",
+      "Large": "$43.00"
+    }
+  },
+  "plants": []
+}

@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.env
+.env.local
+.env.production
+data/parcels/
+*.pdf
+.DS_Store

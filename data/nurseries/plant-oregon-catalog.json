@@ -1,0 +1,1386 @@
+{
+  "nursery_name": "Plant Oregon (The Nursery on Wagner Creek)",
+  "location": "Talent, OR",
+  "website": "https://www.plantoregon.com",
+  "scraped_date": "2026-03-28",
+  "note": "Family-owned native plant nursery. General pricing ~$10/gallon. Open M-F 9-1pm.",
+  "plants": [
+    {
+      "common_name": "",
+      "botanical_name": "Sorry,No imagecurrently available.",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2530"
+    },
+    {
+      "common_name": "Grand Fir",
+      "botanical_name": "Abies grandis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2416"
+    },
+    {
+      "common_name": "Nordman Fir",
+      "botanical_name": "Abies nordmanniana",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2088"
+    },
+    {
+      "common_name": "Trident Maple",
+      "botanical_name": "Acer buergerianum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2091"
+    },
+    {
+      "common_name": "Hedge Maple",
+      "botanical_name": "Acer campestre",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2092"
+    },
+    {
+      "common_name": "Autumn Blaze Maple",
+      "botanical_name": "Acer freemanii 'Autumn Blaze'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2095"
+    },
+    {
+      "common_name": "Celebration Maple",
+      "botanical_name": "Acer freemannii 'Celebration'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2514"
+    },
+    {
+      "common_name": "",
+      "botanical_name": "Sorry,No imagecurrently available.",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2527"
+    },
+    {
+      "common_name": "Douglas Maple",
+      "botanical_name": "Acer glabrum var. douglasii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2087"
+    },
+    {
+      "common_name": "Paperbark Maple",
+      "botanical_name": "Acer griseum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2097"
+    },
+    {
+      "common_name": "Henry's Maple",
+      "botanical_name": "Acer henryi",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2098"
+    },
+    {
+      "common_name": "Big Leaf Maple",
+      "botanical_name": "Acer macrophyllum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2099"
+    },
+    {
+      "common_name": "Japanese Maple",
+      "botanical_name": "Acer palmatum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2102"
+    },
+    {
+      "common_name": "Sycamore Maple",
+      "botanical_name": "Acer pseudoplatanus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2105"
+    },
+    {
+      "common_name": "Armstrong Maple",
+      "botanical_name": "Acer rubrum 'Armstrong'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2372"
+    },
+    {
+      "common_name": "October Glory Red Maple",
+      "botanical_name": "Acer rubrum var. October Glory",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2107"
+    },
+    {
+      "common_name": "Sun Valley Maple",
+      "botanical_name": "Acer rubrum var. Sun Valley",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2373"
+    },
+    {
+      "common_name": "Bigtooth Maple",
+      "botanical_name": "Acer saccharum ssp. grandidentatum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2110"
+    },
+    {
+      "common_name": "Three-flower Maple",
+      "botanical_name": "Acer triflorum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2111"
+    },
+    {
+      "common_name": "Shantung Maple",
+      "botanical_name": "Acer truncatum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2112"
+    },
+    {
+      "common_name": "California Buckeye",
+      "botanical_name": "Aesculus californica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2114"
+    },
+    {
+      "common_name": "Brioti Red Flowering Chestnut",
+      "botanical_name": "Aesculus carnea x Briotii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2117"
+    },
+    {
+      "common_name": "White Alder",
+      "botanical_name": "Alnus rhombifolia",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2119"
+    },
+    {
+      "common_name": "Sitka Alder",
+      "botanical_name": "Alnus Sinuata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2391"
+    },
+    {
+      "common_name": "Western Serviceberry",
+      "botanical_name": "Amelanchier alnifolia",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2407"
+    },
+    {
+      "common_name": "Madrone",
+      "botanical_name": "Arbutus menziesii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2123"
+    },
+    {
+      "common_name": "Strawberry Tree",
+      "botanical_name": "Arbutus unedo",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2124"
+    },
+    {
+      "common_name": "Common Manzanita",
+      "botanical_name": "Arctostaphylos manzanita",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2126"
+    },
+    {
+      "common_name": "",
+      "botanical_name": "Sorry,No imagecurrently available.",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2540"
+    },
+    {
+      "common_name": "Kinnikinnick, Pinemat Manzanita",
+      "botanical_name": "Arctostaphylos uva ursi",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2127"
+    },
+    {
+      "common_name": "Sticky Whiteleaf Manzanita",
+      "botanical_name": "Arctostaphylos viscida",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2517"
+    },
+    {
+      "common_name": "Big Sagebrush",
+      "botanical_name": "Artemisia tridentata (Seriphidium tridentata)",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2130"
+    },
+    {
+      "common_name": "Wild Ginger",
+      "botanical_name": "Asarum caudatum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2131"
+    },
+    {
+      "common_name": "Narrow Leaf Milkweed",
+      "botanical_name": "Asclepias fascicularis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2539"
+    },
+    {
+      "common_name": "Showy Milkweed",
+      "botanical_name": "Asclepias speciosa",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2476"
+    },
+    {
+      "common_name": "Heritage\u00ae River Birch",
+      "botanical_name": "Betula nigra 'Heritage'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2478"
+    },
+    {
+      "common_name": "Little King Dwarf River Birch",
+      "botanical_name": "Betula nigra 'Little King'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2134"
+    },
+    {
+      "common_name": "Water Birch, Mountain Birch",
+      "botanical_name": "Betula occidentalis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2137"
+    },
+    {
+      "common_name": "Incense Cedar",
+      "botanical_name": "Calocedrus decurrens",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2139"
+    },
+    {
+      "common_name": "European Hornbeam",
+      "botanical_name": "Carpinus betulus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2143"
+    },
+    {
+      "common_name": "Upright European Hornbeam",
+      "botanical_name": "Carpinus betulus 'Fastigiata'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2142"
+    },
+    {
+      "common_name": "Japanese Hornbeam",
+      "botanical_name": "Carpinus japonica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2145"
+    },
+    {
+      "common_name": "Point Reyes Ceanothus",
+      "botanical_name": "Ceanothus gloriosus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2430"
+    },
+    {
+      "common_name": "Weeping Himalayan Cedar",
+      "botanical_name": "Cedrus deodara 'Emerald Falls'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2375"
+    },
+    {
+      "common_name": "Cedar of Lebanon",
+      "botanical_name": "Cedrus libani",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2152"
+    },
+    {
+      "common_name": "Blue Weeping Cedar of Lebanon",
+      "botanical_name": "Cedrus libani Glauca Pendula",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2154"
+    },
+    {
+      "common_name": "Katsura Tree, Gingerbread Tree",
+      "botanical_name": "Cercidiphyllum japonicum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2155"
+    },
+    {
+      "common_name": "Redbud",
+      "botanical_name": "Cercis canadensis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2156"
+    },
+    {
+      "common_name": "Western Redbud",
+      "botanical_name": "Cercis occidentalis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2157"
+    },
+    {
+      "common_name": "Port Orford Cedar",
+      "botanical_name": "Chamaecyparis lawsoniana",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2159"
+    },
+    {
+      "common_name": "Fringe Tree",
+      "botanical_name": "Chionanthus virginicus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2165"
+    },
+    {
+      "common_name": "Flowering Dogwood",
+      "botanical_name": "Cornus florida",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2386"
+    },
+    {
+      "common_name": "Chinese Dogwood",
+      "botanical_name": "Cornus kousa v. chinensis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2171"
+    },
+    {
+      "common_name": "Japanese Cornel Dogwood",
+      "botanical_name": "Cornus officinalis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2173"
+    },
+    {
+      "common_name": "Red Osier Dogwood",
+      "botanical_name": "Cornus stolonifera (C. sericea)",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2397"
+    },
+    {
+      "common_name": "Spike Winterhazel",
+      "botanical_name": "Corylopsis spicata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2177"
+    },
+    {
+      "common_name": "Beaked Hazel",
+      "botanical_name": "Corylus cornuta",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2413"
+    },
+    {
+      "common_name": "Royal Purple Smoketree",
+      "botanical_name": "Cotinus coggygria 'Purpureus'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2179"
+    },
+    {
+      "common_name": "American Smoketree, Chittamwood",
+      "botanical_name": "Cotinus obovatus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2180"
+    },
+    {
+      "common_name": "Striebs Findling",
+      "botanical_name": "Cotoneaster dammeri v. Striebs Findling",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2182"
+    },
+    {
+      "common_name": "Douglas Hawthorn",
+      "botanical_name": "Crataegus douglasii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2183"
+    },
+    {
+      "common_name": "Dove Tree",
+      "botanical_name": "Davidia involucrata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2197"
+    },
+    {
+      "common_name": "Western Bleeding Heart",
+      "botanical_name": "Dicentra Formosa",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2199"
+    },
+    {
+      "common_name": "Sulphureum Barrenwort",
+      "botanical_name": "Epimedium x versicolor Sulphureum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2204"
+    },
+    {
+      "common_name": "European Beech",
+      "botanical_name": "Fagus sylvatica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2208"
+    },
+    {
+      "common_name": "Common Fig",
+      "botanical_name": "Ficus carica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2398"
+    },
+    {
+      "common_name": "Blue Mist Fothergilla",
+      "botanical_name": "Fothergilla gardenii Blue Mist",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2429"
+    },
+    {
+      "common_name": "Sweet Woodruff",
+      "botanical_name": "Galium oreganum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2215"
+    },
+    {
+      "common_name": "Coast Silktassel",
+      "botanical_name": "Garrya elliptica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2216"
+    },
+    {
+      "common_name": "Fremonts Silktassel",
+      "botanical_name": "Garrya fremontii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2217"
+    },
+    {
+      "common_name": "Kentucky Coffee Tree",
+      "botanical_name": "Gymnocladus dioicus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2218"
+    },
+    {
+      "common_name": "Seven-son Flower, Seven Son Tree.",
+      "botanical_name": "Heptacodium miconioides",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2223"
+    },
+    {
+      "common_name": "Cow Parsnip",
+      "botanical_name": "Heracleum maximum (H. lanatum)",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2224"
+    },
+    {
+      "common_name": "Arizona Cypress",
+      "botanical_name": "Hesperocyparis arizonica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2186"
+    },
+    {
+      "common_name": "Ocean Spray",
+      "botanical_name": "Holodiscus discolor",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2225"
+    },
+    {
+      "common_name": "Western Larch, Tamarack",
+      "botanical_name": "Larix occidentalis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2231"
+    },
+    {
+      "common_name": "Sweetgum, Redgum",
+      "botanical_name": "Liquidambar stryaciflua",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2233"
+    },
+    {
+      "common_name": "Oregon Grape",
+      "botanical_name": "Mahonia aquifolium",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2242"
+    },
+    {
+      "common_name": "Creeping Oregon Grape",
+      "botanical_name": "Mahonia repens",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2244"
+    },
+    {
+      "common_name": "Western Crabapple",
+      "botanical_name": "Malus fusca",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2245"
+    },
+    {
+      "common_name": "Dawn Redwood",
+      "botanical_name": "Metasequoia glyptostroboides",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2246"
+    },
+    {
+      "common_name": "Seep Monkeyflower",
+      "botanical_name": "Mimulus guttatus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2247"
+    },
+    {
+      "common_name": "Sour Gum, Tupelo Tree",
+      "botanical_name": "Nyssa sylvatica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2249"
+    },
+    {
+      "common_name": "Indian Plum, Oso Berry",
+      "botanical_name": "Oemleria cerasiformis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2250"
+    },
+    {
+      "common_name": "Persian Parrotia",
+      "botanical_name": "Parrotia persica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2253"
+    },
+    {
+      "common_name": "Mock Orange",
+      "botanical_name": "Philadelphus lewisii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2264"
+    },
+    {
+      "common_name": "Pacific Ninebark",
+      "botanical_name": "Physocarpus capitatus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2265"
+    },
+    {
+      "common_name": "Bird's Nest Spruce",
+      "botanical_name": "Picea abies 'Nidiformis'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2267"
+    },
+    {
+      "common_name": "Englemann Spruce",
+      "botanical_name": "Picea englemannii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2270"
+    },
+    {
+      "common_name": "Colorado Spruce",
+      "botanical_name": "Picea pungens",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2272"
+    },
+    {
+      "common_name": "Bristlecone Pine",
+      "botanical_name": "Pinus aristata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2276"
+    },
+    {
+      "common_name": "Jeffrey Pine",
+      "botanical_name": "Pinus jeffreyi",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2279"
+    },
+    {
+      "common_name": "Bosnian Pine",
+      "botanical_name": "Pinus leucodermis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2281"
+    },
+    {
+      "common_name": "Single-leaf Pinyon Pine",
+      "botanical_name": "Pinus monophylla",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2461"
+    },
+    {
+      "common_name": "Dwarf Mugo Pine",
+      "botanical_name": "Pinus mugo v. pumilio",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2283"
+    },
+    {
+      "common_name": "Oregon Green Austrian Pine",
+      "botanical_name": "Pinus nigra 'Oregon Green'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2376"
+    },
+    {
+      "common_name": "Ponderosa Pine",
+      "botanical_name": "Pinus ponderosa",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2285"
+    },
+    {
+      "common_name": "Thunderhead Japanese Black Pine",
+      "botanical_name": "Pinus thunbergii 'Thunderhead'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2287"
+    },
+    {
+      "common_name": "Chinese Pistache",
+      "botanical_name": "Pistacia chinensis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2288"
+    },
+    {
+      "common_name": "Sword Fern",
+      "botanical_name": "Polystichum munitum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2291"
+    },
+    {
+      "common_name": "Douglas Fir",
+      "botanical_name": "Pseudotsuga menziesii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2299"
+    },
+    {
+      "common_name": "Sawtooth Oak",
+      "botanical_name": "Quercus acutissima",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2532"
+    },
+    {
+      "common_name": "",
+      "botanical_name": "Sorry,No imagecurrently available.",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2544"
+    },
+    {
+      "common_name": "",
+      "botanical_name": "Sorry,No imagecurrently available.",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2499"
+    },
+    {
+      "common_name": "Swamp White Oak",
+      "botanical_name": "Quercus bicolor",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2302"
+    },
+    {
+      "common_name": "",
+      "botanical_name": "Quercus cerris Turkey Oak",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2537"
+    },
+    {
+      "common_name": "Oregon White Oak",
+      "botanical_name": "Quercus garryana",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2306"
+    },
+    {
+      "common_name": "Grey Oak or Shin Oak",
+      "botanical_name": "Quercus grisea",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2535"
+    },
+    {
+      "common_name": "Silverleaf Oak",
+      "botanical_name": "Quercus hypoleucoides",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2536"
+    },
+    {
+      "common_name": "Valley Oak",
+      "botanical_name": "Quercus lobata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2436"
+    },
+    {
+      "common_name": "Bur Oak, Mossycup Oak",
+      "botanical_name": "Quercus macrocarpa",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2308"
+    },
+    {
+      "common_name": "Willow Oak",
+      "botanical_name": "Quercus phellos",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2311"
+    },
+    {
+      "common_name": "",
+      "botanical_name": "Quercus robur fastigiata English oak",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2534"
+    },
+    {
+      "common_name": "Shumard Oak",
+      "botanical_name": "Quercus shumardii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2313"
+    },
+    {
+      "common_name": "Cork Oak",
+      "botanical_name": "Quercus suber",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2314"
+    },
+    {
+      "common_name": "Cascara Sagrada",
+      "botanical_name": "Rhamnus purshiana",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2315"
+    },
+    {
+      "common_name": "Hoary Coffeeberry, Mountain Coffeeberry",
+      "botanical_name": "Rhamnus tomentella",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2412"
+    },
+    {
+      "common_name": "Golden Currant",
+      "botanical_name": "Ribes aureum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2319"
+    },
+    {
+      "common_name": "Prickly Currant, Swamp Gooseberry",
+      "botanical_name": "Ribes lacustre",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2320"
+    },
+    {
+      "common_name": "Sierra Currant, Mountain Pink Currant",
+      "botanical_name": "Ribes nevadense",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2321"
+    },
+    {
+      "common_name": "Red Flowering Currant",
+      "botanical_name": "Ribes sanguineum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2322"
+    },
+    {
+      "common_name": "Nootka Rose",
+      "botanical_name": "Rosa nutkana",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2323"
+    },
+    {
+      "common_name": "Clustered Rose",
+      "botanical_name": "Rosa pisocarpa",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2324"
+    },
+    {
+      "common_name": "Hedgehog Rose, Sea Tomato",
+      "botanical_name": "Rosa rugosa",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2325"
+    },
+    {
+      "common_name": "Woods Rose",
+      "botanical_name": "Rosa woodsii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2326"
+    },
+    {
+      "common_name": "",
+      "botanical_name": "Sorry,No imagecurrently available.",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2545"
+    },
+    {
+      "common_name": "Thimbleberry",
+      "botanical_name": "Rubus parviflorus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2327"
+    },
+    {
+      "common_name": "Flame Willow",
+      "botanical_name": "Salix Flame",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2329"
+    },
+    {
+      "common_name": "Green Lakes Willow",
+      "botanical_name": "Salix 'Green Lakes'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2410"
+    },
+    {
+      "common_name": "Blue Elderberry",
+      "botanical_name": "Sambucus mexicana (S. caerulea)",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2333"
+    },
+    {
+      "common_name": "Coast Redwood",
+      "botanical_name": "Sequoia sempervirens",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2337"
+    },
+    {
+      "common_name": "Sierra Redwood, Big Tree",
+      "botanical_name": "Sequoiadendron giganteum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2338"
+    },
+    {
+      "common_name": "Weeping Giant Sequoia",
+      "botanical_name": "Sequoiadendron giganteum 'Pendulum'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2421"
+    },
+    {
+      "common_name": "Pagoda Tree",
+      "botanical_name": "Sophora japonica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2339"
+    },
+    {
+      "common_name": "Subalpine Spirea",
+      "botanical_name": "Spiraea densiflora",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2342"
+    },
+    {
+      "common_name": "Western Spirea",
+      "botanical_name": "Spiraea douglasii",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2343"
+    },
+    {
+      "common_name": "Japanese Stewartia",
+      "botanical_name": "Stewartia pseudocamellia",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2344"
+    },
+    {
+      "common_name": "Japanese Snowbell",
+      "botanical_name": "Styrax japonica",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2345"
+    },
+    {
+      "common_name": "Chinese Fighazel",
+      "botanical_name": "Sycopsis sinensis",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2441"
+    },
+    {
+      "common_name": "Snowberry",
+      "botanical_name": "Symphoricarpos albus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2346"
+    },
+    {
+      "common_name": "Bald Cypress",
+      "botanical_name": "Taxodium distichum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2348"
+    },
+    {
+      "common_name": "Western Red Cedar",
+      "botanical_name": "Thuja plicata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2350"
+    },
+    {
+      "common_name": "Excelsa Western Red Cedar",
+      "botanical_name": "Thuja plicata var. Excelsa",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2189"
+    },
+    {
+      "common_name": "Western Red Cedar",
+      "botanical_name": "Thuja plicata var. Virescens",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2352"
+    },
+    {
+      "common_name": "Watnong Green Cedar",
+      "botanical_name": "Thuja plicata var. Watnong Green",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2353"
+    },
+    {
+      "common_name": "Variegated Elk Horn Cedar",
+      "botanical_name": "Thujopsis dolabrata Variegata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2425"
+    },
+    {
+      "common_name": "Minus Creeping Thyme",
+      "botanical_name": "Thymus praecox Minus",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2356"
+    },
+    {
+      "common_name": "Littleleaf Linden",
+      "botanical_name": "Tilia cordata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2444"
+    },
+    {
+      "common_name": "Western Hemlock",
+      "botanical_name": "Tsuga heterophylla",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2358"
+    },
+    {
+      "common_name": "Princeton Elm",
+      "botanical_name": "Ulmus americana 'Princeton'",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2445"
+    },
+    {
+      "common_name": "Seiju Dwarf Chinese Elm",
+      "botanical_name": "Ulmus parvifolia Seiju",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2361"
+    },
+    {
+      "common_name": "Evergreen Huckleberry",
+      "botanical_name": "Vaccinium ovatum",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2396"
+    },
+    {
+      "common_name": "Sawtooth Zelkova",
+      "botanical_name": "Zelkova serrata",
+      "price": "$10/gallon (general pricing)",
+      "container_size": "",
+      "availability": "in catalog",
+      "category": "",
+      "url": "https://www.plantoregon.com/product.asp?specific=2365"
+    }
+  ]
+}
