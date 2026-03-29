@@ -20,7 +20,6 @@ import {
   type Tag,
 } from "@/lib/tags/api";
 import { CHART_COLORS } from "@/lib/design-tokens";
-import { CHART_COLORS } from "@/lib/design-tokens";
 import { toast } from "@/components/ui/Toast";
 
 const LIST_COLORS = CHART_COLORS.palette;

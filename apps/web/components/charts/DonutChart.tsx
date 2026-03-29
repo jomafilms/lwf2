@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CHART_COLORS } from "@/lib/design-tokens";
 
 interface DonutChartProps {
   data: Array<{

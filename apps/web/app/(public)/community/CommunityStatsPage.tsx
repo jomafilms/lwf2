@@ -42,7 +42,7 @@ const tierColors = {
   compliant: SCORE_COLORS.high.hex, // green
   "needs-work": SCORE_COLORS.medium.hex, // yellow
   "non-compliant": SCORE_COLORS.low.hex, // red
-  unassessed: CHART_COLORS.muted, // gray
+  unassessed: CHART_COLORS.muted, // gray (keeping this as a fallback since it's not part of scoring)
 };
 
 const tierLabels = {
@@ -117,7 +117,7 @@ export function CommunityStatsPage() {
   const monthlyData = stats.monthlyProgress.slice(-12).map(item => ({
     label: item.monthLabel.split(' ')[0], // Short month names for better mobile display
     value: item.count,
-    color: SCORE_COLORS.high.hex, // green-600
+    color: SCORE_COLORS.high.hex, // green
   }));
 
   return (
