@@ -61,18 +61,48 @@ export default function FeaturedListPage() {
       const list = lists[index];
       setFeaturedList(list);
 
-      // Load plant details
+      // Use seed data directly for names/reasons (already in the list)
+      // Fetch full plant data in background for images/details
       const plantResults = await Promise.all(
         list.plants.map(async (item) => {
           try {
-            return await getPlant(item.plantId);
+            const res = await fetch(
+              `https://lwf-api.vercel.app/api/v1/plants/${item.plantId}`
+            );
+            if (!res.ok) {
+              // Return a minimal plant from seed data
+              return {
+                id: item.plantId,
+                commonName: item.commonName,
+                genus: item.botanicalName?.split(" ")[0] || "",
+                species: item.botanicalName?.split(" ").slice(1).join(" ") || "",
+                subspeciesVarieties: null,
+                urls: null,
+                notes: null,
+                lastUpdated: null,
+                primaryImage: null,
+              } as Plant;
+            }
+            const data = await res.json();
+            return data.data as Plant;
           } catch {
-            return null;
+            // Fallback to seed data
+            return {
+              id: item.plantId,
+              commonName: item.commonName,
+              genus: item.botanicalName?.split(" ")[0] || "",
+              species: item.botanicalName?.split(" ").slice(1).join(" ") || "",
+              subspeciesVarieties: null,
+              urls: null,
+              notes: null,
+              lastUpdated: null,
+              primaryImage: null,
+            } as Plant;
           }
         })
       );
 
-      setPlants(plantResults.filter((p): p is Plant => p !== null));
+      setPlants(plantResults);
     } catch {
       setError("Failed to load featured list");
     } finally {
