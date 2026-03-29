@@ -104,23 +104,31 @@ export async function getPlants(
 }
 
 export async function getPlant(id: string): Promise<Plant> {
-  const res = await request<{ data: Plant }>(`/plants/${id}`);
+  const res = await request<{ data: Plant & { values?: ResolvedValue[] } }>(`/plants/${id}`);
   return res.data;
 }
 
 export async function getPlantValues(id: string): Promise<ResolvedValue[]> {
-  const res = await request<{ data: ResolvedValue[] }>(`/plants/${id}/values`);
-  return res.data;
+  // v2 API returns values inline on the plant detail endpoint
+  const res = await request<{ data: { values?: ResolvedValue[] } }>(`/plants/${id}`);
+  return res.data.values || [];
 }
 
 export async function getPlantImages(id: string): Promise<PlantImagesResponse> {
-  const res = await request<{ data: PlantImagesResponse }>(`/plants/${id}/images`);
-  return res.data;
+  // v2 returns images inline on plant detail
+  const res = await request<{ data: { images?: PlantImagesResponse['images'] } }>(`/plants/${id}`);
+  return { plantId: id, images: res.data.images || [] };
 }
 
 export async function getPlantRiskReduction(id: string): Promise<RiskReduction> {
-  const res = await request<{ data: RiskReduction }>(`/plants/${id}/risk-reduction`);
-  return res.data;
+  // v2 doesn't have a separate risk-reduction endpoint
+  // Return a basic structure from plant values
+  const res = await request<{ data: { values?: ResolvedValue[] } }>(`/plants/${id}`);
+  const values = res.data.values || [];
+  const charScore = values.find(v => v.attributeName === 'Character Score');
+  return {
+    characterScore: charScore?.resolved?.value ? parseInt(charScore.resolved.value, 10) : 0,
+  } as RiskReduction;
 }
 
 // ─── Attributes ──────────────────────────────────────────────────────────────
@@ -230,7 +238,7 @@ export async function getSources(
 
 export async function getPlantFieldsGuide(): Promise<Record<string, unknown>> {
   // plant-fields.json is served from the root, not under /api/v2
-  const baseOrigin = BASE_URL.replace(/\/api\/v1\/?$/, '');
+  const baseOrigin = BASE_URL.replace(/\/api\/v[12]\/?$/, '');
   const res = await fetch(`${baseOrigin}/plant-fields.json`);
   if (!res.ok) {
     throw new LwfApiError(res.status, 'FETCH_ERROR', `Failed to fetch plant-fields.json`);
