@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { AddressSearch } from "@/components/map/AddressSearch";
 import { PropertyMap } from "@/components/map/PropertyMap";
-import { ArrowLeft } from "lucide-react";
+import { ChatPanel } from "@/components/agent/ChatPanel";
+import { ArrowLeft, MessageSquare, X } from "lucide-react";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
 
 export default function MapPage() {
@@ -13,6 +14,7 @@ export default function MapPage() {
   const [structureCoords, setStructureCoords] = useState<
     [number, number][] | null
   >(null);
+  const [chatOpen, setChatOpen] = useState(false);
 
   // Read initial location from URL params (from home page search)
   useEffect(() => {
@@ -74,12 +76,41 @@ export default function MapPage() {
         <AddressSearch onSelect={handleAddressSelect} className="w-80" />
       </div>
 
-      {/* Map */}
-      <div className="flex-1">
-        <PropertyMap
-          center={{ lat: location.lat, lng: location.lng }}
-          onStructureDrawn={(coords) => setStructureCoords(coords)}
-        />
+      {/* Map + Chat */}
+      <div className="relative flex flex-1">
+        <div className="flex-1">
+          <PropertyMap
+            center={{ lat: location.lat, lng: location.lng }}
+            onStructureDrawn={(coords) => setStructureCoords(coords)}
+          />
+        </div>
+
+        {/* Chat toggle */}
+        {!chatOpen && (
+          <button
+            onClick={() => setChatOpen(true)}
+            className="absolute bottom-6 right-6 flex items-center gap-2 rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white shadow-lg hover:bg-neutral-800"
+          >
+            <MessageSquare className="h-4 w-4" />
+            Ask about plants
+          </button>
+        )}
+
+        {/* Chat panel */}
+        {chatOpen && (
+          <div className="flex w-96 flex-col border-l bg-white">
+            <div className="flex items-center justify-between border-b px-4 py-3">
+              <p className="text-sm font-medium">Plant Advisor</p>
+              <button
+                onClick={() => setChatOpen(false)}
+                className="rounded p-1 hover:bg-neutral-100"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <ChatPanel className="flex-1" />
+          </div>
+        )}
       </div>
     </div>
   );
