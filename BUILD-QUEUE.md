@@ -33,13 +33,12 @@
 - [x] P1-5: Scoring system (fire/pollinator/water/deer) — merged 04:14 UTC
 - [x] Mapbox CSS build fix — merged 04:13 UTC
 - [x] Stakeholder insights doc — merged 04:10 UTC
+- [x] P1-6: County parcel data (Jackson County GIS auto-detect) — merged 04:25 UTC
 
 ## 🔄 IN PROGRESS
 
-- [ ] **P1-6: County parcel data** — sub-agent running on `feature/parcel-data` branch
-  - Auto-detect property boundaries from Jackson County GIS
-  - Agent was spawned ~04:08 UTC, should finish soon
-  - When done: review diff, merge to main, move to COMPLETED
+- [ ] **A2+A3: Home page polish + mobile responsive** — sub-agent on `feature/homepage-mobile`
+- [ ] **A4: Inline plant cards in chat** — sub-agent on `feature/inline-plant-cards`
 
 ## 📋 PENDING (in priority order)
 
