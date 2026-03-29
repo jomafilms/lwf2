@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
@@ -8,15 +8,13 @@ import {
   ArrowLeft,
   Save,
   Loader2,
-  Upload,
   ExternalLink,
-  Building2,
-  MapPin,
-  Globe,
-  Mail,
-  Phone,
   Eye,
 } from "lucide-react";
+import { LogoUploadForm } from "@/components/nursery/profile/LogoUploadForm";
+import { BasicInfoForm } from "@/components/nursery/profile/BasicInfoForm";
+import { LocationForm } from "@/components/nursery/profile/LocationForm";
+import { BusinessTypeForm } from "@/components/nursery/profile/BusinessTypeForm";
 
 interface NurseryData {
   id: string;
@@ -39,7 +37,6 @@ export default function NurseryProfilePage() {
   const searchParams = useSearchParams();
   const nurseryId = searchParams.get("id");
   const { data: session, isPending: authPending } = useSession();
-  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const [nursery, setNursery] = useState<NurseryData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -157,6 +154,10 @@ export default function NurseryProfilePage() {
     } finally {
       setUploadingLogo(false);
     }
+  }
+
+  function handleFormChange(field: string, value: string | boolean) {
+    setForm(prev => ({ ...prev, [field]: value }));
   }
 
   const publicUrl = nurseryId ? `/nurseries/${nurseryId}` : "";

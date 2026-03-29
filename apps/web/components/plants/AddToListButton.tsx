@@ -10,6 +10,7 @@ import {
   fetchTagAssignments,
   type Tag,
 } from "@/lib/tags/api";
+import { CHART_COLORS } from "@/lib/design-tokens";
 import { toast } from "@/components/ui/Toast";
 
 interface AddToListButtonProps {
@@ -179,7 +180,7 @@ export function AddToListButton({ plantId }: AddToListButtonProps) {
                 >
                   <div
                     className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: tag.color || "#9ca3af" }}
+                    style={{ backgroundColor: tag.color || CHART_COLORS.muted }}
                   />
                   <span className="flex-1 truncate text-gray-700">
                     {tag.name}
