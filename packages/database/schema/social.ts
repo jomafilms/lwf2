@@ -35,10 +35,15 @@ export const orgs = pgTable("orgs", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   type: text("type", {
-    enum: ["nursery", "hoa", "city", "landscaping_company", "other"],
+    enum: ["nursery", "hoa", "neighborhood", "firewise", "city", "landscaping_company", "other"],
   }),
+  description: text("description"),
+  zipCode: text("zip_code"),
   website: text("website"),
   logo: text("logo"),
+  createdBy: text("created_by")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -51,4 +56,20 @@ export const orgMembers = pgTable("org_members", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   role: text("role", { enum: ["owner", "admin", "member"] }).default("member"),
+  joinedAt: timestamp("joined_at").defaultNow(),
+});
+
+export const orgInvites = pgTable("org_invites", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => orgs.id, { onDelete: "cascade" }),
+  code: text("code").notNull().unique(),
+  createdBy: text("created_by")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at"),
+  usedBy: text("used_by").references(() => user.id),
+  usedAt: timestamp("used_at"),
+  createdAt: timestamp("created_at").defaultNow(),
 });

@@ -86,6 +86,12 @@ export default async function DashboardPage() {
       icon: ListChecks,
     },
     {
+      href: "/dashboard/hoa",
+      label: "HOA & Community",
+      description: "Community compliance tracking and progress",
+      icon: Shield,
+    },
+    {
       href: "/dashboard/preferences",
       label: "Preferences",
       description: "View and manage AI-learned preferences",
