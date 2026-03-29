@@ -5,7 +5,7 @@
  * All GET endpoints are public — no auth required.
  *
  * Base URL from env: NEXT_PUBLIC_LWF_API_BASE
- * Fallback: https://lwf-api.vercel.app/api/v1
+ * Fallback: https://lwf-api.vercel.app/api/v2
  */
 
 import type {
@@ -27,7 +27,7 @@ import type {
 
 const BASE_URL =
   (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_LWF_API_BASE) ||
-  'https://lwf-api.vercel.app/api/v1';
+  'https://lwf-api.vercel.app/api/v2';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -229,7 +229,7 @@ export async function getSources(
 // ─── Plant Fields Guide ──────────────────────────────────────────────────────
 
 export async function getPlantFieldsGuide(): Promise<Record<string, unknown>> {
-  // plant-fields.json is served from the root, not under /api/v1
+  // plant-fields.json is served from the root, not under /api/v2
   const baseOrigin = BASE_URL.replace(/\/api\/v1\/?$/, '');
   const res = await fetch(`${baseOrigin}/plant-fields.json`);
   if (!res.ok) {
