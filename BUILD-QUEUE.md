@@ -37,8 +37,7 @@
 
 ## 🔄 IN PROGRESS
 
-- [ ] **A2+A3: Home page polish + mobile responsive** — sub-agent on `feature/homepage-mobile`
-- [ ] **A4: Inline plant cards in chat** — sub-agent on `feature/inline-plant-cards`
+(none — spawning next batch)
 
 ## 📋 PENDING (in priority order)
 
@@ -47,15 +46,8 @@
 - [x] **A1: AI Agent — nuanced, informed decision-making** — merged 04:17 UTC
   - Rewrote system prompt + tools for empowered decision-making, source citations, property-specific nuance
   
-- [ ] **A2: Home page polish** — Task doc: `docs/tasks/todo/home-page-polish.md`
-  - Make landing page compelling for stakeholders/demo Sunday 4pm
-  
-- [ ] **A3: Mobile responsive map** — Task doc: `docs/tasks/todo/mobile-responsive-map.md`
-  - Map + chat panels need to work on phone
-
-- [ ] **A4: Inline plant cards in chat** — Task doc: `docs/tasks/todo/inline-plant-cards-in-chat.md`
-  - When agent recommends plants, show rich cards not just text
-  - Include: image, fire score, placement code, water needs, nursery availability
+- [x] **A2+A3: Home page polish + mobile responsive** — merged 04:30 UTC
+- [x] **A4: Inline plant cards in chat** — merged 04:30 UTC (display_plants tool + rich cards)
 
 ### Priority B — Overnight autonomous build (9:05-14:00 UTC)
 
