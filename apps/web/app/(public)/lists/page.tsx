@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, Filter, Globe, Lock, Building2, Star } from "lucide-react";
 import { fetchTags, type Tag } from "@/lib/tags/api";
 import { StarButton } from "@/components/lists/StarButton";
+import { CollectionGridWithExpand } from "@/components/lists/CollectionGridWithExpand";
 
 interface TagWithCount extends Tag {
   itemCount: number;
@@ -123,27 +124,7 @@ export default function PublicListsPage() {
               <Star className="w-4 h-4 text-yellow-500" />
               <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Featured Collections</h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {featuredLists.map((list, index) => (
-                <Link
-                  key={index}
-                  href={`/lists/featured/${index}`}
-                  className="group bg-white rounded-lg border border-gray-200 hover:border-orange-200 hover:shadow-md transition-all p-4"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs px-1.5 py-0.5 bg-yellow-100 text-yellow-700 rounded font-medium">
-                      {ORG_TYPE_LABELS[list.organization.type] || "Community"}
-                    </span>
-                    <span className="text-xs text-gray-400">{list.plants.length} plants</span>
-                  </div>
-                  <h3 className="font-semibold text-sm text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-1">
-                    {list.name}
-                  </h3>
-                  <p className="text-xs text-gray-500 line-clamp-2">{list.description}</p>
-                  <p className="text-xs text-gray-400 mt-2">{list.organization.name}</p>
-                </Link>
-              ))}
-            </div>
+            <CollectionGridWithExpand collections={featuredLists} />
           </section>
         )}
 

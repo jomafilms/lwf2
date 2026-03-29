@@ -7,6 +7,7 @@ import { PlantSearch } from '@/components/plants/PlantSearch';
 import { Pagination } from '@/components/plants/Pagination';
 import { CompareFloatingButton } from '@/components/plants/CompareFloatingButton';
 import { PlantCard } from '@/components/plants/PlantCard';
+import { CollectionGridWithExpand } from '@/components/lists/CollectionGridWithExpand';
 import Link from 'next/link';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -414,55 +415,7 @@ async function CollectionsGrid() {
     );
   }
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {collections.map((collection: any, index: number) => (
-        <div
-          key={index}
-          className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-        >
-          <div className="p-6">
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="font-semibold text-gray-900 text-lg leading-tight">
-                {collection.name}
-              </h3>
-              <span className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                {collection.plants.length} plants
-              </span>
-            </div>
-            
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-sm text-gray-600">
-                {collection.organization.name}
-              </span>
-              <span className={`inline-flex items-center text-xs px-2 py-0.5 rounded-full ${
-                collection.organization.type === 'community' 
-                  ? 'bg-green-100 text-green-700' 
-                  : collection.organization.type === 'hoa'
-                  ? 'bg-blue-100 text-blue-700'
-                  : collection.organization.type === 'city'
-                  ? 'bg-purple-100 text-purple-700'
-                  : 'bg-gray-100 text-gray-700'
-              }`}>
-                {collection.organization.type}
-              </span>
-            </div>
-
-            <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-              {collection.description}
-            </p>
-
-            <Link
-              href={`/lists/featured/${index}`}
-              className="inline-flex items-center gap-1 text-sm text-orange-500 hover:text-orange-600 font-medium"
-            >
-              View Collection →
-            </Link>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  return <CollectionGridWithExpand collections={collections} />;
 }
 
 // ─── Browse All Plants (existing grid) ──────────────────────────────────────
