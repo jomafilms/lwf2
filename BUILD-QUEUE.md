@@ -87,7 +87,7 @@
 
 ### Priority C — Phase 3 (PRD: Scale, Months 2-6)
 
-- [ ] **C1: P3-2 Regional template** — Abstract GIS endpoint, parcel data, CWPP references so the platform works for ANY county, not just Jackson County. Config-driven: county GIS URL, parcel field mapping, local resources.
+- [x] **C1: P3-2 Regional template** — merged 10:20 UTC (feature/regional-template) — County abstraction system allows platform to work anywhere with minimal config. GIS APIs, field mappings, local resources all configurable per county.
 - [ ] **C2: P3-1 Marketplace/transaction layer** — Facilitate nursery → landscaper → homeowner purchases. Order routing, basic cart, nursery fulfillment tracking. Revenue model designed in (platform fee configurable but not active).
 - [ ] **C3: P3-4 Landscape plan design tool** — Professional canvas for landscape plan creation. Place plants on zones, drag/drop, spacing guides, print to scale.
 - [ ] **C4: P3-5 AR property walkthrough** — Camera-based property assessment using device camera. Plant identification via photo.
