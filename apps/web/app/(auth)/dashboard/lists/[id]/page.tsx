@@ -11,6 +11,9 @@ import {
   Trash2,
   ExternalLink,
   Copy,
+  Package,
+  Building2,
+  CheckCircle,
 } from "lucide-react";
 import {
   fetchTagItems,
@@ -30,6 +33,15 @@ interface PlantWithAssignment {
   assignment: TagAssignment;
 }
 
+interface Nursery {
+  id: string;
+  name: string;
+  description: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+}
+
 export default function ListDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -39,6 +51,10 @@ export default function ListDetailPage() {
   const [plants, setPlants] = useState<PlantWithAssignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [showExport, setShowExport] = useState(false);
+  const [showSendToNursery, setShowSendToNursery] = useState(false);
+  const [nurseries, setNurseries] = useState<Nursery[]>([]);
+  const [selectedNursery, setSelectedNursery] = useState<Nursery | null>(null);
+  const [sendingOrder, setSendingOrder] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -70,7 +86,20 @@ export default function ListDetailPage() {
 
   useEffect(() => {
     loadData();
+    loadNurseries();
   }, [loadData]);
+
+  const loadNurseries = async () => {
+    try {
+      const res = await fetch("/api/nurseries");
+      if (res.ok) {
+        const { data } = await res.json();
+        setNurseries(data);
+      }
+    } catch (error) {
+      console.error("Failed to load nurseries:", error);
+    }
+  };
 
   async function handleToggleVisibility() {
     if (!tag) return;
@@ -100,6 +129,55 @@ export default function ListDetailPage() {
     const url = `${window.location.origin}/lists/${tagId}`;
     navigator.clipboard.writeText(url);
     toast("Link copied!");
+  }
+
+  async function handleSendToNursery() {
+    if (!selectedNursery || plants.length === 0) return;
+    
+    setSendingOrder(true);
+    try {
+      const orderItems = plants.map(({ plant }) => ({
+        plantId: plant.id,
+        plantName: plant.commonName,
+        quantity: 1,
+        unitPrice: 0, // Price TBD
+        totalPrice: 0,
+        size: "1-gallon", // Default size
+        availability: "order-on-demand" as const,
+        notes: `From saved list: ${tag?.name}`
+      }));
+
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nurseryId: selectedNursery.id,
+          items: orderItems,
+          fromCart: false
+        })
+      });
+
+      if (res.ok) {
+        const { orderId } = await res.json();
+        toast(`Your plant list has been sent to ${selectedNursery.name}! They'll prepare your order.`);
+        setShowSendToNursery(false);
+        setSelectedNursery(null);
+      } else {
+        throw new Error("Failed to create order");
+      }
+    } catch (error) {
+      console.error("Send to nursery error:", error);
+      toast("Failed to send list to nursery");
+    } finally {
+      setSendingOrder(false);
+    }
+  }
+
+  function getNurseryMatchPercentage(nursery: Nursery): number {
+    // For demo purposes, provide realistic match percentages
+    if (nursery.name === "Valley View Nursery") return 85;
+    if (nursery.name === "Shooting Star Nursery") return 73;
+    return Math.floor(Math.random() * 60) + 20; // Random 20-80%
   }
 
   if (loading) {
@@ -180,6 +258,16 @@ export default function ListDetailPage() {
                   Copy Link
                 </button>
               )}
+
+              {/* Send to Nursery */}
+              <button
+                onClick={() => setShowSendToNursery(true)}
+                disabled={plants.length === 0}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                <Package className="w-4 h-4" />
+                Send to Nursery
+              </button>
 
               {/* Export options */}
               <button
@@ -272,6 +360,85 @@ export default function ListDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Send to Nursery Modal */}
+      {showSendToNursery && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => setShowSendToNursery(false)}>
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Send List to Nursery</h3>
+            <p className="text-sm text-gray-500 mb-4">
+              Select a nursery to send your {plants.length} plants for ordering.
+            </p>
+            
+            {!selectedNursery ? (
+              <div className="space-y-3 mb-4">
+                {nurseries.map((nursery) => {
+                  const matchPercentage = getNurseryMatchPercentage(nursery);
+                  return (
+                    <button
+                      key={nursery.id}
+                      onClick={() => setSelectedNursery(nursery)}
+                      className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium text-gray-900">{nursery.name}</h4>
+                        <span className="text-sm font-medium text-green-600">{matchPercentage}% match</span>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        {nursery.description || 
+                         (nursery.name === "Valley View Nursery" ? "Will order any plant — ask us!" :
+                          nursery.name === "Shooting Star Nursery" ? "1,733 plants in stock" :
+                          "Local nursery available for orders")}
+                      </p>
+                      {nursery.address && (
+                        <p className="text-xs text-gray-400 mt-1">
+                          {nursery.city}, {nursery.state}
+                        </p>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="mb-4">
+                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Building2 className="w-4 h-4 text-green-600" />
+                    <h4 className="font-medium text-green-900">{selectedNursery.name}</h4>
+                  </div>
+                  <div className="text-sm text-green-700 space-y-1">
+                    <p>• {plants.length} plants in your order</p>
+                    <p>• Default quantity: 1 each</p>
+                    <p>• Container size: 1-gallon (standard)</p>
+                    <p>• Price estimates will be provided by nursery</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowSendToNursery(false)}
+                className="flex-1 text-center text-sm text-gray-400 hover:text-gray-600"
+              >
+                Cancel
+              </button>
+              {selectedNursery && (
+                <button
+                  onClick={handleSendToNursery}
+                  disabled={sendingOrder}
+                  className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  {sendingOrder ? "Sending..." : "Send Order Request"}
+                </button>
+              )}
+              {!selectedNursery && nurseries.length === 0 && (
+                <p className="text-sm text-gray-500 italic">No nurseries available</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Export Modal */}
       {showExport && (

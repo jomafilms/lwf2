@@ -129,7 +129,7 @@ export function CreateOrgForm() {
         <ul className="text-sm text-blue-800 space-y-1">
           <li>• You&apos;ll become the administrator of this organization</li>
           <li>• Generate invite codes to add members</li>
-          <li>• Track community fire safety compliance and progress</li>
+          <li>• Track community fire safety readiness and progress</li>
           <li>• Access aggregate data for CWPP reporting</li>
         </ul>
       </div>

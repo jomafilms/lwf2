@@ -10,6 +10,9 @@ import {
   ArrowLeft,
   Package,
   Leaf,
+  TrendingUp,
+  Users,
+  ShoppingCart,
 } from "lucide-react";
 import { NurseryStats } from "@/components/nursery/NurseryStats";
 import { NurseryActions } from "@/components/nursery/NurseryActions";
@@ -33,6 +36,21 @@ interface NurseryData {
   inventory: Array<{ lwfPlantId: string | null; lastUpdated: string | null }>;
 }
 
+interface DemandSignal {
+  plantName: string;
+  commonName: string;
+  saveCount: number;
+}
+
+interface OrderData {
+  id: string;
+  customerName: string;
+  status: string;
+  items: Array<{ plantName: string; quantity: number }>;
+  createdAt: string;
+  totalAmount: number;
+}
+
 export default function NurseryDashboardPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,6 +58,8 @@ export default function NurseryDashboardPage() {
   const { data: session, isPending: authPending } = useSession();
 
   const [nursery, setNursery] = useState<NurseryData | null>(null);
+  const [demandSignals, setDemandSignals] = useState<DemandSignal[]>([]);
+  const [pendingOrders, setPendingOrders] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -94,8 +114,13 @@ export default function NurseryDashboardPage() {
       router.push("/sign-in?redirect_url=/dashboard/nursery");
       return;
     }
-    if (nurseryId) fetchNursery();
-    else setLoading(false);
+    if (nurseryId) {
+      fetchNursery();
+      loadDemandSignals();
+      loadPendingOrders();
+    } else {
+      setLoading(false);
+    }
   }, [nurseryId, authPending, session, router, fetchNursery]);
 
   async function handleSave() {
