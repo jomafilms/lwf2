@@ -7,11 +7,11 @@ import { Users, Calendar, MapPin } from "lucide-react";
 import { JoinForm } from "@/components/hoa/JoinForm";
 
 interface JoinPageProps {
-  params: { code: string };
+  params: Promise<{ code: string }>;
 }
 
 export default async function JoinPage({ params }: JoinPageProps) {
-  const { code } = params;
+  const { code } = await params;
   const user = await getCurrentUser();
 
   // Find the invite
