@@ -29,15 +29,23 @@ export function calculateFireZones(
 
   const structure = polygon([coords]);
 
-  const zone0 = buffer(structure, 5 * FEET_TO_KILOMETERS, {
+  // Create buffers at each distance
+  const buffer5ft = buffer(structure, 5 * FEET_TO_KILOMETERS, {
     units: "kilometers",
   }) as Feature<Polygon>;
-  const zone1 = buffer(structure, 30 * FEET_TO_KILOMETERS, {
+  const buffer30ft = buffer(structure, 30 * FEET_TO_KILOMETERS, {
     units: "kilometers",
   }) as Feature<Polygon>;
-  const zone2 = buffer(structure, 100 * FEET_TO_KILOMETERS, {
+  const buffer100ft = buffer(structure, 100 * FEET_TO_KILOMETERS, {
     units: "kilometers",
   }) as Feature<Polygon>;
+
+  // Create ring zones by subtracting inner areas from outer areas
+  const zone0 = buffer5ft; // 0-5ft: just the 5ft buffer
+  
+  const zone1 = difference(featureCollection([buffer30ft, buffer5ft])) as Feature<Polygon>; // 5-30ft: 30ft buffer minus 5ft buffer
+  
+  const zone2 = difference(featureCollection([buffer100ft, buffer30ft])) as Feature<Polygon>; // 30-100ft: 100ft buffer minus 30ft buffer
 
   return { zone0, zone1, zone2 };
 }
