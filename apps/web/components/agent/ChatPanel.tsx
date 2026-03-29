@@ -2,10 +2,16 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Send, Loader2, Flame } from "lucide-react";
+import {
+  PlantCardRow,
+  type CompactPlant,
+} from "@/components/plants/PlantCardCompact";
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
+interface ChatItem {
+  type: "message" | "plants";
+  role?: "user" | "assistant";
+  content?: string;
+  plants?: CompactPlant[];
 }
 
 interface ChatPanelProps {
@@ -20,7 +26,7 @@ const SUGGESTIONS = [
 ];
 
 export function ChatPanel({ className = "" }: ChatPanelProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [items, setItems] = useState<ChatItem[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -28,25 +34,28 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
 
   useEffect(() => {
     scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
-  }, [messages]);
+  }, [items]);
 
   const sendMessage = useCallback(
     async (text?: string) => {
       const msg = (text || input).trim();
       if (!msg || isLoading) return;
 
-      const userMessage: Message = { role: "user", content: msg };
-      const newMessages = [...messages, userMessage];
-      setMessages(newMessages);
+      const userItem: ChatItem = { type: "message", role: "user", content: msg };
+      const newItems = [...items, userItem];
+      setItems(newItems);
       setInput("");
       setIsLoading(true);
 
-      try {
-        const apiMessages = newMessages.map((m) => ({
-          role: m.role as "user" | "assistant",
-          content: m.content,
+      // Build API messages from message items only (not plant cards)
+      const apiMessages = newItems
+        .filter((item) => item.type === "message" && item.content)
+        .map((item) => ({
+          role: item.role as "user" | "assistant",
+          content: item.content!,
         }));
 
+      try {
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -60,7 +69,12 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
 
         const decoder = new TextDecoder();
         let assistantText = "";
-        setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+        // Add placeholder assistant message
+        setItems((prev) => [
+          ...prev,
+          { type: "message", role: "assistant", content: "" },
+        ]);
 
         let buffer = "";
         while (true) {
@@ -75,37 +89,61 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
             if (!line.startsWith("data: ")) continue;
             try {
               const data = JSON.parse(line.slice(6));
+
               if (data.type === "text") {
                 assistantText += data.text;
+                setItems((prev) => {
+                  const updated = [...prev];
+                  const lastMsgIdx = findLastMessageIndex(updated);
+                  if (lastMsgIdx >= 0) {
+                    updated[lastMsgIdx] = {
+                      ...updated[lastMsgIdx],
+                      content: assistantText,
+                    };
+                  }
+                  return updated;
+                });
+              } else if (data.type === "plant_cards" && data.plants?.length) {
+                setItems((prev) => [
+                  ...prev,
+                  { type: "plants", plants: data.plants },
+                ]);
               } else if (data.type === "error") {
                 assistantText += `\n\nSorry, something went wrong: ${data.error}`;
+                setItems((prev) => {
+                  const updated = [...prev];
+                  const lastMsgIdx = findLastMessageIndex(updated);
+                  if (lastMsgIdx >= 0) {
+                    updated[lastMsgIdx] = {
+                      ...updated[lastMsgIdx],
+                      content: assistantText,
+                    };
+                  }
+                  return updated;
+                });
               }
-              setMessages((prev) => {
-                const updated = [...prev];
-                updated[updated.length - 1] = {
-                  role: "assistant",
-                  content: assistantText,
-                };
-                return updated;
-              });
             } catch {
-              // skip malformed SSE lines
+              // skip malformed SSE
             }
           }
         }
       } catch (err) {
         const errorMsg =
           err instanceof Error ? err.message : "Something went wrong";
-        setMessages((prev) => [
+        setItems((prev) => [
           ...prev,
-          { role: "assistant", content: `Sorry, I couldn't respond: ${errorMsg}` },
+          {
+            type: "message",
+            role: "assistant",
+            content: `Sorry, I couldn't respond: ${errorMsg}`,
+          },
         ]);
       } finally {
         setIsLoading(false);
         inputRef.current?.focus();
       }
     },
-    [input, isLoading, messages]
+    [input, isLoading, items]
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -115,11 +153,13 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
     }
   };
 
+  const hasMessages = items.length > 0;
+
   return (
     <div className={`flex flex-col ${className}`}>
-      {/* Messages */}
+      {/* Items */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.length === 0 && (
+        {!hasMessages && (
           <div className="flex flex-col items-center pt-8 text-center">
             <Flame className="h-6 w-6 text-neutral-300" />
             <p className="mt-2 text-sm font-medium text-neutral-500">
@@ -128,8 +168,6 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
             <p className="mt-1 text-xs text-neutral-400">
               Powered by 1,300+ plants from the LWF database
             </p>
-
-            {/* Suggested prompts */}
             <div className="mt-6 flex w-full flex-col gap-2">
               {SUGGESTIONS.map((s) => (
                 <button
@@ -144,29 +182,35 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
           </div>
         )}
 
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-          >
+        {items.map((item, i) => {
+          if (item.type === "plants" && item.plants) {
+            return <PlantCardRow key={i} plants={item.plants} />;
+          }
+
+          return (
             <div
-              className={`max-w-[90%] rounded-lg px-3 py-2 text-sm leading-relaxed ${
-                msg.role === "user"
-                  ? "bg-neutral-900 text-white"
-                  : "bg-neutral-100 text-neutral-800"
-              }`}
-              style={{ whiteSpace: "pre-wrap" }}
+              key={i}
+              className={`flex ${item.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              {msg.content ||
-                (isLoading && i === messages.length - 1 && (
-                  <span className="flex items-center gap-2 text-neutral-400">
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    Searching plants...
-                  </span>
-                ))}
+              <div
+                className={`max-w-[90%] rounded-lg px-3 py-2 text-sm leading-relaxed ${
+                  item.role === "user"
+                    ? "bg-neutral-900 text-white"
+                    : "bg-neutral-100 text-neutral-800"
+                }`}
+                style={{ whiteSpace: "pre-wrap" }}
+              >
+                {item.content ||
+                  (isLoading && i === items.length - 1 && (
+                    <span className="flex items-center gap-2 text-neutral-400">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Searching plants...
+                    </span>
+                  ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Input */}
@@ -196,4 +240,11 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
       </div>
     </div>
   );
+}
+
+function findLastMessageIndex(items: ChatItem[]): number {
+  for (let i = items.length - 1; i >= 0; i--) {
+    if (items[i].type === "message" && items[i].role === "assistant") return i;
+  }
+  return -1;
 }
