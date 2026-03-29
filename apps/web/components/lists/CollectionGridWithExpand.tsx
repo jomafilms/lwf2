@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { ListDetailInlineExpand } from "./ListDetailInlineExpand";
+import { SaveCollectionButton } from "./SaveCollectionButton";
 
 interface CollectionPlant {
   plantId: string;
@@ -98,9 +99,15 @@ export function CollectionGridWithExpand({
                   <h3 className="font-semibold text-gray-900 text-lg leading-tight group-hover:text-orange-600 transition-colors">
                     {collection.name}
                   </h3>
-                  <span className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full flex-shrink-0 ml-2">
-                    {collection.plants.length} plants
-                  </span>
+                  <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
+                    <SaveCollectionButton
+                      collectionName={collection.name}
+                      plants={collection.plants}
+                    />
+                    <span className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                      {collection.plants.length} plants
+                    </span>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 mb-3">

@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { NurseryAvailability } from './NurseryAvailability';
+import { SavePlantButton } from './SavePlantButton';
 import { AddToListButton } from './AddToListButton';
-import { CompareButton } from './CompareButton';
 import { PlanToggleButton } from './PlanToggleButton';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -103,6 +103,18 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
             </div>
           )}
         </div>
+        {/* Action buttons — visible on hover */}
+        <div className="absolute top-1.5 right-1.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <SavePlantButton plantId={plant.id} size="sm" />
+          <AddToListButton plantId={plant.id} />
+          <PlanToggleButton
+            plantId={plant.id}
+            commonName={plant.commonName}
+            botanicalName={getBotanicalName(plant)}
+            imageUrl={plant.primaryImage?.url || null}
+            variant="pill"
+          />
+        </div>
         <div className="p-2.5">
           <h3 className="text-xs font-semibold text-gray-900 group-hover:text-orange-600 transition-colors leading-tight line-clamp-1">
             {plant.commonName}
@@ -148,8 +160,8 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
 
       {/* Action buttons */}
       <div className="absolute top-2 right-2 flex items-center gap-1.5">
+        <SavePlantButton plantId={plant.id} />
         <AddToListButton plantId={plant.id} />
-        <CompareButton plant={plant} variant="button" />
         <PlanToggleButton
           plantId={plant.id}
           commonName={plant.commonName}

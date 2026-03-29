@@ -1,6 +1,9 @@
 "use client";
 
 import { Droplets, Shield, Leaf } from "lucide-react";
+import { SavePlantButton } from "./SavePlantButton";
+import { AddToListButton } from "./AddToListButton";
+import { PlanToggleButton } from "./PlanToggleButton";
 
 export interface CompactPlant {
   id: string;
@@ -23,7 +26,7 @@ export function PlantCardCompact({ plant }: PlantCardCompactProps) {
   return (
     <a
       href={`/plants/${plant.id}`}
-      className="group flex w-40 flex-shrink-0 flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-sm"
+      className="group relative flex w-40 flex-shrink-0 flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-sm"
     >
       {/* Image */}
       <div className="relative h-24 w-full bg-neutral-100">
@@ -38,6 +41,18 @@ export function PlantCardCompact({ plant }: PlantCardCompactProps) {
             <Leaf className="h-6 w-6 text-neutral-300" />
           </div>
         )}
+        {/* Action buttons — visible on hover */}
+        <div className="absolute top-1 right-1 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <SavePlantButton plantId={plant.id} size="sm" />
+          <AddToListButton plantId={plant.id} />
+          <PlanToggleButton
+            plantId={plant.id}
+            commonName={name}
+            botanicalName={botanical || `${plant.genus} ${plant.species}`}
+            imageUrl={imageUrl || null}
+            variant="pill"
+          />
+        </div>
       </div>
 
       {/* Info */}

@@ -117,7 +117,16 @@ async function fetchFeaturedPlants() {
       return hasZone0to5 && (isNative || isDeerResistant || isPollinator);
     });
 
-    return { plants: featuredPlants.slice(0, 10), valuesMap };
+    // Dedupe by image URL so varieties sharing the same photo don't repeat
+    const seenImages = new Set<string>();
+    const uniqueFeatured = featuredPlants.filter(plant => {
+      const url = plant.primaryImage?.url;
+      if (!url || seenImages.has(url)) return false;
+      seenImages.add(url);
+      return true;
+    });
+
+    return { plants: uniqueFeatured.slice(0, 10), valuesMap };
   } catch (error) {
     console.error('Error fetching featured plants:', error);
     return { plants: [], valuesMap: {} };
@@ -283,7 +292,7 @@ export default async function PlantsPage({
             <section className="mb-12">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Featured Plants</h2>
               <p className="text-sm text-gray-600 mb-6">
-                Zone 0-5 rated plants with special characteristics — perfect for close-to-home landscaping
+                Top-rated fire-reluctant plants — pick favorites to feature on your home page
               </p>
               <Suspense fallback={<FeaturedPlantsSkeleton />}>
                 <FeaturedPlantsRow />

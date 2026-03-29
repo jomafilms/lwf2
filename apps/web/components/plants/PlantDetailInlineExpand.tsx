@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getPlantClient } from "@/lib/api/lwf";
 import { presentPlant, type PlantPresentation } from "@/lib/plants/present";
+import { SavePlantButton } from "./SavePlantButton";
 import { AddToListButton } from "./AddToListButton";
 import { PlanToggleButton } from "./PlanToggleButton";
 import type { Plant, ResolvedValue } from "@lwf/types";
@@ -254,6 +255,7 @@ export function PlantDetailInlineExpand({
 
               {/* Actions */}
               <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                <SavePlantButton plantId={plant.id} />
                 <AddToListButton plantId={plant.id} />
                 <PlanToggleButton
                   plantId={plant.id}
