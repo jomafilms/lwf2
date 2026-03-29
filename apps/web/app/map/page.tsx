@@ -20,6 +20,7 @@ import {
   Check,
   Loader2,
   FileText,
+  ClipboardCheck,
 } from "lucide-react";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
 import type { FireZones } from "@/lib/geo/fire-zones";
@@ -49,6 +50,11 @@ export default function MapPage() {
   // Parcel auto-detection state
   const [parcelBoundary, setParcelBoundary] = useState<ParcelBoundary | null>(null);
   const [parcelLoading, setParcelLoading] = useState(false);
+
+  // Assessment state
+  const [showAssessment, setShowAssessment] = useState(false);
+  const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(null);
+  const [showAssessmentSummary, setShowAssessmentSummary] = useState(false);
 
   // Load saved property from URL param
   useEffect(() => {
