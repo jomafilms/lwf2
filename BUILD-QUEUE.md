@@ -3,6 +3,8 @@
 > **Last updated:** 2026-03-29 04:15 UTC
 > **Session status:** ACTIVE — Annie awake until ~7am UTC (midnight PT)
 > **Token reset:** ~9:01 UTC (2:01am PT) if throttled
+> **Overnight goal:** Get through Phase 2 by 14:00 UTC (7am PT)
+> **Sunday AM plan:** Annie tests, bug fixes, UI refinement, demo prep (demos at 4pm PT / 23:00 UTC)
 
 ## 🚨 FIRST: If You Just Woke Up
 
@@ -43,71 +45,146 @@
 
 ### Priority A — Tonight (before Annie sleeps ~7am UTC)
 
-- [ ] **AI Agent system prompt update** — Lead with Charisse's hierarchy: Placement → Spacing → Maintenance → Plant Selection. Don't jump to plant recommendations. Ask about property context first.
-  - File: `apps/web/lib/agent/system-prompt.ts`
-  - Also update tools to surface placement codes and risk reduction data
+- [ ] **A1: AI Agent — nuanced, informed decision-making**
+  - File: `apps/web/lib/agent/system-prompt.ts` + `apps/web/lib/agent/tools.ts`
+  - THE CORE PRODUCT INSIGHT: The agent must help homeowners make informed, empowered decisions for THEIR specific property. Not prescriptive lists. Nuanced guidance.
+  - Charisse's framework: Placement, Spacing, Maintenance, AND Plant Selection all matter together. The problem isn't the order — it's that most tools ONLY show plant selection and ignore everything else.
+  - Agent should: surface placement codes, spacing requirements, maintenance needs alongside plant recommendations
+  - Agent should: cite data sources ("this rating comes from [source]")  
+  - Agent should: explain WHY a plant works or doesn't for THIS specific situation
+  - Agent should: understand that "own the fuels, own the fire" = personal responsibility, empowerment
+  - Agent should: know 250 native plants in DB, support informed native plant choices
+  - Agent should: reference risk reduction data, character scores, zone placement codes
+  - Read `docs/stakeholder-insights.md` for full context
   
-- [ ] **Home page polish** — Task doc: `docs/tasks/todo/home-page-polish.md`
-  - Make landing page compelling for stakeholders/demo
+- [ ] **A2: Home page polish** — Task doc: `docs/tasks/todo/home-page-polish.md`
+  - Make landing page compelling for stakeholders/demo Sunday 4pm
   
-- [ ] **Mobile responsive map** — Task doc: `docs/tasks/todo/mobile-responsive-map.md`
+- [ ] **A3: Mobile responsive map** — Task doc: `docs/tasks/todo/mobile-responsive-map.md`
   - Map + chat panels need to work on phone
 
-- [ ] **Inline plant cards in chat** — Task doc: `docs/tasks/todo/inline-plant-cards-in-chat.md`
+- [ ] **A4: Inline plant cards in chat** — Task doc: `docs/tasks/todo/inline-plant-cards-in-chat.md`
   - When agent recommends plants, show rich cards not just text
+  - Include: image, fire score, placement code, water needs, nursery availability
 
-### Priority B — Overnight autonomous (9:05 UTC onwards)
+### Priority B — Overnight autonomous build (9:05-14:00 UTC)
 
-- [ ] **P2-3: Compliance document generation** — Generate CC&R-compatible landscaping rules for HOAs
+- [ ] **B1: P2-3 Compliance document generation**
+  - Generate CC&R-compatible landscaping rules for HOAs
   - Dennis's #1 ask: "adoptable by association governing documents"
+  - Generate property-specific compliance reports
+  - Include: zone map, plant list per zone, spacing diagrams, maintenance schedule, source citations
   - Task doc: `docs/tasks/todo/P2-compliance-docs.md`
-  
-- [ ] **P2-4: HOA dashboard** — Neighborhood-level view of compliance
-  - Task doc: `docs/tasks/todo/P2-hoa-dashboard.md`
 
-- [ ] **P2-1: Landscaper dashboard** — Professional tools
+- [ ] **B2: P2-4 HOA dashboard**
+  - Neighborhood-level view: how many properties assessed, compliance rates
+  - HOA admin can invite residents
+  - Aggregate scoring across properties
+  - Progress tracking toward community goals (90% in 10 years)
+  - Task doc: `docs/tasks/todo/P2-hoa-dashboard.md`
+  
+- [ ] **B3: P2-1 Landscaper dashboard**
+  - Professional tools: client list, plan submissions, plant sourcing
+  - View client properties and plans
+  - Submit plans to city (format TBD but build the structure)
   - Task doc: `docs/tasks/todo/P2-landscaper-dashboard.md`
 
-- [ ] **P2-2: Nursery org management** — Inventory upload, profile
+- [ ] **B4: P2-2 Nursery org management**
+  - Nursery profile pages, inventory upload (CSV), price management
+  - Connect nursery catalog to LWF plant database
+  - Show "available at" on plant cards with real pricing
   - Task doc: `docs/tasks/todo/P2-nursery-management.md`
 
-- [ ] **P2-5: City analytics dashboard** — Community-wide progress tracking
+- [ ] **B5: P2-5 City analytics dashboard**
+  - Community-wide progress: properties assessed, scores over time
+  - Ward/neighborhood breakdown
+  - Adoption rates, risk reduction estimates
+  - Export data for grant applications
   - Task doc: `docs/tasks/todo/P2-city-analytics.md`
 
-### Priority C — If time permits
+- [ ] **B6: Data provenance display**
+  - Show WHERE each plant data point comes from (source citations)
+  - "Why does the database say this plant has a fire score of X?" → show sources
+  - Use LWF API's source data, display on plant detail pages
+  - This is critical for Charisse's credibility and user trust
 
-- [ ] Community/neighborhood features (Lori's ask — connect neighbors)
-- [ ] Maintenance calendar/reminders (Mark's ask)
-- [ ] Insurance certification pathway tracking (Ralph/Woolsey)
-- [ ] Cost estimation per property ($2K-$15K range)
-- [ ] Grant eligibility helper
+- [ ] **B7: Plant comparison tool**
+  - Side-by-side compare 2-3 plants on all attributes
+  - "Which is better for MY zone 0 near windows?" — show the tradeoffs
+  - Helps informed decision-making, not just "pick this one"
+
+- [ ] **B8: Maintenance calendar/reminders**
+  - Based on plants in your plan, generate maintenance schedule
+  - Seasonal tasks: pruning, dead material removal, spacing checks
+  - "In 3 years these plants will be X size — here's when to prune"
+  - Addresses the maintenance gap Charisse identified
+
+- [ ] **B9: Property assessment walkthrough**
+  - Guided UX: step-by-step property assessment
+  - "What's in your zone 0 right now?" → photo upload or plant identification
+  - "Where are your windows? Fences? Deck?"
+  - Produces a baseline assessment before recommending changes
+  - This is what makes each property's plan DIFFERENT from any other
+
+- [ ] **B10: Community progress features**
+  - Neighborhood groups (Lori's ask)
+  - Aggregate view: "Your neighborhood is X% assessed"
+  - Social visibility without shaming
+  - Firewise community certification pathway tracking
+
+- [ ] **B11: Insurance/certification tracker**
+  - Track progress toward Wildfire Prepared Home certification (IBHS)
+  - Show which requirements are met, which aren't
+  - Connect scores to insurance discount eligibility
+  - Cost estimation for remaining work
+
+- [ ] **B12: Cost estimator**
+  - Based on plan plants + nursery pricing, estimate total cost
+  - Show budget options: "$500 starter" vs "$5K full makeover"
+  - Link to grant programs that might offset costs
+  - Woolsey's input: $2K-$15K per property typical range
+
+### Priority C — Stretch / post-codeathon
+
+- [ ] AR property walkthrough (Aaron's idea)
+- [ ] Tower defense game (Garen's idea)
+- [ ] Social media content generator from plant data
+- [ ] Climate change adaptation tagging (which plants are climate-stressed)
+- [ ] Multi-source data conflict resolution UI for Charisse
+- [ ] Plant identification from photo (David's idea — PlantNet API)
+- [ ] Growth projection modeling (what does your yard look like in 5 years?)
+- [ ] Landscape plan scanner/reader
 
 ## 🔧 KNOWN ISSUES
 
 - GitHub PAT lacks PR write permissions — merge directly to main
 - Vercel deploy needs Root Directory set to `apps/web`
 - Some TypeScript type errors in API routes (non-blocking with skipLibCheck)
+- `@anthropic-ai/sdk` types missing locally (works on Vercel with npm install)
 
 ## 📝 HOW TO BUILD A TASK
 
 1. `cd /home/buggy/lwf2 && git checkout main && git pull`
 2. `git checkout -b feature/[task-slug]`
-3. Read the task doc if it exists
-4. Read relevant existing code first (check what's there!)
-5. Build it
-6. `git add -A && git commit -m "feat: [description]"`
-7. `git push origin feature/[task-slug]`
-8. Merge: `git checkout main && git merge feature/[task-slug] && git push origin main`
-9. **UPDATE THIS FILE** — move task to COMPLETED, update timestamp
-10. Pick next task
+3. Read the task doc if it exists in `docs/tasks/todo/`
+4. Read relevant existing code first (check what's already built!)
+5. Build it — target 300 lines per file, max 600
+6. TypeScript strict, Tailwind only, named exports
+7. `git add -A && git commit -m "feat: [description]"`
+8. `git push origin feature/[task-slug]`
+9. Merge: `git checkout main && git merge feature/[task-slug] --no-edit && git push origin main`
+10. **UPDATE THIS FILE** — move task to COMPLETED with timestamp
+11. `git add BUILD-QUEUE.md && git commit -m "queue: mark [task] complete" && git push origin main`
+12. Pick next task
 
 ## 🤖 OVERNIGHT CRON INSTRUCTIONS
 
 A cron job fires at 9:05 UTC (2:05am PT) to restart the build loop after token reset.
 The cron agent should:
 1. Read this file
-2. Pick the next PENDING task
-3. Spawn a sub-agent to build it
-4. Wait for completion
-5. Review, merge, update this file
-6. Repeat until all Priority B tasks are done or 14:00 UTC (7am PT)
+2. Pick the next PENDING task (Priority B in order)
+3. Build it directly (don't spawn sub-agents — you ARE the builder)
+4. After completing each task, update this file and push
+5. Continue to next task
+6. Stop at 14:00 UTC (7am PT) — Annie will be waking up
+7. Leave a summary of what was built in the git log
