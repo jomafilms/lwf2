@@ -7,7 +7,7 @@ import { Star, BookmarkPlus, Building2 } from "lucide-react";
 import { createTag, assignTag } from "@/lib/tags/api";
 import { getPlantClient } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
-import { PlantSlideOut } from "@/components/plants/PlantSlideOut";
+import { PlantGridWithSlideOut } from "@/components/plants/PlantGridWithSlideOut";
 import type { Plant } from "@lwf/types";
 
 interface FeaturedList {
@@ -45,7 +45,6 @@ export default function FeaturedListPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -197,66 +196,9 @@ export default function FeaturedListPage() {
             <p className="text-gray-500">No plants found in this collection</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {plants.map((plant, plantIndex) => {
-              const listItem = featuredList.plants[plantIndex];
-              
-              return (
-                <button
-                  key={plant.id}
-                  onClick={() => setSelectedPlantId(plant.id)}
-                  className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow text-left"
-                >
-                  <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden rounded-t-xl">
-                    {plant.primaryImage ? (
-                      <img
-                        src={plant.primaryImage.url}
-                        alt={plant.commonName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100">
-                        <svg
-                          className="w-12 h-12 text-green-300"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
-                      {plant.commonName}
-                    </h3>
-                    <p className="text-sm text-gray-500 italic mt-0.5">
-                      {[plant.genus, plant.species].filter(Boolean).join(" ")}
-                    </p>
-                    {listItem?.reason && (
-                      <p className="text-xs text-gray-400 mt-2 line-clamp-2">
-                        {listItem.reason}
-                      </p>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          <PlantGridWithSlideOut plants={plants} valuesMap={{}} />
         )}
       </div>
-      
-      <PlantSlideOut
-        plantId={selectedPlantId}
-        onClose={() => setSelectedPlantId(null)}
-      />
     </div>
   );
 }
