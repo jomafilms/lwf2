@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { db, orders, fulfillmentUpdates, nurseryOrganizations } from '@lwf/database';
+import { db, orders, fulfillmentUpdates, orgs, orgMembers } from '@lwf/database';
 import { eq, and } from 'drizzle-orm';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     orderId: string;
-  };
+  }>;
 }
 
 /**
@@ -24,7 +24,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   }
 
   try {
-    const { orderId } = params;
+    const { orderId } = await params;
     const body = await req.json();
     const { status, notes, estimatedDate } = body;
 
@@ -51,17 +51,18 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Check if user owns the nursery for this order
-    const [nursery] = await db
+    // Check if user is a member of the nursery for this order
+    const [membership] = await db
       .select()
-      .from(nurseryOrganizations)
+      .from(orgMembers)
       .where(
         and(
-          eq(nurseryOrganizations.id, order.nurseryId!),
-          eq(nurseryOrganizations.ownerId, user.id)
+          eq(orgMembers.orgId, order.nurseryId!),
+          eq(orgMembers.userId, user.id)
         )
       )
       .limit(1);
+    const nursery = membership;
 
     if (!nursery) {
       return NextResponse.json(

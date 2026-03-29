@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { db, nurseryOrganizations } from "@lwf/database";
+import { db, orgs } from "@lwf/database";
 import { eq } from "drizzle-orm";
 import { MarketplaceDemo } from "@/components/marketplace/MarketplaceDemo";
 
@@ -14,8 +14,8 @@ export default async function MarketplaceDemoPage() {
   // Get Shooting Star nursery for demo
   const [shootingStar] = await db
     .select()
-    .from(nurseryOrganizations)
-    .where(eq(nurseryOrganizations.name, "Shooting Star Nursery"))
+    .from(orgs)
+    .where(eq(orgs.name, "Shooting Star Nursery"))
     .limit(1);
 
   if (!shootingStar) {
@@ -40,7 +40,7 @@ export default async function MarketplaceDemoPage() {
         </p>
       </div>
 
-      <MarketplaceDemo nursery={shootingStar} />
+      <MarketplaceDemo nursery={shootingStar as any} />
     </div>
   );
 }

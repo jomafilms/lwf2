@@ -17,7 +17,7 @@
     "paths": {
       "@/*": ["./*"],
       "@lwf/database": ["../../packages/database"],
-      "@lwf/types": ["../../packages/types/lwf"]
+      "@lwf/types": ["../../packages/types"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
