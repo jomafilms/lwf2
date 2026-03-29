@@ -109,6 +109,28 @@ export const toolDefinitions: Anthropic.Tool[] = [
       required: ["key", "value"],
     },
   },
+  {
+    name: "compare_plants",
+    description:
+      "Compare 2-3 plants side-by-side to help users make informed decisions. Returns a link to the comparison page and summarizes key differences. Use when a user asks to compare specific plants or when you want to suggest comparing alternatives for their situation.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        plantIds: {
+          type: "array",
+          items: { type: "string" },
+          description: "Array of 2-3 plant UUIDs to compare",
+          minItems: 2,
+          maxItems: 3,
+        },
+        context: {
+          type: "string",
+          description: "Brief context for why you're suggesting this comparison (e.g. 'for your Zone 1 area' or 'low-water options')",
+        },
+      },
+      required: ["plantIds"],
+    },
+  },
 ];
 
 // Context passed from the chat route to identify the current user
@@ -332,6 +354,70 @@ export async function executeTool(
         return JSON.stringify({
           saved: { key, value },
           allPreferences: merged,
+        });
+      }
+
+      case "compare_plants": {
+        const plantIds = input.plantIds as string[];
+        const context = input.context as string | undefined;
+        
+        if (plantIds.length < 2 || plantIds.length > 3) {
+          return JSON.stringify({ 
+            error: "Can only compare 2-3 plants at a time" 
+          });
+        }
+
+        // Fetch basic info for all plants to verify they exist and get names
+        const plants = await Promise.all(
+          plantIds.map(async (id) => {
+            try {
+              const plant = await getPlant(id);
+              const riskReduction = await getPlantRiskReduction(id).catch(() => null);
+              return {
+                id: plant.id,
+                commonName: plant.commonName,
+                botanicalName: `${plant.genus} ${plant.species}`.trim(),
+                characterScore: riskReduction?.characterScore || null,
+              };
+            } catch {
+              return null;
+            }
+          })
+        );
+
+        const validPlants = plants.filter(Boolean);
+        
+        if (validPlants.length !== plantIds.length) {
+          return JSON.stringify({ 
+            error: "One or more plants not found" 
+          });
+        }
+
+        // Generate comparison URL
+        const compareUrl = `/plants/compare?ids=${plantIds.join(',')}`;
+        
+        // Create brief summary of key differences
+        const plantNames = validPlants.map((p) => p!.commonName);
+        const scores = validPlants.map((p) => p!.characterScore).filter(Boolean);
+        
+        let summary = `Comparing ${plantNames.join(', ')}`;
+        if (context) {
+          summary += ` ${context}`;
+        }
+        
+        if (scores.length > 1) {
+          const maxScore = Math.max(...scores);
+          const minScore = Math.min(...scores);
+          const bestPlant = validPlants.find((p) => p!.characterScore === maxScore)?.commonName;
+          
+          summary += `. Fire safety: ${bestPlant} has the highest fire character score (${maxScore}/100) vs ${minScore}/100.`;
+        }
+
+        return JSON.stringify({
+          compareUrl,
+          summary,
+          plants: validPlants,
+          message: `[View detailed comparison](${compareUrl})`,
         });
       }
 

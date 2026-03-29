@@ -5,6 +5,7 @@ import { PlantCard } from '@/components/plants/PlantCard';
 import { PlantFilters } from '@/components/plants/PlantFilters';
 import { PlantSearch } from '@/components/plants/PlantSearch';
 import { Pagination } from '@/components/plants/Pagination';
+import { CompareFloatingButton } from '@/components/plants/CompareFloatingButton';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -206,6 +207,9 @@ export default async function PlantsPage({
           </main>
         </div>
       </div>
+      
+      {/* Floating compare button */}
+      <CompareFloatingButton />
     </div>
   );
 }

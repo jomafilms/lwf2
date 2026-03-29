@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { NurseryAvailability } from './NurseryAvailability';
 import { AddToListButton } from './AddToListButton';
+import { CompareButton } from './CompareButton';
 import { useCart } from '@/lib/cart/store';
 import { toast } from '@/components/ui/Toast';
 
@@ -121,6 +122,7 @@ export function PlantCard({ plant, values = [] }: PlantCardProps) {
       {/* Action buttons */}
       <div className="absolute top-2 right-2 flex items-center gap-1.5">
         <AddToListButton plantId={plant.id} />
+        <CompareButton plant={plant} variant="button" />
         <button
           onClick={handleAddToPlan}
           className={`px-2.5 py-1 text-xs font-medium rounded-full shadow-sm transition-colors ${
