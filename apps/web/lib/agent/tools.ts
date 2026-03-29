@@ -231,16 +231,43 @@ export async function executeTool(
       case "get_zone_recommendations": {
         const zone = input.zone as string;
         const zoneMap = await getZoneMap();
-        const matching: { plantId: string; zones: string[] }[] = [];
+        const matchingIds: string[] = [];
         for (const [plantId, zones] of Object.entries(zoneMap)) {
           if (zones.includes(zone)) {
-            matching.push({ plantId, zones });
+            matchingIds.push(plantId);
           }
         }
+        // Fetch basic info + risk data for top matches to help agent filter
+        const enriched = await Promise.all(
+          matchingIds.slice(0, 20).map(async (plantId) => {
+            try {
+              const [plant, rr] = await Promise.all([
+                getPlant(plantId),
+                getPlantRiskReduction(plantId).catch(() => null),
+              ]);
+              return {
+                plantId,
+                commonName: plant.commonName,
+                genus: plant.genus,
+                species: plant.species,
+                imageUrl: plant.primaryImage?.url || null,
+                characterScore: rr?.characterScore ?? null,
+                placement: rr?.placement ?? null,
+                riskReductionText: rr?.riskReductionText ?? null,
+                triggeredRules: rr?.triggeredRules ?? [],
+              };
+            } catch {
+              return { plantId, commonName: "Unknown", characterScore: null };
+            }
+          })
+        );
+        // Sort by character score (lower = safer) so agent sees safest first
+        enriched.sort((a, b) => (a.characterScore ?? 99) - (b.characterScore ?? 99));
         return JSON.stringify({
           zone,
-          matchCount: matching.length,
-          plants: matching.slice(0, 15),
+          matchCount: matchingIds.length,
+          plants: enriched,
+          note: "Plants sorted by fire safety (lowest character score = safest). Check characterScore and placement before recommending. Do NOT recommend plants with characterScore > 10 for Zone 0-1.",
         });
       }
 
