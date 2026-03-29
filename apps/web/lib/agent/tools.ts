@@ -12,6 +12,38 @@ import { eq } from "drizzle-orm";
 // HIZ attribute ID from IMPLEMENTATION.md
 const HIZ_ATTRIBUTE_ID = "b908b170-70c9-454d-a2ed-d86f98cb3de1";
 
+// Cache zone data (1MB response, avoid re-fetching per chat message)
+let zoneCache: { data: Record<string, string[]>; timestamp: number } | null = null;
+const ZONE_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+async function getZoneMap(): Promise<Record<string, string[]>> {
+  if (zoneCache && Date.now() - zoneCache.timestamp < ZONE_CACHE_TTL) {
+    return zoneCache.data;
+  }
+  const bulkResult = await getValuesBulk({
+    attributeIds: [HIZ_ATTRIBUTE_ID],
+    resolve: true,
+  });
+  const zoneMap: Record<string, string[]> = {};
+  if (bulkResult && typeof bulkResult === "object") {
+    for (const [plantId, plantData] of Object.entries(bulkResult)) {
+      if (!plantData || typeof plantData !== "object") continue;
+      const zones: string[] = [];
+      for (const attrValues of Object.values(plantData as Record<string, unknown>)) {
+        if (!Array.isArray(attrValues)) continue;
+        for (const v of attrValues) {
+          const val = v as { resolved?: { value?: string }; value?: string };
+          const resolved = val.resolved?.value || val.value || "";
+          if (resolved) zones.push(resolved);
+        }
+      }
+      if (zones.length > 0) zoneMap[plantId] = zones;
+    }
+  }
+  zoneCache = { data: zoneMap, timestamp: Date.now() };
+  return zoneMap;
+}
+
 export const toolDefinitions: Anthropic.Tool[] = [
   {
     name: "search_plants",
@@ -158,7 +190,7 @@ export async function executeTool(
             commonName: p.commonName,
             genus: p.genus,
             species: p.species,
-            images: (p as unknown as { images?: { imageUrl: string }[] }).images?.slice(0, 1),
+            imageUrl: p.primaryImage?.url || null,
           })),
         });
       }
@@ -198,27 +230,11 @@ export async function executeTool(
 
       case "get_zone_recommendations": {
         const zone = input.zone as string;
-        const bulkResult = await getValuesBulk({
-          attributeIds: [HIZ_ATTRIBUTE_ID],
-          resolve: true,
-        });
-        // Bulk API returns: { plantId: { attrId: [values] } }
-        const matching: { plantId: string; value: string }[] = [];
-        if (bulkResult && typeof bulkResult === "object") {
-          for (const [plantId, plantData] of Object.entries(bulkResult)) {
-            if (!plantData || typeof plantData !== "object") continue;
-            // plantData is { attributeId: [values] }
-            for (const attrValues of Object.values(plantData as Record<string, unknown>)) {
-              if (!Array.isArray(attrValues)) continue;
-              for (const v of attrValues) {
-                const val = v as { resolved?: { value?: string }; value?: string };
-                const resolved = val.resolved?.value || val.value || "";
-                if (resolved === zone) {
-                  matching.push({ plantId, value: resolved });
-                  break;
-                }
-              }
-            }
+        const zoneMap = await getZoneMap();
+        const matching: { plantId: string; zones: string[] }[] = [];
+        for (const [plantId, zones] of Object.entries(zoneMap)) {
+          if (zones.includes(zone)) {
+            matching.push({ plantId, zones });
           }
         }
         return JSON.stringify({
