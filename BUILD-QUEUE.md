@@ -81,11 +81,7 @@
 - [x] **B9: Property assessment walkthrough** — merged 05:27 UTC (Sonnet)
 - [~] **B10: Community progress** — partial (tangled branch, core concepts in B2 HOA dashboard)
 
-- [ ] **B11: Insurance/certification tracker**
-  - Track progress toward Wildfire Prepared Home certification (IBHS)
-  - Show which requirements are met, which aren't
-  - Connect scores to insurance discount eligibility
-  - Cost estimation for remaining work
+- [x] **B11: Insurance/certification tracker** — merged 05:33 UTC (Sonnet)
 
 - [ ] **B12: Cost estimator**
   - Based on plan plants + nursery pricing, estimate total cost
