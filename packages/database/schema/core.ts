@@ -37,6 +37,7 @@ export const plans = pgTable("plans", {
   }).default("draft"),
   plantPlacements: jsonb("plant_placements"),
   estimatedCost: integer("estimated_cost"),
+  complianceScore: integer("compliance_score"),
   readinessScore: integer("readiness_score"),
   notes: text("notes"),
   submittedAt: timestamp("submitted_at"),

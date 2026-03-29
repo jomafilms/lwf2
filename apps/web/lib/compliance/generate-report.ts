@@ -1,7 +1,7 @@
 /**
  * Compliance Report Generator
  * 
- * Generates CC&R-compatible landscaping compliance reports for HOAs.
+ * Generates CC&R-compatible landscaping readiness reports for HOAs.
  * Based on CWPP standards and Dennis Holeman's requirements.
  * Uses regional context for county-specific requirements.
  */
@@ -10,7 +10,7 @@ import type { PlanPlant, ScoreResult } from "../scoring/types";
 import { calculateScores } from "../scoring/calculate";
 import { RegionalContext } from "../regional/context";
 
-export type ComplianceStatus = 'compliant' | 'needs-work' | 'non-compliant';
+export type ComplianceStatus = 'fire-ready' | 'needs-work' | 'needs attention';
 
 export interface ZoneReport {
   zone: string; // "Zone 0 (0-5ft)", etc.
@@ -77,7 +77,7 @@ const ZONE_DEFINITIONS = {
   }
 } as const;
 
-// Placement code compliance mapping
+// Placement code readiness mapping
 const PLACEMENT_COMPLIANCE: Record<string, string[]> = {
   A: ["zone0", "zone1", "zone2"], // Suitable for all zones
   B: ["zone1", "zone2"],         // Zones 1-2 only
@@ -103,7 +103,7 @@ function determineZoneCompliance(
   const zoneDef = ZONE_DEFINITIONS[zone];
   const zoneReport: ZoneReport = {
     zone: zoneDef.name,
-    status: 'compliant',
+    status: 'fire-ready',
     plants: [],
     spacingIssues: [],
     maintenanceNotes: []
@@ -140,11 +140,11 @@ function determineZoneCompliance(
   const appropriateRatio = plants.length > 0 ? appropriateCount / plants.length : 1;
   
   if (appropriateRatio >= 0.9) {
-    zoneReport.status = 'compliant';
+    zoneReport.status = 'fire-ready';
   } else if (appropriateRatio >= 0.7) {
     zoneReport.status = 'needs-work';
   } else {
-    zoneReport.status = 'non-compliant';
+    zoneReport.status = 'needs attention';
   }
   
   // Add spacing recommendations based on zone
@@ -200,7 +200,7 @@ function generateRecommendations(
   
   // Zone-specific recommendations
   for (const zone of zoneReports) {
-    if (zone.status === 'non-compliant') {
+    if (zone.status === 'needs attention') {
       recommendations.push(`${zone.zone}: Replace inappropriate plants with species suitable for this zone`);
     }
     if (zone.status === 'needs-work') {
@@ -234,7 +234,7 @@ function assessCertificationProgress(
   
   // Check each certification criterion
   const zone0Report = zoneReports.find(z => z.zone.includes("Zone 0"));
-  if (zone0Report?.status === 'compliant') {
+  if (zone0Report?.status === 'fire-ready') {
     met.push("Zone 0 maintained with appropriate low-flammability vegetation");
   } else {
     unmet.push("Zone 0 maintained with appropriate low-flammability vegetation");
@@ -337,13 +337,13 @@ export function generateComplianceReport(
     zoneReports.push(determineZoneCompliance('zone2', plantsByZone.zone2));
   }
   
-  // Determine overall compliance
-  let overallCompliance: ComplianceStatus = 'compliant';
-  const nonCompliantZones = zoneReports.filter(z => z.status === 'non-compliant').length;
+  // Determine overall readiness
+  let overallCompliance: ComplianceStatus = 'fire-ready';
+  const nonCompliantZones = zoneReports.filter(z => z.status === 'needs attention').length;
   const needsWorkZones = zoneReports.filter(z => z.status === 'needs-work').length;
   
   if (nonCompliantZones > 0 || scores.fire.score < 50) {
-    overallCompliance = 'non-compliant';
+    overallCompliance = 'needs attention';
   } else if (needsWorkZones > 0 || scores.fire.score < 70) {
     overallCompliance = 'needs-work';
   }

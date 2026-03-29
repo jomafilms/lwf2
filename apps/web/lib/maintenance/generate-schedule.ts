@@ -193,7 +193,7 @@ function generateGrowthProjections(plant: PlanPlant): PlantMaintenanceTask[] {
   for (const years of [3, 5, 10]) {
     const projectedHeight = Math.min(matureHeight, years * growthRate);
     let priority: 'high' | 'medium' | 'low' = 'low';
-    let reason = 'Monitor growth to maintain proper spacing and fire safety compliance';
+    let reason = 'Monitor growth to maintain proper spacing and fire safety readiness';
 
     // Flag concerns
     if (plant.zone === 'zone0' && projectedHeight > 6) {

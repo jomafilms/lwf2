@@ -150,7 +150,7 @@ During Red Flag Warning conditions or when fire activity is reported within 10 m
 function generateInspectionProcess(associationName: string): string {
   return `
 **Annual Inspection Program:**
-The ${associationName} shall conduct annual fire safety inspections of all properties to ensure compliance with these landscaping standards.
+The ${associationName} shall conduct annual fire safety inspections of all properties to ensure readiness with these landscaping standards.
 
 **Inspection Schedule:**
 • Annual inspections conducted April-May before fire season
@@ -180,7 +180,7 @@ Property owners may appeal inspection results by:
 **Enforcement:**
 • First violation: Written notice with correction timeline
 • Second violation: Fine of $[AMOUNT] plus correction requirement
-• Continuing violation: Daily fines until compliance achieved
+• Continuing violation: Daily fines until readiness achieved
 • Association may perform necessary work at owner expense if not corrected`;
 }
 
@@ -189,10 +189,10 @@ function generateGrandfatheringClause(): string {
 **Existing Landscaping (Grandfathering Provisions):**
 Landscaping installed prior to the effective date of these regulations may continue under the following conditions:
 
-• **Maintenance Requirement:** All existing vegetation must be maintained in compliance with the maintenance standards herein
+• **Maintenance Requirement:** All existing vegetation must be maintained in readiness with the maintenance standards herein
 • **Replacement Requirement:** When existing vegetation dies, is removed, or requires replacement, new plantings must comply with current plant selection guidelines
 • **Safety Override:** The Association reserves the right to require removal of any vegetation that poses an immediate fire safety threat, regardless of installation date
-• **Improvement Timeline:** Properties with existing non-compliant landscaping are encouraged to achieve compliance within 5 years through natural replacement cycles
+• **Improvement Timeline:** Properties with existing landscaping needing attention are encouraged to achieve readiness within 5 years through natural replacement cycles
 
 **Voluntary Upgrade Incentives:**
 The Association may offer incentives for voluntary upgrade of existing landscaping:
