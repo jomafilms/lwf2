@@ -10,20 +10,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { ComplianceReport } from "@/lib/compliance/generate-report";
 
-interface ComplianceStatus {
-  'compliant': { color: 'bg-green-100 text-green-800', label: 'Compliant' };
-  'needs-work': { color: 'bg-yellow-100 text-yellow-800', label: 'Needs Work' };
-  'non-compliant': { color: 'bg-red-100 text-red-800', label: 'Non-Compliant' };
-}
-
-const statusStyles: ComplianceStatus = {
+const statusStyles: Record<string, { color: string; label: string }> = {
   'compliant': { color: 'bg-green-100 text-green-800', label: 'Compliant' },
   'needs-work': { color: 'bg-yellow-100 text-yellow-800', label: 'Needs Work' },
-  'non-compliant': { color: 'bg-red-100 text-red-800', label: 'Non-Compliant' }
+  'non-compliant': { color: 'bg-red-100 text-red-800', label: 'Non-Compliant' },
 };
 
-function StatusBadge({ status }: { status: keyof ComplianceStatus }) {
-  const style = statusStyles[status];
+function StatusBadge({ status }: { status: string }) {
+  const style = statusStyles[status] || statusStyles['needs-work'];
   return (
     <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${style.color}`}>
       {style.label}

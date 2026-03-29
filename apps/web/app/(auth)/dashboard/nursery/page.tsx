@@ -116,8 +116,7 @@ export default function NurseryDashboardPage() {
     }
     if (nurseryId) {
       fetchNursery();
-      loadDemandSignals();
-      loadPendingOrders();
+      // TODO: implement demand signals and pending orders loading
     } else {
       setLoading(false);
     }
