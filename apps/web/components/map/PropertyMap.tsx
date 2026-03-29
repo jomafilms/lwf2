@@ -144,12 +144,12 @@ export function PropertyMap({
     <div className="relative h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
 
-      {/* Drawing controls — bottom center */}
+      {/* Drawing controls — bottom center, touch-friendly */}
       <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2">
         {!isDrawing && (
           <button
             onClick={startDrawing}
-            className="flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium shadow-lg hover:bg-neutral-50"
+            className="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg hover:bg-neutral-50 active:bg-neutral-100 sm:py-2.5"
           >
             {hasZones ? (
               <>
@@ -167,26 +167,21 @@ export function PropertyMap({
 
         {isDrawing && (
           <>
-            {/* Drawing guidance */}
-            <div className="rounded-lg bg-white/95 px-3 py-2 text-sm shadow-lg">
+            <div className="rounded-lg bg-white/95 px-3 py-2 text-xs shadow-lg sm:text-sm">
               {pointCount === 0 && (
                 <span className="text-neutral-600">
-                  Click corners of your building
+                  Tap corners of your building
                 </span>
               )}
               {pointCount === 1 && (
-                <span className="text-neutral-600">
-                  Click the next corner
-                </span>
+                <span className="text-neutral-600">Tap the next corner</span>
               )}
               {pointCount === 2 && (
-                <span className="text-neutral-600">
-                  One more point minimum
-                </span>
+                <span className="text-neutral-600">One more point min</span>
               )}
               {pointCount >= 3 && (
-                <span className="text-green-700 font-medium">
-                  {pointCount} points — click Done or keep adding
+                <span className="font-medium text-green-700">
+                  {pointCount} pts — tap Done
                 </span>
               )}
             </div>
@@ -194,7 +189,7 @@ export function PropertyMap({
             <button
               onClick={undoPoint}
               disabled={pointCount === 0}
-              className="rounded-lg bg-white p-2.5 shadow-lg hover:bg-neutral-50 disabled:opacity-30"
+              className="rounded-lg bg-white p-3 shadow-lg hover:bg-neutral-50 active:bg-neutral-100 disabled:opacity-30 sm:p-2.5"
               title="Undo last point"
             >
               <Undo2 className="h-4 w-4" />
@@ -203,7 +198,7 @@ export function PropertyMap({
             <button
               onClick={finishDrawing}
               disabled={pointCount < 3}
-              className="flex items-center gap-1.5 rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white shadow-lg hover:bg-neutral-800 disabled:opacity-30"
+              className="flex items-center gap-1.5 rounded-lg bg-neutral-900 px-4 py-3 text-sm font-medium text-white shadow-lg hover:bg-neutral-800 active:bg-neutral-700 disabled:opacity-30 sm:py-2.5"
             >
               <Check className="h-4 w-4" />
               Done
@@ -326,10 +321,10 @@ function addMapLayers(map: mapboxgl.Map) {
     type: "circle",
     source: "draw-points",
     paint: {
-      "circle-radius": 5,
+      "circle-radius": 7,
       "circle-color": "#ffffff",
       "circle-stroke-color": "#1e293b",
-      "circle-stroke-width": 2,
+      "circle-stroke-width": 2.5,
     },
   });
 }

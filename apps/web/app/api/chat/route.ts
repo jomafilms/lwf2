@@ -77,6 +77,19 @@ async function runAgentLoop(
           block.name,
           block.input as Record<string, unknown>
         );
+
+        // Emit plant cards for tools that return plant data
+        if (block.name === "search_plants" || block.name === "get_zone_recommendations") {
+          try {
+            const parsed = JSON.parse(result);
+            if (parsed.plants?.length > 0) {
+              send({ type: "plant_cards", plants: parsed.plants });
+            }
+          } catch {
+            // skip if result isn't parseable
+          }
+        }
+
         toolResults.push({
           type: "tool_result",
           tool_use_id: block.id,
