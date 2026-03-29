@@ -77,9 +77,21 @@ async function fetchPlantsWithValues(searchParams: SearchParams) {
       if (bulkResult && typeof bulkResult === 'object') {
         const data = (bulkResult as Record<string, unknown>).data || bulkResult;
         for (const plantId of plantIds) {
-          const plantValues = (data as Record<string, unknown>)[plantId];
-          if (Array.isArray(plantValues)) {
-            valuesMap[plantId] = plantValues as ResolvedValue[];
+          const plantEntry = (data as Record<string, unknown>)[plantId];
+          if (Array.isArray(plantEntry)) {
+            // Direct array of values
+            valuesMap[plantId] = plantEntry as ResolvedValue[];
+          } else if (plantEntry && typeof plantEntry === 'object') {
+            // Nested by attributeId: { attrId: [values] }
+            const allValues: ResolvedValue[] = [];
+            for (const attrValues of Object.values(plantEntry as Record<string, unknown>)) {
+              if (Array.isArray(attrValues)) {
+                allValues.push(...(attrValues as ResolvedValue[]));
+              }
+            }
+            if (allValues.length > 0) {
+              valuesMap[plantId] = allValues;
+            }
           }
         }
       }
