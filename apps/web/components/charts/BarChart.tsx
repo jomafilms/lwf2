@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CHART_COLORS } from "@/lib/design-tokens";
 
 interface BarChartProps {
   data: Array<{
@@ -37,7 +38,7 @@ export function BarChart({
         <div className="relative flex items-end justify-center gap-2" style={{ height }}>
           {data.map((item, index) => {
             const barHeight = animated ? (item.value / maxValue) * (height - 30) : 0;
-            const color = item.color || "#3b82f6"; // Default blue
+            const color = item.color || CHART_COLORS.primary; // Default blue
             
             return (
               <div
