@@ -5,7 +5,7 @@ import { useDemoRole, type DemoRole } from '@/lib/demo/use-demo-role';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const roleOptions: Array<{ value: DemoRole; label: string; emoji: string }> = [
-  { value: 'homeowner', label: 'Homeowner', emoji: '🏠' },
+  { value: 'homeowner', label: 'Resident', emoji: '🏠' },
   { value: 'landscaper', label: 'Landscaper', emoji: '🌱' },
   { value: 'nursery_admin', label: 'Nursery Admin', emoji: '🏪' },
   { value: 'hoa_admin', label: 'HOA Admin', emoji: '🏘️' },
