@@ -26,8 +26,12 @@ async function getZoneMap(): Promise<Record<string, string[]>> {
   });
   const zoneMap: Record<string, string[]> = {};
   if (bulkResult && typeof bulkResult === "object") {
-    for (const [plantId, plantData] of Object.entries(bulkResult)) {
-      if (!plantData || typeof plantData !== "object") continue;
+    // API returns { data: { values: { plantId: { attrId: [...] } } } }
+    const raw = bulkResult as Record<string, unknown>;
+    const dataObj = raw.data as Record<string, unknown> | undefined;
+    const valuesObj = (dataObj?.values || dataObj || raw) as Record<string, unknown>;
+    for (const [plantId, plantData] of Object.entries(valuesObj)) {
+      if (!plantData || typeof plantData !== "object" || plantId === "meta") continue;
       const zones: string[] = [];
       for (const attrValues of Object.values(plantData as Record<string, unknown>)) {
         if (!Array.isArray(attrValues)) continue;
