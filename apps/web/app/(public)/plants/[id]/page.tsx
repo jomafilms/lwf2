@@ -11,6 +11,7 @@ import {
 import type { ResolvedValue, RiskReduction, PlantImage, Source } from '@lwf/types';
 import { NurseryAvailability } from '@/components/plants/NurseryAvailability';
 import { SourceCitation, SourceCitationList } from '@/components/plants/SourceCitation';
+import { ImageGallery } from '@/components/plants/ImageGallery';
 
 // ─── Attribute grouping ──────────────────────────────────────────────────────
 
@@ -140,52 +141,7 @@ export default async function PlantDetailPage({
         <div className="lg:grid lg:grid-cols-2 lg:gap-8">
           {/* Images */}
           <div>
-            {allImages.length > 0 ? (
-              <div className="space-y-3">
-                {/* Primary image */}
-                <div className="aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden">
-                  <img
-                    src={allImages[0].url}
-                    alt={plant.commonName}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {/* Thumbnail grid */}
-                {allImages.length > 1 && (
-                  <div className="grid grid-cols-4 gap-2">
-                    {allImages.slice(1, 5).map((img, i) => (
-                      <div
-                        key={i}
-                        className="aspect-square bg-gray-100 rounded-lg overflow-hidden"
-                      >
-                        <img
-                          src={img.url}
-                          alt={`${plant.commonName} ${img.type || ''}`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="aspect-[4/3] bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl flex items-center justify-center">
-                <svg
-                  className="w-20 h-20 text-green-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                  />
-                </svg>
-              </div>
-            )}
+            <ImageGallery images={allImages} plantName={plant.commonName} />
           </div>
 
           {/* Plant info */}
