@@ -10,8 +10,10 @@ import {
   type FireZones,
 } from "@/lib/geo/fire-zones";
 import { MAP_COLORS } from "@/lib/design-tokens";
-import { Pencil, RotateCcw, Check, Undo2 } from "lucide-react";
 import type mapboxgl from "mapbox-gl";
+import { MapControls } from "./MapControls";
+import { ZoneOverlay } from "./ZoneOverlay";
+import { ParcelDisplay } from "./ParcelDisplay";
 
 export interface SavedPropertyData {
   structureFootprints: [number, number][];
@@ -209,118 +211,25 @@ export function PropertyMap({
       <div ref={mapContainer} className="h-full w-full" />
 
       {/* Parcel info badge */}
-      {parcelBoundary && !isDrawing && (
-        <div className="absolute left-4 top-4 flex items-center gap-2">
-          <div className="rounded-lg bg-emerald-600/90 px-3 py-2 text-white shadow-lg backdrop-blur-sm">
-            <p className="text-xs font-semibold">✓ Property boundary found</p>
-            <p className="text-[11px] opacity-90">
-              {parcelBoundary.address} · {parcelBoundary.acreage} acres
-            </p>
-          </div>
-          {onEditBoundary && (
-            <button
-              onClick={onEditBoundary}
-              className="rounded-lg bg-white/90 px-3 py-2 text-xs font-medium shadow-lg backdrop-blur-sm hover:bg-white"
-            >
-              <Pencil className="mr-1 inline-block h-3 w-3" />
-              Edit
-            </button>
-          )}
-        </div>
-      )}
+      <ParcelDisplay
+        parcelBoundary={parcelBoundary}
+        isDrawing={isDrawing}
+        onEditBoundary={onEditBoundary}
+      />
 
       {/* Drawing controls */}
-      <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2">
-        {!isDrawing && !hasZones && (
-          <button
-            onClick={startDrawing}
-            className="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg hover:bg-neutral-50 active:bg-neutral-100 sm:py-2.5"
-          >
-            <Pencil className="h-4 w-4" />
-            {parcelBoundary ? "Draw Structure Footprint" : "Draw Structure"}
-          </button>
-        )}
-
-        {!isDrawing && hasZones && (
-          <button
-            onClick={startDrawing}
-            className="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg hover:bg-neutral-50 active:bg-neutral-100 sm:py-2.5"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Redraw
-          </button>
-        )}
-
-        {isDrawing && (
-          <>
-            <div className="rounded-lg bg-white/95 px-3 py-2 text-xs shadow-lg sm:text-sm">
-              {pointCount === 0 && (
-                <span className="text-neutral-600">
-                  Tap corners of your building
-                </span>
-              )}
-              {pointCount === 1 && (
-                <span className="text-neutral-600">Tap the next corner</span>
-              )}
-              {pointCount === 2 && (
-                <span className="text-neutral-600">One more point min</span>
-              )}
-              {pointCount >= 3 && (
-                <span className="font-medium text-green-700">
-                  {pointCount} pts — tap Done
-                </span>
-              )}
-            </div>
-
-            <button
-              onClick={undoPoint}
-              disabled={pointCount === 0}
-              className="rounded-lg bg-white p-3 shadow-lg hover:bg-neutral-50 active:bg-neutral-100 disabled:opacity-30 sm:p-2.5"
-              title="Undo last point"
-            >
-              <Undo2 className="h-4 w-4" />
-            </button>
-
-            <button
-              onClick={finishDrawing}
-              disabled={pointCount < 3}
-              className="flex items-center gap-1.5 rounded-lg bg-neutral-900 px-4 py-3 text-sm font-medium text-white shadow-lg hover:bg-neutral-800 active:bg-neutral-700 disabled:opacity-30 sm:py-2.5"
-            >
-              <Check className="h-4 w-4" />
-              Done
-            </button>
-          </>
-        )}
-      </div>
+      <MapControls
+        isDrawing={isDrawing}
+        hasZones={hasZones}
+        pointCount={pointCount}
+        parcelBoundary={!!parcelBoundary}
+        onStartDrawing={startDrawing}
+        onUndoPoint={undoPoint}
+        onFinishDrawing={finishDrawing}
+      />
 
       {/* Zone legend */}
-      {hasZones && !isDrawing && (
-        <div className="absolute bottom-6 left-4 rounded-lg bg-black/70 px-3 py-2.5 text-white shadow-lg backdrop-blur-sm">
-          <div className="flex items-center gap-4 text-xs">
-            <div className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone0, opacity: 0.8 }}
-              />
-              0-5ft
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone1, opacity: 0.8 }}
-              />
-              5-30ft
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone2, opacity: 0.8 }}
-              />
-              30-100ft
-            </div>
-          </div>
-        </div>
-      )}
+      <ZoneOverlay hasZones={hasZones} isDrawing={isDrawing} />
     </div>
   );
 }

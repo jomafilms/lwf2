@@ -5,18 +5,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import {
-  Upload,
   ArrowLeft,
   Loader2,
-  FileSpreadsheet,
-  Check,
   AlertCircle,
-  Leaf,
   Plus,
-  Trash2,
   X,
 } from "lucide-react";
 import { parseCSV, type ParsedInventoryItem } from "@/lib/nursery/csv-parser";
+import { InventoryTable } from "@/components/nursery/InventoryTable";
+import { InventoryFilters } from "@/components/nursery/InventoryFilters";
+import { CSVUploadForm } from "@/components/nursery/CSVUploadForm";
+import { ManualAddForm } from "@/components/nursery/ManualAddForm";
 
 type AvailabilityStatus = "in_stock" | "limited" | "out_of_stock" | "seasonal";
 

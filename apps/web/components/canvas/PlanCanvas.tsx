@@ -1,33 +1,10 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Stage, Layer, Rect, Circle, Text, Line, Group } from "react-konva";
-import { 
-  Ruler, 
-  Move, 
-  RotateCcw, 
-  Trash2, 
-  Settings,
-  ZoomIn,
-  ZoomOut,
-  Hand
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Stage } from "react-konva";
+import { CanvasToolbar } from "./CanvasToolbar";
+import { PlantPalette } from "./PlantPalette";
+import { CanvasZoneLayer } from "./CanvasZoneLayer";
 
 interface PlantPlacement {
   id: string;
@@ -188,65 +165,18 @@ export function PlanCanvas({
       {/* Canvas */}
       <div className="flex-1 border rounded-lg overflow-hidden bg-neutral-50">
         {/* Toolbar */}
-        <div className="flex items-center justify-between p-2 border-b bg-white">
-          <div className="flex items-center gap-2">
-            <Button
-              variant={tool === 'select' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTool('select')}
-              disabled={readOnly}
-            >
-              <Move className="h-4 w-4" />
-            </Button>
-            
-            <Button
-              variant={dragMode ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setDragMode(!dragMode)}
-            >
-              <Hand className="h-4 w-4" />
-            </Button>
-
-            <div className="h-4 w-px bg-neutral-300" />
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleZoom('in')}
-            >
-              <ZoomIn className="h-4 w-4" />
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleZoom('out')}
-            >
-              <ZoomOut className="h-4 w-4" />
-            </Button>
-
-            <span className="text-sm text-neutral-600">
-              {Math.round(zoom * 100)}%
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Badge variant="outline">
-              {placements.length} plants
-            </Badge>
-            
-            {selectedId && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDelete}
-                className="text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        </div>
+        <CanvasToolbar
+          tool={tool}
+          setTool={setTool}
+          dragMode={dragMode}
+          setDragMode={setDragMode}
+          zoom={zoom}
+          onZoom={handleZoom}
+          placementsCount={placements.length}
+          selectedId={selectedId}
+          onDelete={handleDelete}
+          readOnly={readOnly}
+        />
 
         {/* Stage */}
         <div className="relative">
@@ -259,268 +189,31 @@ export function PlanCanvas({
             draggable={dragMode}
             onClick={handleStageClick}
           >
-            <Layer>
-              {/* Property boundary */}
-              <Rect
-                x={0}
-                y={0}
-                width={propertyBounds.width}
-                height={propertyBounds.height}
-                stroke="#94a3b8"
-                strokeWidth={2}
-                dash={[5, 5]}
-                fill="rgba(248, 250, 252, 0.5)"
-              />
-
-              {/* Fire zones */}
-              {zones.map(zone => (
-                <Group key={zone.id}>
-                  <Rect
-                    x={zone.bounds.x}
-                    y={zone.bounds.y}
-                    width={zone.bounds.width}
-                    height={zone.bounds.height}
-                    fill={zone.color}
-                    opacity={0.1}
-                    stroke={zone.color}
-                    strokeWidth={2}
-                  />
-                  <Text
-                    x={zone.bounds.x + 10}
-                    y={zone.bounds.y + 10}
-                    text={zone.name}
-                    fontSize={14}
-                    fontStyle="bold"
-                    fill={zone.color}
-                  />
-                </Group>
-              ))}
-
-              {/* Plant placements */}
-              {placements.map(placement => {
-                const isSelected = selectedId === placement.id;
-                const radius = (placement.matureSize * SCALE) / 2;
-                
-                return (
-                  <Group key={placement.id}>
-                    {/* Mature size circle */}
-                    <Circle
-                      x={placement.x}
-                      y={placement.y}
-                      radius={radius}
-                      fill="rgba(34, 197, 94, 0.2)"
-                      stroke={isSelected ? "#3b82f6" : "#22c55e"}
-                      strokeWidth={isSelected ? 3 : 1}
-                      dash={[3, 3]}
-                    />
-                    
-                    {/* Plant marker */}
-                    <Circle
-                      x={placement.x}
-                      y={placement.y}
-                      radius={6}
-                      fill={isSelected ? "#3b82f6" : "#16a34a"}
-                      stroke="white"
-                      strokeWidth={2}
-                      draggable={!readOnly}
-                      onClick={() => setSelectedId(placement.id)}
-                      onDragMove={(e) => {
-                        handlePlantDrag(placement.id, {
-                          x: e.target.x(),
-                          y: e.target.y()
-                        });
-                      }}
-                    />
-                    
-                    {/* Plant label */}
-                    <Text
-                      x={placement.x - 30}
-                      y={placement.y + radius + 5}
-                      width={60}
-                      text={placement.plantName}
-                      fontSize={10}
-                      align="center"
-                      fill="#374151"
-                    />
-
-                    {/* Quantity badge */}
-                    {placement.quantity > 1 && (
-                      <Group>
-                        <Circle
-                          x={placement.x + 15}
-                          y={placement.y - 10}
-                          radius={8}
-                          fill="#dc2626"
-                        />
-                        <Text
-                          x={placement.x + 10}
-                          y={placement.y - 14}
-                          text={placement.quantity.toString()}
-                          fontSize={10}
-                          fill="white"
-                          fontStyle="bold"
-                        />
-                      </Group>
-                    )}
-
-                    {/* Spacing guides when selected */}
-                    {isSelected && (
-                      <Group>
-                        <Circle
-                          x={placement.x}
-                          y={placement.y}
-                          radius={radius + 20} // 20ft recommended spacing
-                          stroke="#f59e0b"
-                          strokeWidth={1}
-                          dash={[2, 4]}
-                          opacity={0.5}
-                        />
-                      </Group>
-                    )}
-                  </Group>
-                );
-              })}
-
-              {/* Grid (optional) */}
-              {zoom > 0.5 && (
-                <Group>
-                  {[...Array(Math.floor(canvasWidth / 50))].map((_, i) => (
-                    <Line
-                      key={`v-${i}`}
-                      points={[i * 50, 0, i * 50, canvasHeight]}
-                      stroke="#e2e8f0"
-                      strokeWidth={1}
-                      opacity={0.3}
-                    />
-                  ))}
-                  {[...Array(Math.floor(canvasHeight / 50))].map((_, i) => (
-                    <Line
-                      key={`h-${i}`}
-                      points={[0, i * 50, canvasWidth, i * 50]}
-                      stroke="#e2e8f0"
-                      strokeWidth={1}
-                      opacity={0.3}
-                    />
-                  ))}
-                </Group>
-              )}
-            </Layer>
+            <CanvasZoneLayer
+              propertyBounds={propertyBounds}
+              zones={zones}
+              placements={placements}
+              selectedId={selectedId}
+              scale={SCALE}
+              readOnly={readOnly}
+              onPlantSelect={setSelectedId}
+              onPlantDrag={handlePlantDrag}
+            />
           </Stage>
         </div>
       </div>
 
-      {/* Properties panel */}
-      <div className="w-64 space-y-4">
-        {/* Legend */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Fire Zones</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {zones.map(zone => (
-              <div key={zone.id} className="flex items-center gap-2">
-                <div 
-                  className="w-3 h-3 rounded border"
-                  style={{ backgroundColor: zone.color }}
-                />
-                <span className="text-xs">{zone.name}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Selected plant properties */}
-        {selectedId && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">Plant Properties</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {(() => {
-                const plant = placements.find(p => p.id === selectedId);
-                if (!plant) return null;
-
-                return (
-                  <>
-                    <div>
-                      <label className="text-xs font-medium">Plant Name</label>
-                      <Select
-                        value={plant.plantName}
-                        onValueChange={(value) => {
-                          const newPlacements = placements.map(p =>
-                            p.id === selectedId ? { ...p, plantName: value } : p
-                          );
-                          setPlacements(newPlacements);
-                          onPlacementChange(newPlacements);
-                        }}
-                      >
-                        <SelectTrigger className="h-8">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="English Lavender">English Lavender</SelectItem>
-                          <SelectItem value="Deer Brush">Deer Brush</SelectItem>
-                          <SelectItem value="Common Yarrow">Common Yarrow</SelectItem>
-                          <SelectItem value="Kinnikinnick">Kinnikinnick</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-medium">Mature Size (ft)</label>
-                      <Select
-                        value={plant.matureSize.toString()}
-                        onValueChange={(value) => {
-                          const newPlacements = placements.map(p =>
-                            p.id === selectedId ? { ...p, matureSize: parseInt(value) } : p
-                          );
-                          setPlacements(newPlacements);
-                          onPlacementChange(newPlacements);
-                        }}
-                      >
-                        <SelectTrigger className="h-8">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="2">2 feet</SelectItem>
-                          <SelectItem value="4">4 feet</SelectItem>
-                          <SelectItem value="6">6 feet</SelectItem>
-                          <SelectItem value="8">8 feet</SelectItem>
-                          <SelectItem value="12">12 feet</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-medium">Zone</label>
-                      <div className="text-xs text-neutral-600 mt-1">
-                        {zones.find(z => z.id === plant.zone)?.name || 'Unknown'}
-                      </div>
-                    </div>
-
-                    <div className="text-xs text-neutral-500">
-                      Position: {Math.round(plant.x)}, {Math.round(plant.y)}
-                    </div>
-                  </>
-                );
-              })()}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Instructions */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-xs text-neutral-600 space-y-1">
-              <p>• Click in zones to place plants</p>
-              <p>• Drag plants to reposition</p>
-              <p>• Select plants to edit properties</p>
-              <p>• Green circles show mature size</p>
-              <p>• Orange circles show spacing guides</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Sidebar */}
+      <PlantPalette
+        selectedId={selectedId}
+        placements={placements}
+        zones={zones}
+        readOnly={readOnly}
+        onPlacementChange={(newPlacements) => {
+          setPlacements(newPlacements);
+          onPlacementChange(newPlacements);
+        }}
+      />
     </div>
   );
 }
