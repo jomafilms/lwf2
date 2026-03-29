@@ -29,6 +29,17 @@ const BASE_URL =
   (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_LWF_API_BASE) ||
   'https://lwf-api.vercel.app/api/v2';
 
+/**
+ * For client components: fetch plant detail through our proxy to avoid CORS.
+ * Server components can use getPlant() directly.
+ */
+export async function getPlantClient(id: string): Promise<Plant & { values?: ResolvedValue[] }> {
+  const res = await fetch(`/api/plants/${id}`);
+  if (!res.ok) throw new LwfApiError(res.status, 'FETCH_ERROR', `Failed to fetch plant ${id}`);
+  const json = await res.json();
+  return json.data;
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 export class LwfApiError extends Error {

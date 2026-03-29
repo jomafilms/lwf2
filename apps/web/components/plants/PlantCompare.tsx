@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import type { Plant, ResolvedValue, RiskReduction } from '@lwf/types';
-import { getPlant, getPlantValues, getPlantRiskReduction } from '@/lib/api/lwf';
+import { getPlantClient } from '@/lib/api/lwf';
 import { NurseryAvailability } from './NurseryAvailability';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -133,13 +133,14 @@ export function PlantCompare({ plantIds }: PlantCompareProps) {
         const results = await Promise.all(
           plantIds.map(async (id) => {
             try {
-              const [plant, values, riskReduction] = await Promise.all([
-                getPlant(id),
-                getPlantValues(id),
-                getPlantRiskReduction(id).catch(() => null), // Risk reduction is optional
-              ]);
-              
-              return { plant, values, riskReduction };
+              const plantData = await getPlantClient(id);
+              const values = plantData.values || [];
+              const charScore = values.find(v => v.attributeName === 'Character Score');
+              const riskReduction: RiskReduction = {
+                characterScore: charScore?.resolved?.value ? parseInt(charScore.resolved.value, 10) : 0,
+              } as RiskReduction;
+
+              return { plant: plantData as Plant, values, riskReduction };
             } catch (error) {
               console.error(`Failed to fetch data for plant ${id}:`, error);
               throw new Error(`Failed to load plant data for ${id}`);

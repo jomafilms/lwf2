@@ -9,7 +9,7 @@ import { AddToListButton } from './AddToListButton';
 import { NurseryAvailability } from './NurseryAvailability';
 import { useCart } from '@/lib/cart/store';
 import { toast } from '@/components/ui/Toast';
-import { getPlant, getPlantValues } from '@/lib/api/lwf';
+import { getPlantClient } from '@/lib/api/lwf';
 
 interface PlantSlideOutProps {
   plantId: string | null;
@@ -36,13 +36,11 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
       setError(null);
 
       try {
-        // Use LWF API client directly (not internal API routes)
-        const [plantData, valuesData] = await Promise.all([
-          getPlant(plantId!),
-          getPlantValues(plantId!),
-        ]);
+        // Fetch through proxy to avoid CORS
+        const plantData = await getPlantClient(plantId!);
+        const valuesData = plantData.values || [];
 
-        setPlant(plantData);
+        setPlant(plantData as Plant);
         setPresentation(presentPlant(valuesData));
       } catch (err) {
         console.error('Error fetching plant data:', err);
