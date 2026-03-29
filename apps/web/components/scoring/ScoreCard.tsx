@@ -22,10 +22,10 @@ interface ScoreRingProps {
 
 // ─── Color helpers ───────────────────────────────────────────────────────────
 
+import { getScoreColor } from "@/lib/design-tokens";
+
 function scoreColor(score: number): string {
-  if (score > 70) return "#22c55e"; // green-500
-  if (score >= 40) return "#eab308"; // yellow-500
-  return "#ef4444"; // red-500
+  return getScoreColor(score).hex;
 }
 
 function scoreBgClass(score: number): string {
