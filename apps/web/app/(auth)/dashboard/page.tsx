@@ -121,6 +121,15 @@ export default async function DashboardPage() {
       icon: Calendar,
     });
   }
+  
+  if (role === "city_admin") {
+    sections.unshift({
+      href: "/dashboard/city",
+      label: "City Analytics",
+      description: "Community-wide wildfire readiness progress",
+      icon: Calendar,
+    });
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
