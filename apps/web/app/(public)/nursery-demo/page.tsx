@@ -1,14 +1,62 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useCart, CONTAINER_SIZES, formatPrice } from '@/lib/cart/store';
-import { ArrowLeft, Printer } from 'lucide-react';
+import { useSession } from '@/lib/auth-client';
+import { ArrowLeft, Printer, Mail, Loader2, Check } from 'lucide-react';
 function getSizeLabel(value: string): string {
   return CONTAINER_SIZES.find((s) => s.value === value)?.label || value;
 }
 
 export default function NurseryDemoPage() {
   const { items, total } = useCart();
+  const { data: session } = useSession();
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+
+  const orderRef = `FSP-${Date.now().toString(36).toUpperCase()}`;
+  const orderDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  async function handleEmailOrder() {
+    const email = session?.user?.email;
+    if (!email) {
+      alert('Please sign in to email yourself the order.');
+      return;
+    }
+
+    setEmailStatus('sending');
+    try {
+      const res = await fetch('/api/email/send-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: email,
+          items: items.map((item) => ({
+            commonName: item.commonName,
+            botanicalName: item.botanicalName,
+            quantity: item.quantity,
+            containerSize: getSizeLabel(item.containerSize),
+            price: item.price,
+          })),
+          total,
+          nurseryName: 'Shooting Star Nursery',
+          date: orderDate,
+          ref: orderRef,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed to send');
+      setEmailStatus('sent');
+      setTimeout(() => setEmailStatus('idle'), 3000);
+    } catch {
+      setEmailStatus('error');
+      setTimeout(() => setEmailStatus('idle'), 3000);
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -51,14 +99,8 @@ export default function NurseryDemoPage() {
               </p>
             </div>
             <div className="text-right text-sm text-gray-400">
-              <p>
-                Date: {new Date().toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
-              <p className="mt-1">Ref: FSP-{Date.now().toString(36).toUpperCase()}</p>
+              <p>Date: {orderDate}</p>
+              <p className="mt-1">Ref: {orderRef}</p>
             </div>
           </div>
         </div>
@@ -144,13 +186,35 @@ export default function NurseryDemoPage() {
             <ArrowLeft className="h-4 w-4" />
             Back to my plants
           </Link>
-          <button
-            onClick={() => window.print()}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            <Printer className="h-4 w-4" />
-            Print
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              <Printer className="h-4 w-4" />
+              Print
+            </button>
+            <button
+              onClick={handleEmailOrder}
+              disabled={emailStatus === 'sending' || emailStatus === 'sent'}
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {emailStatus === 'sending' ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : emailStatus === 'sent' ? (
+                <Check className="h-4 w-4 text-green-600" />
+              ) : (
+                <Mail className="h-4 w-4" />
+              )}
+              {emailStatus === 'sending'
+                ? 'Sending…'
+                : emailStatus === 'sent'
+                  ? 'Sent!'
+                  : emailStatus === 'error'
+                    ? 'Failed — retry?'
+                    : 'Email to me'}
+            </button>
+          </div>
         </div>
       </main>
   );
