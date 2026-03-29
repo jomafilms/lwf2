@@ -3,7 +3,6 @@ import { getPlants, getValuesBulk } from '@/lib/api/lwf';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { PlantGridWithSlideOut } from '@/components/plants/PlantGridWithSlideOut';
 import { PlantFilters } from '@/components/plants/PlantFilters';
-import { PlantSearch } from '@/components/plants/PlantSearch';
 import { Pagination } from '@/components/plants/Pagination';
 import { CompareFloatingButton } from '@/components/plants/CompareFloatingButton';
 import { PlantCard } from '@/components/plants/PlantCard';
@@ -277,27 +276,6 @@ export default async function PlantsPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Browse Plants
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                Find fire-reluctant plants for your landscape
-              </p>
-            </div>
-          </div>
-
-          {/* Search */}
-          <div className="mt-4">
-            <PlantSearch initialSearch={params.search || ''} />
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {!showAllPlants ? (
           <>

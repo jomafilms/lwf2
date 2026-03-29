@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart/store';
-import { TreePine, Flame, MessageSquare, X, Maximize2 } from 'lucide-react';
+import { TreePine, Flame, MessageSquare, X, Maximize2, Search } from 'lucide-react';
 import { UserMenu } from './UserMenu';
 import { ChatPanel } from '@/components/agent/ChatPanel';
 
@@ -11,6 +12,42 @@ export function SiteNav() {
   const { count } = useCart();
   const [chatOpen, setChatOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const [query, setQuery] = useState(searchParams.get('search') || '');
+
+  // Sync query when URL search param changes
+  useEffect(() => {
+    setQuery(searchParams.get('search') || '');
+  }, [searchParams]);
+
+  const handleSearch = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      const params = new URLSearchParams(searchParams.toString());
+      if (query.trim()) {
+        params.set('search', query.trim());
+      } else {
+        params.delete('search');
+      }
+      params.delete('page');
+      // Always navigate to /plants with search
+      if (!params.has('showAll')) {
+        params.set('showAll', 'true');
+      }
+      router.push(`/plants?${params.toString()}`);
+    },
+    [query, router, searchParams]
+  );
+
+  const handleClear = useCallback(() => {
+    setQuery('');
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('search');
+    params.delete('page');
+    router.push(`/plants?${params.toString()}`);
+  }, [router, searchParams]);
 
   useEffect(() => {
     if (!chatOpen) return;
@@ -26,10 +63,33 @@ export function SiteNav() {
   return (
     <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-14">
-        <Link href="/" className="flex items-center gap-2 font-bold text-gray-900">
+        <Link href="/" className="flex items-center gap-2 font-bold text-gray-900 shrink-0">
           <Flame className="h-5 w-5 text-orange-500" />
           LWF
         </Link>
+
+        {/* Search input */}
+        <form onSubmit={handleSearch} className="hidden sm:flex items-center flex-1 max-w-sm mx-6">
+          <div className="relative w-full">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search plants..."
+              className="w-full pl-8 pr-8 py-1.5 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white focus:ring-1 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        </form>
 
         <div className="flex items-center gap-6 text-sm font-medium">
           <Link href="/plants" className="text-gray-600 hover:text-gray-900 transition-colors">
