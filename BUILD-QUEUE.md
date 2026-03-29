@@ -37,7 +37,7 @@
 
 ## 🔄 IN PROGRESS
 
-(spawning B3+B4)
+(spawning B5+B6+B7)
 
 ## 📋 PENDING (in priority order)
 
@@ -56,11 +56,7 @@
   
 - [x] **B3: P2-1 Landscaper dashboard** — merged 04:47 UTC (Sonnet)
 
-- [ ] **B4: P2-2 Nursery org management**
-  - Nursery profile pages, inventory upload (CSV), price management
-  - Connect nursery catalog to LWF plant database
-  - Show "available at" on plant cards with real pricing
-  - Task doc: `docs/tasks/todo/P2-nursery-management.md`
+- [x] **B4: P2-2 Nursery org management** — merged 04:55 UTC (Sonnet)
 
 - [ ] **B5: P2-5 City analytics dashboard**
   - Community-wide progress: properties assessed, scores over time
