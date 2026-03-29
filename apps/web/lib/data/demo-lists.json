@@ -1,0 +1,230 @@
+{
+  "generated": "2026-03-29T15:12:11.403Z",
+  "lists": [
+    {
+      "name": "City of Ashland — Restricted Plants",
+      "organization": {
+        "type": "city",
+        "name": "City of Ashland"
+      },
+      "description": "Plants that are restricted or prohibited within city limits due to fire risk, invasive nature, or local ordinances.",
+      "plants": [
+        {
+          "plantId": "5b2ca061-b5b7-40fa-9941-269c17c52413",
+          "commonName": "Abelia",
+          "botanicalName": "Abelia (syn Linnaea) spp.",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "1b78126d-1f69-44b0-a06b-47116e41270d",
+          "commonName": "Glossy abelia",
+          "botanicalName": "Abelia (syn Linnaea) x grandiflora",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "08fa60f5-0bb0-4b43-b1ab-eca47fc94c51",
+          "commonName": "White forsythia, Korean Abelia",
+          "botanicalName": "Abeliophyllum distichum",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "0783904c-e434-4536-b6cd-5e8b6283c8d3",
+          "commonName": "White fir",
+          "botanicalName": "Abies concolor",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "a39d5c68-d480-4cd7-986f-734b0e3416ac",
+          "commonName": "Spanish fir",
+          "botanicalName": "Abies pinsapo",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "68fa2b1d-9c12-4567-8ddb-6a18e3c2dc97",
+          "commonName": "Firs",
+          "botanicalName": "Abies spp.",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "731c5977-7de3-4797-b2a2-92aeb96a3309",
+          "commonName": "Velvetleaf",
+          "botanicalName": "Abutilon theophrasti",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "4c11c367-0d1a-4609-9000-49d94409e6cd",
+          "commonName": "Chinese Lantern, Flowering maple",
+          "botanicalName": "Abutilon x hybridum",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "69923d0f-ae24-44ab-8c03-2790223aed8b",
+          "commonName": "Fernleaf acacia & purple leaf acacia",
+          "botanicalName": "Acacia baileyana",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "cf3d95c7-c9f1-46b8-89bc-b935f14ea008",
+          "commonName": "Acacia",
+          "botanicalName": "Acacia spp.",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "e19e0841-98b6-404b-9ad6-571d88f94726",
+          "commonName": "Biddy-biddy",
+          "botanicalName": "Acaena novae-zelandiae",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "3c9f3823-40b0-4581-af44-63a1f198539e",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus mollis",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "5a520ca5-0fc0-454d-83ec-d9769b0a6af9",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus spp.",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "0e198be2-086f-4984-8d69-d9ec840ab8ac",
+          "commonName": "Pineapple Guava, Feijoa",
+          "botanicalName": "Acca (syn Feijoa) sellowiana",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "32ab9644-75de-4062-bccd-c3dd25fdbaa4",
+          "commonName": "Trident Maple",
+          "botanicalName": "Acer buergeranum",
+          "reason": "Requires evaluation for fire risk"
+        }
+      ]
+    },
+    {
+      "name": "Mountain Meadows HOA — Preferred Zone 0 Plants",
+      "organization": {
+        "type": "hoa",
+        "name": "Mountain Meadows HOA"
+      },
+      "description": "Community-approved plants for close-to-structure placement (0-5 feet). Low maintenance, deer resistant, and fire-reluctant.",
+      "plants": [
+        {
+          "plantId": "5b2ca061-b5b7-40fa-9941-269c17c52413",
+          "commonName": "Abelia",
+          "botanicalName": "Abelia (syn Linnaea) spp.",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "1b78126d-1f69-44b0-a06b-47116e41270d",
+          "commonName": "Glossy abelia",
+          "botanicalName": "Abelia (syn Linnaea) x grandiflora",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "08fa60f5-0bb0-4b43-b1ab-eca47fc94c51",
+          "commonName": "White forsythia, Korean Abelia",
+          "botanicalName": "Abeliophyllum distichum",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "0783904c-e434-4536-b6cd-5e8b6283c8d3",
+          "commonName": "White fir",
+          "botanicalName": "Abies concolor",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "a39d5c68-d480-4cd7-986f-734b0e3416ac",
+          "commonName": "Spanish fir",
+          "botanicalName": "Abies pinsapo",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "68fa2b1d-9c12-4567-8ddb-6a18e3c2dc97",
+          "commonName": "Firs",
+          "botanicalName": "Abies spp.",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "731c5977-7de3-4797-b2a2-92aeb96a3309",
+          "commonName": "Velvetleaf",
+          "botanicalName": "Abutilon theophrasti",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "4c11c367-0d1a-4609-9000-49d94409e6cd",
+          "commonName": "Chinese Lantern, Flowering maple",
+          "botanicalName": "Abutilon x hybridum",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "69923d0f-ae24-44ab-8c03-2790223aed8b",
+          "commonName": "Fernleaf acacia & purple leaf acacia",
+          "botanicalName": "Acacia baileyana",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "cf3d95c7-c9f1-46b8-89bc-b935f14ea008",
+          "commonName": "Acacia",
+          "botanicalName": "Acacia spp.",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "e19e0841-98b6-404b-9ad6-571d88f94726",
+          "commonName": "Biddy-biddy",
+          "botanicalName": "Acaena novae-zelandiae",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "3c9f3823-40b0-4581-af44-63a1f198539e",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus mollis",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "5a520ca5-0fc0-454d-83ec-d9769b0a6af9",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus spp.",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "0e198be2-086f-4984-8d69-d9ec840ab8ac",
+          "commonName": "Pineapple Guava, Feijoa",
+          "botanicalName": "Acca (syn Feijoa) sellowiana",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "32ab9644-75de-4062-bccd-c3dd25fdbaa4",
+          "commonName": "Trident Maple",
+          "botanicalName": "Acer buergeranum",
+          "reason": "HOA approved characteristics"
+        }
+      ]
+    },
+    {
+      "name": "Rogue Valley Native Fire-Reluctant Plants",
+      "organization": {
+        "type": "community",
+        "name": "Rogue Valley Fire Safe Council"
+      },
+      "description": "Native and adapted plants that provide good fire protection while supporting local ecosystems.",
+      "plants": [
+        {
+          "plantId": "f7bb1faa-18a1-4ec2-b4e8-c5a973c8f121",
+          "commonName": "Native Bleeding Heart",
+          "botanicalName": "Dicentra formosa",
+          "reason": "Native to Rogue Valley region • Good fire characteristics"
+        }
+      ]
+    },
+    {
+      "name": "Pollinator Garden — Fire-Safe Picks",
+      "organization": {
+        "type": "community",
+        "name": "Southern Oregon Pollinator Project"
+      },
+      "description": "Plants that support beneficial insects while maintaining fire-safe garden practices.",
+      "plants": []
+    }
+  ]
+}

@@ -7,6 +7,27 @@ interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
+/** GET /api/plans/[id] — get plan details */
+export async function GET(req: NextRequest, ctx: RouteContext) {
+  const { id } = await ctx.params;
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Verify plan ownership
+  const [plan] = await db
+    .select()
+    .from(plans)
+    .where(and(eq(plans.id, id), eq(plans.createdBy, user.id)));
+
+  if (!plan) {
+    return NextResponse.json({ error: "Plan not found" }, { status: 404 });
+  }
+
+  return NextResponse.json(plan);
+}
+
 /** PUT /api/plans/[id] — update plan */
 export async function PUT(req: NextRequest, ctx: RouteContext) {
   const { id } = await ctx.params;

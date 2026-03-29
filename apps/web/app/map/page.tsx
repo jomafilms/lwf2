@@ -9,8 +9,10 @@ import {
   type ParcelBoundary,
 } from "@/components/map/PropertyMap";
 import { ChatPanel } from "@/components/agent/ChatPanel";
+import { ScoresPanel } from "@/components/scoring/ScoresPanel";
 import { AssessmentWizard, AssessmentSummary, type AssessmentData } from "@/components/assessment";
 import { useSession } from "@/lib/auth-client";
+import type { PlanPlant } from "@/lib/scoring";
 import {
   ArrowLeft,
   MessageSquare,
@@ -46,6 +48,7 @@ export default function MapPage() {
   >("idle");
   const [savedData, setSavedData] = useState<SavedPropertyData | null>(null);
   const [planId, setPlanId] = useState<string | null>(null);
+  const [planPlants, setPlanPlants] = useState<PlanPlant[]>([]);
 
   // Parcel auto-detection state
   const [parcelBoundary, setParcelBoundary] = useState<ParcelBoundary | null>(null);
@@ -84,7 +87,18 @@ export default function MapPage() {
           fetch(`/api/properties/${propertyId}/plans`)
             .then((r) => r.ok ? r.json() : [])
             .then((plans: Array<{ id: string }>) => {
-              if (plans.length > 0) setPlanId(plans[0].id);
+              if (plans.length > 0) {
+                setPlanId(plans[0].id);
+                // Fetch plan details to get plant placements
+                fetch(`/api/plans/${plans[0].id}`)
+                  .then((r) => r.ok ? r.json() : null)
+                  .then((plan) => {
+                    if (plan?.plantPlacements) {
+                      setPlanPlants(plan.plantPlacements as PlanPlant[]);
+                    }
+                  })
+                  .catch(() => {});
+              }
             })
             .catch(() => {});
         })
@@ -383,6 +397,13 @@ export default function MapPage() {
                 Property found! Now draw your building footprint
               </p>
             </div>
+          </div>
+        )}
+
+        {/* Scores panel — appears when plan has plants */}
+        {planPlants.length > 0 && !chatOpen && (
+          <div className="absolute left-4 top-4 w-72 rounded-xl bg-white p-4 shadow-lg">
+            <ScoresPanel plants={planPlants} />
           </div>
         )}
 
