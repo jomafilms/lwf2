@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ClientProviders } from "@/components/ui/ClientProviders";
-import { FloatingChatButton } from "@/components/agent/FloatingChatButton";
 import { DemoRoleSelector } from "@/components/ui/DemoRoleSelector";
 import "./globals.css";
 
@@ -20,7 +19,6 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <ClientProviders>
           {children}
-          <FloatingChatButton />
           <DemoRoleSelector />
         </ClientProviders>
       </body>

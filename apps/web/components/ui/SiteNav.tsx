@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCart } from '@/lib/cart/store';
-import { TreePine, Flame } from 'lucide-react';
+import { TreePine, Flame, MessageSquare } from 'lucide-react';
 import { UserMenu } from './UserMenu';
 
 export function SiteNav() {
@@ -37,6 +37,9 @@ export function SiteNav() {
                 {count}
               </span>
             )}
+          </Link>
+          <Link href="/dashboard/chat" className="text-gray-600 hover:text-gray-900 transition-colors" title="Plant Advisor">
+            <MessageSquare className="h-5 w-5" />
           </Link>
           <UserMenu />
         </div>
