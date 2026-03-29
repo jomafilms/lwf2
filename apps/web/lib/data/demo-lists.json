@@ -1,19 +1,17 @@
-{"generated":"2026-03-29T20:13:00.000Z","lists":[
-{"name":"Zone 0 Safe Plants (0-5ft)","organization":{"type":"community","name":"Rogue Valley Fire-Ready Community"},"description":"Plants rated for the critical 0-5 foot zone closest to structures. From Charisse Sydoriak's curated fire-reluctant plant database.","plants":[
-{"plantId":"892fa211-7bb0-49ec-a394-c1d57e9e6865","commonName":"Aeonium","botanicalName":"Aeonium decorum, simsii","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
-{"plantId":"ceb38976-4d1a-4698-8b5c-99a73b34e0bb","commonName":"Carpet bugleweed","botanicalName":"Ajuga reptans","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
-{"plantId":"4cb70785-0d00-4b48-9280-6b392d1938d8","commonName":"Hooker's, tapper tipped onion","botanicalName":"Allium acuminatum","reason":"Oregon native, Zone 0, deer resistant","imageUrl":null},
-{"plantId":"f51d4bd2-926b-49e6-823f-0b6acc70d3a5","commonName":"Nodding onion","botanicalName":"Allium cernum","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
-{"plantId":"bb0df762-0c8a-458a-b53f-c814f581b9a1","commonName":"Chives","botanicalName":"Allium schoenoprasum","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
-{"plantId":"f3d94486-79c5-4ff3-b075-fb20bd50fcc2","commonName":"Dwarf aloe","botanicalName":"Aloe aristata","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
-{"plantId":"a219fb3f-ff71-47f0-89bb-a7791752d934","commonName":"Mountain pride","botanicalName":"Penstemon newberryi","reason":"Oregon native, Zone 0, deer resistant","imageUrl":null},
-{"plantId":"2764359a-878c-4ecc-a3a0-0a97bf235b81","commonName":"Rock penstemon","botanicalName":"Penstemon rupicola","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
-{"plantId":"b668f64c-3542-4c94-bd49-4e7142b152ff","commonName":"Rock soapwort","botanicalName":"Saponaria ocymoides","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
-{"plantId":"9aff30db-0d0a-454e-a491-a4432d6c5422","commonName":"Yerba buena","botanicalName":"Satureja douglasii","reason":"Oregon native, Zone 0, deer resistant","imageUrl":null},
-{"plantId":"ffcc59ae-6056-448a-8039-f918016a5ee5","commonName":"Green stonecrop","botanicalName":"Sedum album","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
-{"plantId":"f63accbe-716f-4572-b40e-3eff14d83938","commonName":"Broadleaf stonecrop","botanicalName":"Sedum spathulifolium","reason":"Oregon native, Zone 0, deer resistant","imageUrl":null}]},
-{"name":"Oregon Native — Deer Resistant, Zone 0","organization":{"type":"hoa","name":"Mountain Meadows HOA"},"description":"Oregon native plants that are both deer resistant and rated for Zone 0 (0-5ft). Ideal for the most critical area near your home.","plants":[
-{"plantId":"4cb70785-0d00-4b48-9280-6b392d1938d8","commonName":"Hooker's, tapper tipped onion","botanicalName":"Allium acuminatum","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
+{"generated":"2026-03-29T22:00:00.000Z","lists":[
+{"name":"Zone 0 Best Picks — Charisse's Top 10","organization":{"type":"community","name":"Rogue Valley Fire-Ready Community"},"description":"The best plants for 0-5ft from your structure. Each one is native, deer resistant, pollinator-friendly, and low-water. Hand-picked from Charisse Sydoriak's database.","plants":[
+{"plantId":"4cb70785-0d00-4b48-9280-6b392d1938d8","commonName":"Hooker's onion","botanicalName":"Allium acuminatum","reason":"Native, deer resistant, pollinator, low water","imageUrl":null},
+{"plantId":"a219fb3f-ff71-47f0-89bb-a7791752d934","commonName":"Mountain pride","botanicalName":"Penstemon newberryi","reason":"Native, deer resistant, pollinator, low water","imageUrl":null},
+{"plantId":"9aff30db-0d0a-454e-a491-a4432d6c5422","commonName":"Yerba buena","botanicalName":"Satureja douglasii","reason":"Native, deer resistant, pollinator, low water","imageUrl":null},
+{"plantId":"2813e848-d06a-4f45-a5bd-5678d456d609","commonName":"Cascade stonecrop","botanicalName":"Sedum divergens","reason":"Native, deer resistant, pollinator, low water","imageUrl":null},
+{"plantId":"aff38a65-b468-4782-bce9-f3778a92932c","commonName":"Crown brodiaea","botanicalName":"Brodiaea coronaria","reason":"Native, deer resistant, pollinator, low water","imageUrl":null},
+{"plantId":"56eb4f9b-43e9-45af-b3bd-142a99b7d219","commonName":"Rock cress","botanicalName":"Aubrieta deltoidea","reason":"Deer resistant, pollinator, low water","imageUrl":null},
+{"plantId":"ceb38976-4d1a-4698-8b5c-99a73b34e0bb","commonName":"Carpet bugleweed","botanicalName":"Ajuga reptans","reason":"Deer resistant, pollinator, low water","imageUrl":null},
+{"plantId":"249ccc2f-6c27-45e5-bcc7-c5fd5439f8a5","commonName":"Wild strawberry","botanicalName":"Fragaria chiloensis","reason":"Native, deer resistant, Zone 0","imageUrl":null},
+{"plantId":"5ce4ac1c-dd06-41b6-8af1-5ce641619149","commonName":"Bitterroot lewisia","botanicalName":"Lewisia rediviva","reason":"Native, deer resistant, Zone 0","imageUrl":null},
+{"plantId":"e09ef354-9148-407c-8585-7a0c9635a2e4","commonName":"Mountain violet","botanicalName":"Viola purpurea","reason":"Native, deer resistant, pollinator","imageUrl":null}]},
+{"name":"Oregon Native — Deer Resistant, Zone 0","organization":{"type":"hoa","name":"Mountain Meadows HOA"},"description":"Oregon native plants that are both deer resistant and rated for the most critical zone near structures.","plants":[
+{"plantId":"4cb70785-0d00-4b48-9280-6b392d1938d8","commonName":"Hooker's onion","botanicalName":"Allium acuminatum","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
 {"plantId":"a219fb3f-ff71-47f0-89bb-a7791752d934","commonName":"Mountain pride","botanicalName":"Penstemon newberryi","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
 {"plantId":"9aff30db-0d0a-454e-a491-a4432d6c5422","commonName":"Yerba buena","botanicalName":"Satureja douglasii","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
 {"plantId":"f63accbe-716f-4572-b40e-3eff14d83938","commonName":"Broadleaf stonecrop","botanicalName":"Sedum spathulifolium","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
@@ -21,19 +19,17 @@
 {"plantId":"249ccc2f-6c27-45e5-bcc7-c5fd5439f8a5","commonName":"Wild strawberry","botanicalName":"Fragaria chiloensis","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
 {"plantId":"80c3a509-9978-49f2-888b-d3d0e274d3f4","commonName":"Woodland strawberry","botanicalName":"Fragaria vesca","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
 {"plantId":"5ce4ac1c-dd06-41b6-8af1-5ce641619149","commonName":"Bitterroot lewisia","botanicalName":"Lewisia rediviva","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null}]},
-{"name":"City of Ashland — Restricted Plants","organization":{"type":"city","name":"City of Ashland"},"description":"Plants restricted or requiring special consideration within city limits due to high fire risk characteristics.","plants":[
+{"name":"City of Ashland — Restricted Plants","organization":{"type":"city","name":"City of Ashland"},"description":"Plants restricted within city limits due to high fire risk. Avoid planting these near structures.","plants":[
 {"plantId":"c0e2bf4f-e3e4-49d2-8726-c27854ed9229","commonName":"Juniper Grevillea","botanicalName":"Grevillea junipera","reason":"High flammability — restricted near structures","imageUrl":null},
 {"plantId":"d3ba0237-7a90-4edd-82bf-9da0f1b3e474","commonName":"Creeping junipers","botanicalName":"Juniperus groundcover spp.","reason":"High flammability — restricted near structures","imageUrl":null},
 {"plantId":"d0c5d202-5bce-42fc-89e6-c655049d77ba","commonName":"Junipers","botanicalName":"Juniperus shrub & tree spp.","reason":"High flammability — restricted near structures","imageUrl":null}]},
-{"name":"Native Pollinator Plants — Fire-Reluctant","organization":{"type":"community","name":"Ashland Pollinator Alliance"},"description":"Oregon native plants that support pollinators while maintaining fire-reluctant characteristics. All rated for Zones 0-30ft.","plants":[
-{"plantId":"d3340605-efbb-4da9-87e5-b310d7792cd6","commonName":"Common yarrow","botanicalName":"Achillea millefolium","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"b9568b79-a7a8-4ce2-acf1-1ebe6d0153b8","commonName":"Oregon vine maple","botanicalName":"Acer circinatum","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"b12d6857-d986-4bbe-865f-03700da7e1f9","commonName":"Pacific serviceberry","botanicalName":"Amelanchier alnifolia","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"eab9f25e-1a0f-49e2-8a18-0ac1947a470e","commonName":"Sea thrift","botanicalName":"Armeria maritima","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"249ccc2f-6c27-45e5-bcc7-c5fd5439f8a5","commonName":"Wild strawberry","botanicalName":"Fragaria chiloensis","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"1cb91bde-6544-4524-ab47-51e2ee3bac43","commonName":"Owl's clover","botanicalName":"Orthocarpus spp.","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"93e5e4ab-d372-47bc-b33a-4686841c4fba","commonName":"Oregon boxwood","botanicalName":"Paxistima myrsinites","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"a219fb3f-ff71-47f0-89bb-a7791752d934","commonName":"Mountain pride","botanicalName":"Penstemon newberryi","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"9aff30db-0d0a-454e-a491-a4432d6c5422","commonName":"Yerba buena","botanicalName":"Satureja douglasii","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null},
-{"plantId":"f63accbe-716f-4572-b40e-3eff14d83938","commonName":"Broadleaf stonecrop","botanicalName":"Sedum spathulifolium","reason":"Oregon native, pollinator support, fire-reluctant","imageUrl":null}]}
+{"name":"Native Pollinator Plants — Fire-Reluctant","organization":{"type":"community","name":"Ashland Pollinator Alliance"},"description":"Oregon native plants that support pollinators while maintaining fire-reluctant characteristics.","plants":[
+{"plantId":"d3340605-efbb-4da9-87e5-b310d7792cd6","commonName":"Common yarrow","botanicalName":"Achillea millefolium","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
+{"plantId":"b9568b79-a7a8-4ce2-acf1-1ebe6d0153b8","commonName":"Oregon vine maple","botanicalName":"Acer circinatum","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
+{"plantId":"b12d6857-d986-4bbe-865f-03700da7e1f9","commonName":"Pacific serviceberry","botanicalName":"Amelanchier alnifolia","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
+{"plantId":"eab9f25e-1a0f-49e2-8a18-0ac1947a470e","commonName":"Sea thrift","botanicalName":"Armeria maritima","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
+{"plantId":"249ccc2f-6c27-45e5-bcc7-c5fd5439f8a5","commonName":"Wild strawberry","botanicalName":"Fragaria chiloensis","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
+{"plantId":"93e5e4ab-d372-47bc-b33a-4686841c4fba","commonName":"Oregon boxwood","botanicalName":"Paxistima myrsinites","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
+{"plantId":"a219fb3f-ff71-47f0-89bb-a7791752d934","commonName":"Mountain pride","botanicalName":"Penstemon newberryi","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
+{"plantId":"9aff30db-0d0a-454e-a491-a4432d6c5422","commonName":"Yerba buena","botanicalName":"Satureja douglasii","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null}]}
 ]}

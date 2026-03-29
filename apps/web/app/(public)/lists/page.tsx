@@ -108,55 +108,41 @@ export default function PublicListsPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Browse Plant Lists
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Plant Collections
           </h1>
-          <p className="text-gray-600 max-w-2xl">
-            Discover curated plant collections from homeowners, HOAs, nurseries, and fire-safe communities. 
-            Save lists you like to your personal library.
+          <p className="text-sm text-gray-500">
+            Curated plant lists from local experts, HOAs, and fire-safe communities
           </p>
         </div>
 
         {/* Featured Lists */}
         {featuredLists.length > 0 && (
-          <section className="mb-12">
-            <div className="flex items-center gap-2 mb-6">
-              <Star className="w-5 h-5 text-yellow-500" />
-              <h2 className="text-xl font-semibold text-gray-900">Featured Collections</h2>
+          <section className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Star className="w-4 h-4 text-yellow-500" />
+              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Featured Collections</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {featuredLists.map((list, index) => (
-                <div
+                <Link
                   key={index}
-                  className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                  href={`/lists/featured/${index}`}
+                  className="group bg-white rounded-lg border border-gray-200 hover:border-orange-200 hover:shadow-md transition-all p-4"
                 >
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-semibold text-gray-900 leading-tight">
-                        {list.name}
-                      </h3>
-                      <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full flex-shrink-0">
-                        Featured
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">{list.description}</p>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{list.organization.name}</span>
-                      <span className="bg-gray-100 px-2 py-1 rounded">
-                        {list.plants.length} plants
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs px-1.5 py-0.5 bg-yellow-100 text-yellow-700 rounded font-medium">
+                      {ORG_TYPE_LABELS[list.organization.type] || "Community"}
+                    </span>
+                    <span className="text-xs text-gray-400">{list.plants.length} plants</span>
                   </div>
-                  <div className="px-6 pb-4">
-                    <Link
-                      href={`/lists/featured/${index}`} // We'll create this route
-                      className="text-orange-600 hover:text-orange-700 text-sm font-medium"
-                    >
-                      View Collection →
-                    </Link>
-                  </div>
-                </div>
+                  <h3 className="font-semibold text-sm text-gray-900 group-hover:text-orange-600 transition-colors leading-snug mb-1">
+                    {list.name}
+                  </h3>
+                  <p className="text-xs text-gray-500 line-clamp-2">{list.description}</p>
+                  <p className="text-xs text-gray-400 mt-2">{list.organization.name}</p>
+                </Link>
               ))}
             </div>
           </section>
@@ -211,7 +197,7 @@ export default function PublicListsPage() {
         </div>
 
         {/* Results */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredLists.map((list) => {
             const VisibilityIcon = VISIBILITY_ICONS[list.visibility];
             
