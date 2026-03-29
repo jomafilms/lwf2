@@ -56,13 +56,13 @@ export async function GET(
       .where(eq(orgMembers.orgId, orgId));
 
     // Calculate aggregate scores
-    const scoresData = membersWithProperties.filter(m => m.complianceScore !== null);
+    const scoresData = membersWithProperties.filter(m => m.readinessScore !== null);
     const avgScore = scoresData.length > 0 
-      ? scoresData.reduce((sum, m) => sum + m.complianceScore!, 0) / scoresData.length 
+      ? scoresData.reduce((sum, m) => sum + m.readinessScore!, 0) / scoresData.length 
       : 0;
 
     // Calculate assessment progress
-    const propertiesWithAssessments = membersWithProperties.filter(m => m.complianceScore !== null).length;
+    const propertiesWithAssessments = membersWithProperties.filter(m => m.readinessScore !== null).length;
     const totalProperties = membersWithProperties.filter(m => m.propertyId !== null).length;
     const assessmentProgress = totalProperties > 0 ? (propertiesWithAssessments / totalProperties) * 100 : 0;
 
