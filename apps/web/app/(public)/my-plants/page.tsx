@@ -1,11 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useCart, CONTAINER_SIZES, formatPrice } from '@/lib/cart/store';
-import { TreePine, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { TreePine, Trash2, ShoppingBag, ArrowRight, ChevronDown } from 'lucide-react';
+
+const LOCAL_NURSERIES = [
+  { id: 'shooting-star', name: 'Shooting Star Nursery', city: 'Central Point, OR' },
+  { id: 'ashland-greenhouses', name: 'Ashland Greenhouses', city: 'Ashland, OR' },
+  { id: 'valley-view', name: 'Valley View Nursery', city: 'Ashland, OR' },
+];
 export default function MyPlantsPage() {
   const { items, count, total, removeFromCart, updateQuantity, updateContainerSize, clearCart } =
     useCart();
+  const [selectedNursery, setSelectedNursery] = useState(LOCAL_NURSERIES[0]);
 
   if (count === 0) {
     return (
@@ -142,12 +150,34 @@ export default function MyPlantsPage() {
           <p className="text-xs text-gray-400 mb-4">
             Prices are estimates based on typical nursery pricing. Actual prices may vary.
           </p>
+
+          {/* Nursery selector */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Send to your preferred nursery
+            </label>
+            <div className="relative">
+              <select
+                value={selectedNursery.id}
+                onChange={(e) => setSelectedNursery(LOCAL_NURSERIES.find(n => n.id === e.target.value) || LOCAL_NURSERIES[0])}
+                className="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-3 pr-10 text-sm text-gray-900 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+              >
+                {LOCAL_NURSERIES.map((nursery) => (
+                  <option key={nursery.id} value={nursery.id}>
+                    {nursery.name} — {nursery.city}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            </div>
+          </div>
+
           <Link
             href="/nursery-demo"
             className="flex items-center justify-center gap-2 w-full rounded-lg bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange-700 transition-colors"
           >
             <ShoppingBag className="h-4 w-4" />
-            Send to Shooting Star Nursery
+            Send to {selectedNursery.name}
           </Link>
         </div>
       </main>
