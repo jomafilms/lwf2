@@ -76,6 +76,12 @@ export default async function DashboardPage() {
       icon: Home,
     },
     {
+      href: "/dashboard/certification",
+      label: "Insurance & Certification",
+      description: "Track Wildfire Prepared Home certification progress",
+      icon: Shield,
+    },
+    {
       href: "/my-plants",
       label: "My Plants",
       description: "Your saved plants and lists",
@@ -91,7 +97,7 @@ export default async function DashboardPage() {
       href: "/dashboard/hoa",
       label: "HOA & Community",
       description: "Community compliance tracking and progress",
-      icon: Shield,
+      icon: FileText,
     },
     {
       href: "/dashboard/preferences",
