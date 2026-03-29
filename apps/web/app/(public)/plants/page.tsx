@@ -98,17 +98,14 @@ async function fetchPlantsWithValues(searchParams: SearchParams) {
       return { plants: [], total: 0, page: 1, valuesMap: {} };
     }
 
-    // Step 3: Fetch the actual plant objects for matching IDs
-    // API doesn't support filtering by IDs, so fetch all and filter
-    const plantsResponse = await getPlants({
-      search: searchParams.search || undefined,
-      limit: 1000,
-      offset: 0,
-      includeImages: true,
-    });
-
+    // Step 3: Fetch ALL plant objects (two pages since API max is 1000)
     const matchingSet = new Set(matchingIds);
-    const plants = plantsResponse.data.filter(p => matchingSet.has(p.id));
+    const [page1, page2] = await Promise.all([
+      getPlants({ search: searchParams.search || undefined, limit: 1000, offset: 0, includeImages: true }),
+      getPlants({ search: searchParams.search || undefined, limit: 1000, offset: 1000, includeImages: true }),
+    ]);
+    const allPlants = [...page1.data, ...page2.data];
+    const plants = allPlants.filter(p => matchingSet.has(p.id));
 
     // Step 4: Fetch display attribute values for the matching plants
     let valuesMap: Record<string, ResolvedValue[]> = {};
@@ -188,6 +185,9 @@ function matchesFilters(values: ResolvedValue[], params: SearchParams): boolean 
 // filterPlants is now handled inside fetchPlantsWithValues via matchesFilters
 
 // ─── Page ────────────────────────────────────────────────────────────────────
+
+// ISR: cache for 5 minutes, rebuild in background
+export const revalidate = 300;
 
 export const metadata = {
   title: 'Browse Plants — FireScape',
