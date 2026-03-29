@@ -1,4 +1,51 @@
-{
-  "generated": "2026-03-29T19:17:00.000Z",
-  "lists": []
-}
+{"generated":"2026-03-29T20:13:00.000Z","lists":[
+{"name":"Zone 0 Safe Plants (0-5ft)","organization":{"type":"community","name":"Rogue Valley Fire-Ready Community"},"description":"Plants rated for the critical 0-5 foot zone closest to structures. These require regular maintenance and proper spacing.","plants":[
+{"plantId":"892fa211-7bb0-49ec-a394-c1d57e9e6865","commonName":"Aeonium","botanicalName":"Aeonium decorum, simsii","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"ceb38976-4d1a-4698-8b5c-99a73b34e0bb","commonName":"Carpet bugleweed","botanicalName":"Ajuga reptans","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"4cb70785-0d00-4b48-9280-6b392d1938d8","commonName":"Hooker's, tapper tipped onion","botanicalName":"Allium acuminatum","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"f51d4bd2-926b-49e6-823f-0b6acc70d3a5","commonName":"Nodding onion","botanicalName":"Allium cernum","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"d59a48e4-8947-455f-bf64-6ee711fb1bf2","commonName":"Star of Persia allium","botanicalName":"Allium cristophii","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"88403139-a113-47f2-ab23-a837110cb93e","commonName":"Ivory Queen allium","botanicalName":"Allium karataviense","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"bb0df762-0c8a-458a-b53f-c814f581b9a1","commonName":"Chives","botanicalName":"Allium schoenoprasum","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"81d4edb4-e7ea-4d72-ba85-0cb29a2c6c83","commonName":"Ornamental alliums, onions","botanicalName":"Allium spp.","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"f3d94486-79c5-4ff3-b075-fb20bd50fcc2","commonName":"Dwarf aloe","botanicalName":"Aloe aristata","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"a219fb3f-ff71-47f0-89bb-a7791752d934","commonName":"Mountain pride","botanicalName":"Penstemon newberryi","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"2764359a-878c-4ecc-a3a0-0a97bf235b81","commonName":"Rock penstemon","botanicalName":"Penstemon rupicola","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"b668f64c-3542-4c94-bd49-4e7142b152ff","commonName":"Rock soapwort","botanicalName":"Saponaria ocymoides","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"21d2bde2-f49d-4ef4-9958-d6db2b52a643","commonName":"Bouncing bett","botanicalName":"Saponaria officinalis","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"9aff30db-0d0a-454e-a491-a4432d6c5422","commonName":"Yerba buena","botanicalName":"Satureja (syn Clinopodium) douglasii","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null},
+{"plantId":"ffcc59ae-6056-448a-8039-f918016a5ee5","commonName":"Green stonecrop","botanicalName":"Sedum album","reason":"Rated for Zone 0 (0-5ft from structure)","imageUrl":null}]},
+{"name":"Mountain Meadows HOA — Preferred Plants","organization":{"type":"hoa","name":"Mountain Meadows HOA"},"description":"Plants recommended by Mountain Meadows HOA for fire-reluctant landscaping in our community.","plants":[
+{"plantId":"e02a9fad-1da0-4760-96c1-87195aca9800","commonName":"Hardy kiwi","botanicalName":"Actinidia arguta, kolomikta","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"feed60cf-9e10-47ce-b3c6-c3dd2a04e135","commonName":"Chamise, greasewood","botanicalName":"Adenostoma fasciculatum","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"eb172ca0-2f10-4cad-b486-c25be7aa83f4","commonName":"Red shanks","botanicalName":"Adenostoma sparisfolium","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"96ccb7df-8396-4d14-ad96-abb030e9d8fc","commonName":"Pheasant's eye","botanicalName":"Adonis aestivalis","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"4c000ab5-b051-403d-bac7-1ac43cec5059","commonName":"Jointed goatgrass","botanicalName":"Aegilops cylindrica","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"234f45d4-de34-42bc-b7a6-0877048104bf","commonName":"Flowering horsechestnut","botanicalName":"Aesculus x carnea","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"12ada2a0-3d8f-48aa-b5c1-e39aae6ecd8a","commonName":"Fern pine","botanicalName":"Afrocarpus elongatus","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"7399411b-d02b-4f9a-a90d-48a80a4e31b0","commonName":"Dwarf Liliy of the Valley","botanicalName":"Agapanthus TBD","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"27648f2c-63ff-4dc1-a032-98d4048b38c0","commonName":"Lily of the Nile","botanicalName":"Agapanthus africanus, campanulatus,","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"b5dd1e05-b708-4d11-be93-788e380e996c","commonName":"Lily of the Nile","botanicalName":"Agapanthus praecox","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"eaa6c6b9-77bc-47bc-a838-c2c0d39934d4","commonName":"Lily-of-the-nile","botanicalName":"Agapanthus spp.","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"54cd9392-fb72-4ec2-b36b-89101641d8c7","commonName":"Bubblegum mint","botanicalName":"Agastache cana","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"40da82c0-8e87-494a-80ec-07cba26a840f","commonName":"Licorice mint","botanicalName":"Agastache rupestris","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"701a9824-7d9a-4226-be95-e05dd2271e52","commonName":"Kudos yellow, Kudos ambrosia","botanicalName":"Agastache spp.","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null},
+{"plantId":"44cd5488-053e-4450-9bb6-5188a594826c","commonName":"Century plant","botanicalName":"Agave americana","reason":"HOA approved for fire-reluctant landscaping","imageUrl":null}]},
+{"name":"City of Ashland — Restricted Plants","organization":{"type":"city","name":"City of Ashland"},"description":"Plants restricted or requiring special consideration within city limits due to fire risk characteristics.","plants":[
+{"plantId":"c0e2bf4f-e3e4-49d2-8726-c27854ed9229","commonName":"Juniper Grevillea","botanicalName":"Grevillea junipera","reason":"High flammability — restricted near structures","imageUrl":null},
+{"plantId":"d3ba0237-7a90-4edd-82bf-9da0f1b3e474","commonName":"Creeping junipers","botanicalName":"Juniperus groundcover (<1 ft tall) spp.","reason":"High flammability — restricted near structures","imageUrl":null},
+{"plantId":"d0c5d202-5bce-42fc-89e6-c655049d77ba","commonName":"Junipers","botanicalName":"Juniperus shrub & tree spp.","reason":"High flammability — restricted near structures","imageUrl":null}]},
+{"name":"Pollinator Garden — Fire-Reluctant Picks","organization":{"type":"community","name":"Ashland Pollinator Alliance"},"description":"Plants that support pollinators while maintaining fire-reluctant characteristics for your landscape.","plants":[
+{"plantId":"f7fe1141-0c50-4dc8-88d3-e90a86a6709c","commonName":"Japanese barberry","botanicalName":"Berberis thunbergii","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"60f49f52-ef19-4563-99c8-ef2a34d57c74","commonName":"Royal burgandy & Crimson Pygmy (dwarf varieties)","botanicalName":"Berberis thunbergii","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"393fed9c-425c-4fb9-b2ec-24dab3557222","commonName":null,"botanicalName":"Berberis vulgaris","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"b854fc18-4f15-433a-93f5-a80a4b7db350","commonName":"Heartleaf bergenia","botanicalName":"Bergenia cordifolia","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"2672b10f-cfb9-44de-9946-d8f9af24dbe4","commonName":"Jacquemontii birch","botanicalName":"Betula jacquemontii","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"9429d893-e6fb-41a2-9408-9672a2a9eb33","commonName":"Heritage river birch","botanicalName":"Betula nigra","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"9268971b-c478-4478-9a37-2df2eb99ddf4","commonName":"Water birch","botanicalName":"Betula occidentalis","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"7d384757-c204-48da-8bfd-2246a8adf93c","commonName":"Paperbark birch","botanicalName":"Betula papyrifera","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"2e5d32e2-3f06-47d5-89e4-624cfa172c60","commonName":"European white birch","botanicalName":"Betula pendula","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"3769af8c-31df-49cb-bd11-428c9d2f1688","commonName":"Birch","botanicalName":"Betula spp.","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"a1bac233-bf28-463f-af78-c094b6f086ff","commonName":"Deer Fern","botanicalName":"Blechnum (syn Struthiopteris) spicant","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null},
+{"plantId":"4ac54e64-0a3a-46d1-91fb-c9c8be4a90bf","commonName":"Common borage","botanicalName":"Borago officinalis","reason":"Supports pollinators with fire-reluctant characteristics","imageUrl":null}]}
+]}
