@@ -37,7 +37,7 @@
 
 ## 🔄 IN PROGRESS
 
-(none — spawning next batch)
+(spawning B3+B4)
 
 ## 📋 PENDING (in priority order)
 
@@ -51,19 +51,8 @@
 
 ### Priority B — Overnight autonomous build (9:05-14:00 UTC)
 
-- [ ] **B1: P2-3 Compliance document generation**
-  - Generate CC&R-compatible landscaping rules for HOAs
-  - Dennis's #1 ask: "adoptable by association governing documents"
-  - Generate property-specific compliance reports
-  - Include: zone map, plant list per zone, spacing diagrams, maintenance schedule, source citations
-  - Task doc: `docs/tasks/todo/P2-compliance-docs.md`
-
-- [ ] **B2: P2-4 HOA dashboard**
-  - Neighborhood-level view: how many properties assessed, compliance rates
-  - HOA admin can invite residents
-  - Aggregate scoring across properties
-  - Progress tracking toward community goals (90% in 10 years)
-  - Task doc: `docs/tasks/todo/P2-hoa-dashboard.md`
+- [x] **B1: P2-3 Compliance document generation** — merged 04:39 UTC (Sonnet)
+- [x] **B2: P2-4 HOA dashboard** — merged 04:39 UTC (Sonnet)
   
 - [ ] **B3: P2-1 Landscaper dashboard**
   - Professional tools: client list, plan submissions, plant sourcing
