@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { db, orders, nurseryOrganizations } from "@lwf/database";
+import { db, orders, orgs, orgMembers } from "@lwf/database";
 import { eq, desc, and } from "drizzle-orm";
 import { NurseryOrdersManager } from "@/components/marketplace/NurseryOrdersManager";
 
@@ -13,10 +13,12 @@ export default async function NurseryOrdersPage() {
   }
 
   // Check if user is associated with a nursery
-  const userNurseries = await db
-    .select()
-    .from(nurseryOrganizations)
-    .where(eq(nurseryOrganizations.ownerId, user.id));
+  const userNurseryMemberships = await db
+    .select({ org: orgs })
+    .from(orgMembers)
+    .innerJoin(orgs, eq(orgMembers.orgId, orgs.id))
+    .where(eq(orgMembers.userId, user.id));
+  const userNurseries = userNurseryMemberships.map((m) => m.org);
 
   if (userNurseries.length === 0) {
     return (
@@ -58,7 +60,7 @@ export default async function NurseryOrdersPage() {
       </div>
 
       <Suspense fallback={<div>Loading orders...</div>}>
-        <NurseryOrdersManager nursery={nursery} orders={nurseryOrders} />
+        <NurseryOrdersManager nursery={nursery as any} orders={nurseryOrders as any} />
       </Suspense>
     </div>
   );

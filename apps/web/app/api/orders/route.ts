@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
     const totalAmount = orderItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
     // Determine customer type (basic heuristic)
-    const customerType = user.roles?.includes('landscaper') ? 'landscaper' : 'homeowner';
+    const customerType = (user as unknown as { roles?: string[] }).roles?.includes('landscaper') ? 'landscaper' as const : 'homeowner' as const;
 
     // Create order
     const [newOrder] = await db

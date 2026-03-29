@@ -6,13 +6,14 @@ import { eq, desc } from "drizzle-orm";
 import { PlanDesignInterface } from "@/components/canvas/PlanDesignInterface";
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     property?: string;
     plan?: string;
-  };
+  }>;
 }
 
 export default async function PlanDesignPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams;
   const user = await getCurrentUser();
 
   if (!user) {
@@ -23,23 +24,23 @@ export default async function PlanDesignPage({ searchParams }: PageProps) {
   let selectedProperty = null;
   let existingPlan = null;
 
-  if (searchParams.property) {
+  if (resolvedParams.property) {
     // Load specific property
     const [property] = await db
       .select()
       .from(properties)
-      .where(eq(properties.id, searchParams.property))
+      .where(eq(properties.id, resolvedParams.property))
       .limit(1);
 
     if (property && property.ownerId === user.id) {
       selectedProperty = property;
 
       // Load existing plan if specified
-      if (searchParams.plan) {
+      if (resolvedParams.plan) {
         const [plan] = await db
           .select()
           .from(plans)
-          .where(eq(plans.id, searchParams.plan))
+          .where(eq(plans.id, resolvedParams.plan))
           .limit(1);
 
         if (plan && plan.propertyId === property.id) {
@@ -97,7 +98,7 @@ export default async function PlanDesignPage({ searchParams }: PageProps) {
       <Suspense fallback={<div>Loading design canvas...</div>}>
         <PlanDesignInterface 
           property={selectedProperty} 
-          existingPlan={existingPlan}
+          existingPlan={existingPlan as any}
         />
       </Suspense>
     </div>

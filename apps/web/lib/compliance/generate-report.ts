@@ -290,7 +290,7 @@ function generateSources(propertyLocation?: { lat: number; lng: number }): strin
         }
 
         // Add county-specific building codes
-        config.resources.buildingCodes?.forEach(code => {
+        config.resources.buildingCodes?.forEach((code: string) => {
           baseSources.push(code);
         });
       }

@@ -350,12 +350,12 @@ export function ShootingStarMarketplace({ nursery }: ShootingStarMarketplaceProp
                   plantId={plant.lwfPlantId || plant.id}
                   plantName={plant.commonName}
                   nurseryId={nursery.id}
-                  options={plant.sizes.map(size => ({
+                  options={plant.sizes.map((size: any) => ({
                     size: size.size,
                     price: size.price,
                     availability: size.status,
                     leadTime: size.status === 'out-of-stock' ? 'Out of stock' : undefined
-                  }))}
+                  })) as any}
                   className="w-full"
                   size="sm"
                 />

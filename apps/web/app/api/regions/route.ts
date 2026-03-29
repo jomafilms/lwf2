@@ -25,9 +25,9 @@ export async function GET() {
     
     return NextResponse.json({
       counties: counties.map(({ key, config }) => ({
+        ...config,
         key,
         name: `${config.name}, ${config.state}`,
-        ...config
       }))
     });
   } catch (error) {

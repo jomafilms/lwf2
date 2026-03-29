@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { properties, plans } from "./core";
-import { nurseryOrganizations } from "./nurseries";
+import { nurseries } from "./nurseries";
 
 /**
  * Orders table - tracks purchase requests from homeowners/landscapers to nurseries
@@ -26,7 +26,7 @@ export const orders = pgTable("orders", {
   }).notNull(),
   
   // Fulfillment
-  nurseryId: uuid("nursery_id").references(() => nurseryOrganizations.id),
+  nurseryId: uuid("nursery_id").references(() => nurseries.id),
   status: text("status", {
     enum: ["draft", "submitted", "confirmed", "fulfilled", "cancelled"]
   }).default("draft"),
@@ -65,7 +65,7 @@ export const cartSessions = pgTable("cart_sessions", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: text("user_id").references(() => user.id),
   sessionId: text("session_id"), // for anonymous users
-  nurseryId: uuid("nursery_id").references(() => nurseryOrganizations.id),
+  nurseryId: uuid("nursery_id").references(() => nurseries.id),
   items: jsonb("items").$type<CartItem[]>().default([]),
   propertyContext: jsonb("property_context").$type<PropertyContext>(),
   expiresAt: timestamp("expires_at").notNull(),
