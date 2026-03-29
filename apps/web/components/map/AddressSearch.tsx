@@ -8,12 +8,14 @@ interface AddressSearchProps {
   onSelect: (result: GeocodingResult) => void;
   className?: string;
   compact?: boolean;
+  placeholder?: string;
 }
 
 export function AddressSearch({
   onSelect,
   className = "",
   compact = false,
+  placeholder,
 }: AddressSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<GeocodingResult[]>([]);
@@ -68,7 +70,7 @@ export function AddressSearch({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            placeholder={compact ? "Search address..." : "Enter your address..."}
+            placeholder={placeholder || (compact ? "Search address..." : "Enter your address...")}
             className={inputClasses}
           />
           <Search className={iconClasses} />
