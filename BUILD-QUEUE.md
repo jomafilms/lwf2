@@ -54,11 +54,7 @@
 - [x] **B1: P2-3 Compliance document generation** — merged 04:39 UTC (Sonnet)
 - [x] **B2: P2-4 HOA dashboard** — merged 04:39 UTC (Sonnet)
   
-- [ ] **B3: P2-1 Landscaper dashboard**
-  - Professional tools: client list, plan submissions, plant sourcing
-  - View client properties and plans
-  - Submit plans to city (format TBD but build the structure)
-  - Task doc: `docs/tasks/todo/P2-landscaper-dashboard.md`
+- [x] **B3: P2-1 Landscaper dashboard** — merged 04:47 UTC (Sonnet)
 
 - [ ] **B4: P2-2 Nursery org management**
   - Nursery profile pages, inventory upload (CSV), price management
