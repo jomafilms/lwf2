@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { SlideOutPanel } from '@/components/ui/SlideOutPanel';
 import { presentPlant, type PlantPresentation } from '@/lib/plants/present';
+import { PlantAttributeBadges, FlammabilityBadge } from './PlantAttributeBadges';
 import { AddToListButton } from './AddToListButton';
 import { NurseryAvailability } from './NurseryAvailability';
 import { PlanToggleButton } from './PlanToggleButton';
@@ -54,25 +55,13 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
     return [p.genus, p.species].filter(Boolean).join(' ');
   }
 
-  function getZoneColor(zone: string) {
-    const zoneColors: Record<string, string> = {
-      '0-5': 'bg-red-100 text-red-800 border-red-200',
-      '5-10': 'bg-orange-100 text-orange-800 border-orange-200',
-      '10-30': 'bg-amber-100 text-amber-800 border-amber-200',
-      '30-100': 'bg-green-100 text-green-800 border-green-200',
-      '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    };
-    return zoneColors[zone] || 'bg-gray-100 text-gray-700 border-gray-200';
-  }
-
-  function getCharacterScoreColor(level: string) {
-    switch (level) {
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      case 'moderate': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'high': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  }
+  const ZONE_COLORS: Record<string, string> = {
+    '0-5': 'bg-red-100 text-red-800 border-red-200',
+    '5-10': 'bg-orange-100 text-orange-800 border-orange-200',
+    '10-30': 'bg-amber-100 text-amber-800 border-amber-200',
+    '30-100': 'bg-green-100 text-green-800 border-green-200',
+    '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  };
 
   const isOpen = !!plantId;
   return (
@@ -134,50 +123,33 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
           {presentation.zones.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {presentation.zones.map((zoneBadge, index) => (
-                <span key={index} className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full border ${getZoneColor(zoneBadge.zone)}`}>
+                <span key={index} className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full border ${ZONE_COLORS[zoneBadge.zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
                   {zoneBadge.label}
                 </span>
               ))}
             </div>
           )}
 
-          {/* Character score */}
-          {presentation.characterScore && (
-            <span className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full border ${getCharacterScoreColor(presentation.characterScore.level)}`}>
-              {presentation.characterScore.label}
-            </span>
-          )}
+          {/* Attribute badges */}
+          <PlantAttributeBadges presentation={presentation} size="md" />
 
-          {/* Quick facts */}
-          <div className="flex flex-wrap gap-2">
-            {presentation.waterNeeds && (
-              <span className="inline-flex items-center text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full">
-                Water: {presentation.waterNeeds}
-              </span>
-            )}
-            {presentation.nativeStatus && (
-              <span className="inline-flex items-center text-xs bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">
-                Native
-              </span>
-            )}
-            {presentation.deerResistance && (
-              <span className="inline-flex items-center text-xs bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">
-                Deer Resistant
-              </span>
-            )}
-            {presentation.lightNeeds && (
-              <span className="inline-flex items-center text-xs bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-full">
-                {presentation.lightNeeds}
-              </span>
-            )}
-          </div>
+          {/* Flammability badge */}
+          <FlammabilityBadge presentation={presentation} size="md" />
 
           {/* Fire info */}
           {(presentation.flammabilityNotes || presentation.riskMitigationNotes) && (
             <div className="space-y-2 text-sm text-gray-600">
               <h3 className="font-semibold text-gray-900">Fire Information</h3>
-              {presentation.flammabilityNotes && <p>{presentation.flammabilityNotes}</p>}
-              {presentation.riskMitigationNotes && <p>{presentation.riskMitigationNotes}</p>}
+              {presentation.flammabilityNotes && (
+                <p className="line-clamp-3" title={presentation.flammabilityNotes}>
+                  <span className="font-medium text-gray-700">Flammability:</span> {presentation.flammabilityNotes}
+                </p>
+              )}
+              {presentation.riskMitigationNotes && (
+                <p className="line-clamp-3" title={presentation.riskMitigationNotes}>
+                  <span className="font-medium text-gray-700">Risk reduction:</span> {presentation.riskMitigationNotes}
+                </p>
+              )}
             </div>
           )}
 

@@ -204,9 +204,12 @@ export function presentPlant(values: ResolvedValue[]): PlantPresentation {
     nativeStatus: findValue(values, "Has Native Status") === "true" 
       ? "Native" 
       : null,
-    deerResistance: findBoolean(values, "Has Deer Resistance") 
-      ? "Data available" 
-      : null,
+    deerResistance: (() => {
+      const raw = findValue(values, "Deer Resistance");
+      if (raw === "High (Usually)" || raw === "Some") return raw;
+      if (findBoolean(values, "Has Deer Resistance")) return "Yes";
+      return null;
+    })(),
     evergreen: findBoolean(values, "Evergreen"),
     flowerColor: findValue(values, "Flower Color"),
 

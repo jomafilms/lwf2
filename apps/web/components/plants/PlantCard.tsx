@@ -2,21 +2,14 @@
 
 import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
+import { presentPlant } from '@/lib/plants/present';
+import { PlantAttributeBadges, FlammabilityBadge } from './PlantAttributeBadges';
 import { NurseryAvailability } from './NurseryAvailability';
 import { SavePlantButton } from './SavePlantButton';
 import { AddToListButton } from './AddToListButton';
 import { PlanToggleButton } from './PlanToggleButton';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-/** Known attribute IDs from the LWF API */
-const ATTR_IDS = {
-  HIZ: 'b908b170-70c9-454d-a2ed-d86f98cb3de1',
-  WATER_AMOUNT: 'd9174148-6563-4f92-9673-01feb6a529ce',
-  OREGON_NATIVE: 'd5fb9f61-41dd-4e4e-bc5e-47eb24ecab46',
-  DEER_RESISTANCE: 'ff4c4d0e-35d5-4804-aea3-2a6334ef8cb5',
-  BENEFITS: 'ff75e529-5b5c-4461-8191-0382e33a4bd5',
-} as const;
 
 const ZONE_COLORS: Record<string, string> = {
   '0-5': 'bg-red-100 text-red-800 border-red-200',
@@ -26,16 +19,8 @@ const ZONE_COLORS: Record<string, string> = {
   '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
 };
 
-function getValuesForAttribute(
-  values: ResolvedValue[],
-  attributeId: string
-): ResolvedValue[] {
-  return values.filter((v) => v.attributeId === attributeId);
-}
-
 function getBotanicalName(plant: Plant): string {
-  const parts = [plant.genus, plant.species].filter(Boolean);
-  return parts.join(' ');
+  return [plant.genus, plant.species].filter(Boolean).join(' ');
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -48,35 +33,14 @@ interface PlantCardProps {
 }
 
 export function PlantCard({ plant, values = [], onPlantClick, compact = false }: PlantCardProps) {
-  const hizValues = getValuesForAttribute(values, ATTR_IDS.HIZ);
-  const waterValues = getValuesForAttribute(values, ATTR_IDS.WATER_AMOUNT);
-  const nativeValues = getValuesForAttribute(values, ATTR_IDS.OREGON_NATIVE);
-  const deerValues = getValuesForAttribute(values, ATTR_IDS.DEER_RESISTANCE);
-  const benefitsValues = getValuesForAttribute(values, ATTR_IDS.BENEFITS);
+  const presentation = presentPlant(values);
 
-  const isNative = nativeValues.some(
-    (v) => v.resolved?.value === 'Yes'
-  );
-  const isDeerResistant = deerValues.some(
-    (v) =>
-      v.resolved?.value === 'High (Usually)' ||
-      v.resolved?.value === 'Some'
-  );
-  const isPollinatorFriendly = benefitsValues.some(
-    (v) =>
-      v.resolved?.value?.toLowerCase().includes('pollinator')
-  );
-  const waterLevel = waterValues[0]?.resolved?.value || null;
-
-  const zones = hizValues
-    .map((v) => v.resolved?.value)
-    .filter(Boolean) as string[];
+  const zones = presentation.zones.map(z => z.zone);
 
   function handleCardClick() {
     onPlantClick?.(plant.id);
   }
 
-  // Use primaryImage, or first image from images array
   const imageUrl = plant.primaryImage?.url ||
     (plant as unknown as { images?: { url: string }[] })?.images?.[0]?.url;
 
@@ -171,29 +135,30 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
         />
       </div>
 
-      <div className="p-4">
+      <div className="p-3">
         <button onClick={handleCardClick} className="block w-full text-left">
-          <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+          <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors text-sm">
             {plant.commonName}
           </h3>
-          <p className="text-sm text-gray-500 italic mt-0.5">{getBotanicalName(plant)}</p>
+          <p className="text-xs text-gray-500 italic mt-0.5">{getBotanicalName(plant)}</p>
         </button>
 
         {zones.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {zones.map((zone) => (
-              <span key={zone} className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${ZONE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+              <span key={zone} className={`inline-flex items-center text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${ZONE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
                 {zone} ft
               </span>
             ))}
           </div>
         )}
 
-        <div className="flex flex-wrap gap-1.5 mt-2">
-          {waterLevel && <span className="inline-flex items-center text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">💧 {waterLevel}</span>}
-          {isNative && <span className="inline-flex items-center text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">🌿 Native</span>}
-          {isDeerResistant && <span className="inline-flex items-center text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">🦌 Deer Resistant</span>}
-          {isPollinatorFriendly && <span className="inline-flex items-center text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full">🐝 Pollinator</span>}
+        <div className="mt-2">
+          <PlantAttributeBadges presentation={presentation} size="sm" />
+        </div>
+
+        <div className="mt-1.5">
+          <FlammabilityBadge presentation={presentation} size="sm" />
         </div>
 
         <NurseryAvailability lwfPlantId={plant.id} variant="summary" />

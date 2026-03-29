@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
-import { X, Droplets, TreePine, Flower2, Shield } from "lucide-react";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getPlantClient } from "@/lib/api/lwf";
 import { presentPlant, type PlantPresentation } from "@/lib/plants/present";
+import { PlantAttributeBadges, FlammabilityBadge } from "./PlantAttributeBadges";
 import { SavePlantButton } from "./SavePlantButton";
 import { AddToListButton } from "./AddToListButton";
 import { PlanToggleButton } from "./PlanToggleButton";
@@ -85,7 +86,7 @@ export function PlantDetailInlineExpand({
     const spaceRight = gridRect.right - cardRect.right;
     const cardTop = cardRect.top - gridRect.top + gridRef.current.scrollTop;
     const cardLeft = cardRect.left - gridRect.left;
-    const height = Math.max(cardRect.height, 320);
+    const height = cardRect.height;
 
     if (spaceRight >= panelWidth) {
       setDirection("right");
@@ -222,35 +223,26 @@ export function PlantDetailInlineExpand({
                 </div>
               )}
 
-              {/* Quick attributes */}
-              <div className="flex flex-wrap gap-1.5 text-[11px]">
-                {presentation.waterNeeds && (
-                  <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">
-                    <Droplets className="h-3 w-3" /> {presentation.waterNeeds}
-                  </span>
-                )}
-                {presentation.nativeStatus && (
-                  <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
-                    <TreePine className="h-3 w-3" /> Native
-                  </span>
-                )}
-                {presentation.deerResistance && (
-                  <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">
-                    <Shield className="h-3 w-3" /> Deer Resistant
-                  </span>
-                )}
-                {presentation.benefits.some(b => b.toLowerCase().includes("pollinator")) && (
-                  <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">
-                    <Flower2 className="h-3 w-3" /> Pollinator
-                  </span>
-                )}
-              </div>
+              {/* Attribute badges */}
+              <PlantAttributeBadges presentation={presentation} size="md" />
 
-              {/* Fire info */}
-              {presentation.characterScore && (
-                <p className="text-xs text-gray-500">
-                  Fire score: {presentation.characterScore.label}
-                </p>
+              {/* Flammability */}
+              <FlammabilityBadge presentation={presentation} size="md" />
+
+              {/* Fire notes */}
+              {(presentation.flammabilityNotes || presentation.riskMitigationNotes) && (
+                <div className="space-y-1">
+                  {presentation.flammabilityNotes && (
+                    <p className="text-[11px] text-gray-500 leading-snug line-clamp-2" title={presentation.flammabilityNotes}>
+                      <span className="font-medium text-gray-600">Flammability:</span> {presentation.flammabilityNotes}
+                    </p>
+                  )}
+                  {presentation.riskMitigationNotes && (
+                    <p className="text-[11px] text-gray-500 leading-snug line-clamp-2" title={presentation.riskMitigationNotes}>
+                      <span className="font-medium text-gray-600">Risk reduction:</span> {presentation.riskMitigationNotes}
+                    </p>
+                  )}
+                </div>
               )}
 
               {/* Actions */}
