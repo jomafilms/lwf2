@@ -291,9 +291,6 @@ export default async function PlantsPage({
             {/* Section 1: Featured Plants */}
             <section className="mb-12">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Featured Plants</h2>
-              <p className="text-sm text-gray-600 mb-6">
-                Top-rated fire-reluctant plants — pick favorites to feature on your home page
-              </p>
               <Suspense fallback={<FeaturedPlantsSkeleton />}>
                 <FeaturedPlantsRow />
               </Suspense>
