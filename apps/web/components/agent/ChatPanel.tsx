@@ -6,12 +6,17 @@ import {
   PlantCardRow,
   type CompactPlant,
 } from "@/components/plants/PlantCardCompact";
+import {
+  ChatPlantCardRow,
+  type ChatPlantData,
+} from "@/components/agent/ChatPlantCard";
 
 interface ChatItem {
-  type: "message" | "plants";
+  type: "message" | "plants" | "rich_plants";
   role?: "user" | "assistant";
   content?: string;
   plants?: CompactPlant[];
+  richPlants?: ChatPlantData[];
 }
 
 interface ChatPanelProps {
@@ -106,6 +111,11 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
               } else if (data.type === "plant_cards" && data.plants?.length) {
                 setItems((prev) => [
                   ...prev,
+                  { type: "rich_plants", richPlants: data.plants },
+                ]);
+              } else if (data.type === "plant_cards_compact" && data.plants?.length) {
+                setItems((prev) => [
+                  ...prev,
                   { type: "plants", plants: data.plants },
                 ]);
               } else if (data.type === "error") {
@@ -183,6 +193,10 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
         )}
 
         {items.map((item, i) => {
+          if (item.type === "rich_plants" && item.richPlants) {
+            return <ChatPlantCardRow key={i} plants={item.richPlants} />;
+          }
+
           if (item.type === "plants" && item.plants) {
             return <PlantCardRow key={i} plants={item.plants} />;
           }
@@ -223,12 +237,12 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
             onKeyDown={handleKeyDown}
             placeholder="Ask about fire-safe plants..."
             rows={1}
-            className="flex-1 resize-none rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+            className="flex-1 resize-none rounded-lg border border-neutral-200 px-3 py-2.5 text-base leading-normal focus:border-neutral-400 focus:outline-none sm:py-2 sm:text-sm"
           />
           <button
             onClick={() => sendMessage()}
             disabled={isLoading || !input.trim()}
-            className="rounded-lg bg-neutral-900 p-2 text-white hover:bg-neutral-800 disabled:opacity-30"
+            className="min-h-[44px] min-w-[44px] rounded-lg bg-neutral-900 p-2.5 text-white hover:bg-neutral-800 active:bg-neutral-700 disabled:opacity-30 flex items-center justify-center sm:p-2 sm:min-h-0 sm:min-w-0"
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />

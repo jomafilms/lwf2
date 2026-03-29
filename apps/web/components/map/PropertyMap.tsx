@@ -327,7 +327,7 @@ export function PropertyMap({
 // ─── Helpers ──────────────────────────────────────────────────
 
 function addMapSources(map: mapboxgl.Map) {
-  const empty: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
+  const empty: FeatureCollectionLike = { type: "FeatureCollection", features: [] };
   map.addSource("draw-points", { type: "geojson", data: empty });
   map.addSource("draw-line", { type: "geojson", data: empty });
   map.addSource("structure", { type: "geojson", data: empty });

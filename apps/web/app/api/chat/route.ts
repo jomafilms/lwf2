@@ -88,12 +88,24 @@ async function runAgentLoop(
           toolContext
         );
 
-        // Emit plant cards for tools that return plant data
+        // Emit rich plant cards from display_plants tool
+        if (block.name === "display_plants") {
+          try {
+            const parsed = JSON.parse(result);
+            if (parsed._cards?.length > 0) {
+              send({ type: "plant_cards", plants: parsed._cards });
+            }
+          } catch {
+            // skip if result isn't parseable
+          }
+        }
+
+        // Emit compact plant cards for search/zone tools
         if (block.name === "search_plants" || block.name === "get_zone_recommendations") {
           try {
             const parsed = JSON.parse(result);
             if (parsed.plants?.length > 0) {
-              send({ type: "plant_cards", plants: parsed.plants });
+              send({ type: "plant_cards_compact", plants: parsed.plants });
             }
           } catch {
             // skip if result isn't parseable
