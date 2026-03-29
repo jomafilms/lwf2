@@ -17,6 +17,7 @@ import {
   Save,
   Check,
   Loader2,
+  FileText,
 } from "lucide-react";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
 import type { FireZones } from "@/lib/geo/fire-zones";
@@ -41,6 +42,7 @@ export default function MapPage() {
     "idle" | "saving" | "saved" | "error"
   >("idle");
   const [savedData, setSavedData] = useState<SavedPropertyData | null>(null);
+  const [planId, setPlanId] = useState<string | null>(null);
 
   // Load saved property from URL param
   useEffect(() => {
@@ -66,6 +68,13 @@ export default function MapPage() {
             });
             setStep("zones");
           }
+          // Fetch plans for this property
+          fetch(`/api/properties/${propertyId}/plans`)
+            .then((r) => r.ok ? r.json() : [])
+            .then((plans: Array<{ id: string }>) => {
+              if (plans.length > 0) setPlanId(plans[0].id);
+            })
+            .catch(() => {});
         })
         .catch(() => {
           // Property not found or not authorized — just show address search
@@ -98,6 +107,7 @@ export default function MapPage() {
     setSaveState("idle");
     setZoneData(null);
     setSavedData(null);
+    setPlanId(null);
   };
 
   const handleZonesCalculated = useCallback((data: ZoneData) => {
@@ -254,6 +264,19 @@ export default function MapPage() {
                     : "Save Property"}
             </span>
           </button>
+        )}
+
+        {/* Download Plan button — visible when there's a saved plan */}
+        {planId && (
+          <a
+            href={`/plans/${planId}/document`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-700 transition-colors sm:text-sm"
+          >
+            <FileText className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Download Plan</span>
+          </a>
         )}
 
         {/* Chat toggle */}
