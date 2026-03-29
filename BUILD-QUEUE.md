@@ -37,7 +37,7 @@
 
 ## 🔄 IN PROGRESS
 
-(spawning B5+B6+B7)
+(B9 assessment + B10 community running — B11+B12 spawning next)
 
 ## 📋 PENDING (in priority order)
 
@@ -76,11 +76,7 @@
   - "Which is better for MY zone 0 near windows?" — show the tradeoffs
   - Helps informed decision-making, not just "pick this one"
 
-- [ ] **B8: Maintenance calendar/reminders**
-  - Based on plants in your plan, generate maintenance schedule
-  - Seasonal tasks: pruning, dead material removal, spacing checks
-  - "In 3 years these plants will be X size — here's when to prune"
-  - Addresses the maintenance gap Charisse identified
+- [x] **B8: Maintenance calendar/reminders** — merged 05:21 UTC (Sonnet)
 
 - [ ] **B9: Property assessment walkthrough**
   - Guided UX: step-by-step property assessment
