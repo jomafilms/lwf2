@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Star, BookmarkPlus, Building2 } from "lucide-react";
 import { createTag, assignTag } from "@/lib/tags/api";
-import { getPlant } from "@/lib/api/lwf";
+import { getPlantClient } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
 import { PlantSlideOut } from "@/components/plants/PlantSlideOut";
 import type { Plant } from "@lwf/types";
@@ -68,27 +68,9 @@ export default function FeaturedListPage() {
       const plantResults = await Promise.all(
         list.plants.map(async (item) => {
           try {
-            const res = await fetch(
-              `https://lwf-api.vercel.app/api/v1/plants/${item.plantId}`
-            );
-            if (!res.ok) {
-              // Return a minimal plant from seed data
-              return {
-                id: item.plantId,
-                commonName: item.commonName,
-                genus: item.botanicalName?.split(" ")[0] || "",
-                species: item.botanicalName?.split(" ").slice(1).join(" ") || "",
-                subspeciesVarieties: null,
-                urls: null,
-                notes: null,
-                lastUpdated: "",
-                primaryImage: null,
-              } as unknown as Plant;
-            }
-            const data = await res.json();
-            return data.data as Plant;
+            const plant = await getPlantClient(item.plantId);
+            return plant as unknown as Plant;
           } catch {
-            // Fallback to seed data
             return {
               id: item.plantId,
               commonName: item.commonName,
