@@ -30,8 +30,8 @@ export async function POST(request: NextRequest) {
         allPlants.push(
           ...result.data.map((p) => ({
             id: String(p.id),
-            scientificName: (p as Record<string, unknown>).scientificName as string | undefined,
-            commonName: (p as Record<string, unknown>).commonName as string | undefined,
+            scientificName: (p as unknown as Record<string, unknown>).scientificName as string | undefined,
+            commonName: (p as unknown as Record<string, unknown>).commonName as string | undefined,
           }))
         );
         offset += limit;
