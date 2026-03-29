@@ -57,7 +57,7 @@ export async function GET(
 
     const planData = latestPlan.length > 0 ? {
       plantPlacements: latestPlan[0].plantPlacements as PlanPlant[] || [],
-      complianceScore: latestPlan[0].complianceScore ?? undefined
+      complianceScore: latestPlan[0].readinessScore ?? undefined
     } : {
       plantPlacements: [],
       complianceScore: undefined
