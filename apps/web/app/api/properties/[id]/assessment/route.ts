@@ -8,7 +8,6 @@ interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
-/** POST /api/properties/[id]/assessment — save assessment data */
 export async function POST(req: NextRequest, ctx: RouteContext) {
   const { id } = await ctx.params;
   const user = await getCurrentUser();
@@ -20,7 +19,6 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
   try {
     const assessmentData: AssessmentData = await req.json();
     
-    // Verify user owns this property
     const [property] = await db
       .select()
       .from(properties)
@@ -30,7 +28,6 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
 
-    // Update property with assessment data
     await db
       .update(properties)
       .set({
@@ -53,7 +50,6 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
   }
 }
 
-/** GET /api/properties/[id]/assessment — retrieve assessment data */
 export async function GET(_req: NextRequest, ctx: RouteContext) {
   const { id } = await ctx.params;
   const user = await getCurrentUser();

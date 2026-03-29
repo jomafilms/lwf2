@@ -58,13 +58,6 @@ export function AssessmentWizard({ onComplete, onCancel, initialData }: Assessme
 
   const totalSteps = 5;
 
-  const updateData = useCallback((updates: Partial<AssessmentData>) => {
-    setData(prev => ({
-      ...prev,
-      ...updates,
-    }));
-  }, []);
-
   const nextStep = () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
@@ -102,7 +95,6 @@ export function AssessmentWizard({ onComplete, onCancel, initialData }: Assessme
           </button>
         </div>
         
-        {/* Progress bar */}
         <div className="mt-4">
           <div className="bg-gray-200 rounded-full h-2">
             <div 
@@ -114,41 +106,32 @@ export function AssessmentWizard({ onComplete, onCancel, initialData }: Assessme
       </div>
 
       {/* Step Content */}
-      <div className="p-6 min-h-[400px]">
-        {currentStep === 1 && (
-          <StructureFeaturesStep
-            data={data.structureFeatures}
-            onChange={(structureFeatures) => updateData({ structureFeatures })}
-          />
-        )}
-        
-        {currentStep === 2 && (
-          <Zone0CurrentStep
-            data={data.zone0Current}
-            onChange={(zone0Current) => updateData({ zone0Current })}
-          />
-        )}
-        
-        {currentStep === 3 && (
-          <Zone1CurrentStep
-            data={data.zone1Current}
-            onChange={(zone1Current) => updateData({ zone1Current })}
-          />
-        )}
-        
-        {currentStep === 4 && (
-          <Zone2CurrentStep
-            data={data.zone2Current}
-            onChange={(zone2Current) => updateData({ zone2Current })}
-          />
-        )}
-        
-        {currentStep === 5 && (
-          <PrioritiesStep
-            data={data.priorities}
-            onChange={(priorities) => updateData({ priorities })}
-          />
-        )}
+      <div className="p-6 min-h-[400px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="mb-6">
+            {currentStep === 1 && <Home className="h-16 w-16 mx-auto text-orange-500" />}
+            {currentStep === 2 && <Shield className="h-16 w-16 mx-auto text-red-500" />}
+            {currentStep === 3 && <Shield className="h-16 w-16 mx-auto text-orange-500" />}
+            {currentStep === 4 && <TreePine className="h-16 w-16 mx-auto text-green-500" />}
+            {currentStep === 5 && <Target className="h-16 w-16 mx-auto text-purple-500" />}
+          </div>
+          
+          <h3 className="text-xl font-semibold text-gray-900 mb-3">
+            {currentStep === 1 && "Structure Features"}
+            {currentStep === 2 && "Zone 0: Immediate Structure (0-5ft)"}
+            {currentStep === 3 && "Zone 1: Near Structure (5-30ft)"}
+            {currentStep === 4 && "Zone 2: Surrounding Area (30-100ft)"}
+            {currentStep === 5 && "Your Priorities"}
+          </h3>
+          
+          <div className="bg-blue-50 rounded-lg p-6 max-w-md mx-auto">
+            <p className="font-medium text-blue-900 mb-2">Assessment Framework Complete</p>
+            <p className="text-sm text-blue-700">
+              The guided property assessment structure has been implemented. 
+              Individual step forms with detailed questions will be built in the next iteration.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -178,122 +161,6 @@ export function AssessmentWizard({ onComplete, onCancel, initialData }: Assessme
             <ChevronRight className="h-4 w-4" />
           </button>
         )}
-      </div>
-    </div>
-  );
-}
-
-// Step Components (simplified for now)
-function StructureFeaturesStep({ 
-  data, 
-  onChange 
-}: { 
-  data: AssessmentData['structureFeatures'];
-  onChange: (data: AssessmentData['structureFeatures']) => void;
-}) {
-  return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <Home className="h-12 w-12 mx-auto text-orange-500 mb-3" />
-        <h3 className="text-lg font-medium text-gray-900">Structure Features</h3>
-        <p className="text-sm text-gray-500">Tell us about your building and any attachments</p>
-      </div>
-      
-      <div className="text-center p-8 bg-gray-50 rounded-lg">
-        <p className="text-gray-600">Assessment steps will be fully implemented in the next iteration</p>
-        <p className="text-sm text-gray-500 mt-2">This is the framework for the guided property assessment</p>
-      </div>
-    </div>
-  );
-}
-
-function Zone0CurrentStep({ 
-  data, 
-  onChange
-}: { 
-  data: AssessmentData['zone0Current'];
-  onChange: (data: AssessmentData['zone0Current']) => void;
-}) {
-  return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <Shield className="h-12 w-12 mx-auto text-red-500 mb-3" />
-        <h3 className="text-lg font-medium text-gray-900">Zone 0: Immediate Structure (0-5ft)</h3>
-        <p className="text-sm text-gray-500">What's currently right around your building?</p>
-      </div>
-      
-      <div className="text-center p-8 bg-gray-50 rounded-lg">
-        <p className="text-gray-600">Zone 0 assessment will be fully implemented in the next iteration</p>
-        <p className="text-sm text-gray-500 mt-2">This will include materials checklist, vegetation touching structure, and photo upload</p>
-      </div>
-    </div>
-  );
-}
-
-function Zone1CurrentStep({ 
-  data, 
-  onChange 
-}: { 
-  data: AssessmentData['zone1Current'];
-  onChange: (data: AssessmentData['zone1Current']) => void;
-}) {
-  return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <Shield className="h-12 w-12 mx-auto text-orange-500 mb-3" />
-        <h3 className="text-lg font-medium text-gray-900">Zone 1: Near Structure (5-30ft)</h3>
-        <p className="text-sm text-gray-500">What vegetation do you currently have in your landscaping zone?</p>
-      </div>
-      
-      <div className="text-center p-8 bg-gray-50 rounded-lg">
-        <p className="text-gray-600">Zone 1 assessment will be fully implemented in the next iteration</p>
-        <p className="text-sm text-gray-500 mt-2">This will include vegetation types, plant connectivity, and maintenance levels</p>
-      </div>
-    </div>
-  );
-}
-
-function Zone2CurrentStep({ 
-  data, 
-  onChange 
-}: { 
-  data: AssessmentData['zone2Current'];
-  onChange: (data: AssessmentData['zone2Current']) => void;
-}) {
-  return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <TreePine className="h-12 w-12 mx-auto text-green-500 mb-3" />
-        <h3 className="text-lg font-medium text-gray-900">Zone 2: Surrounding Area (30-100ft)</h3>
-        <p className="text-sm text-gray-500">What's in your wider property area and beyond?</p>
-      </div>
-      
-      <div className="text-center p-8 bg-gray-50 rounded-lg">
-        <p className="text-gray-600">Zone 2 assessment will be fully implemented in the next iteration</p>
-        <p className="text-sm text-gray-500 mt-2">This will include tree spacing, limbing, brush accumulation, and defensible space rating</p>
-      </div>
-    </div>
-  );
-}
-
-function PrioritiesStep({ 
-  data, 
-  onChange 
-}: { 
-  data: AssessmentData['priorities'];
-  onChange: (data: AssessmentData['priorities']) => void;
-}) {
-  return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <Target className="h-12 w-12 mx-auto text-purple-500 mb-3" />
-        <h3 className="text-lg font-medium text-gray-900">Your Priorities</h3>
-        <p className="text-sm text-gray-500">Help us understand what matters most to you</p>
-      </div>
-      
-      <div className="text-center p-8 bg-gray-50 rounded-lg">
-        <p className="text-gray-600">Priorities assessment will be fully implemented in the next iteration</p>
-        <p className="text-sm text-gray-500 mt-2">This will include budget range, labor approach, timeline, and priority selection</p>
       </div>
     </div>
   );
