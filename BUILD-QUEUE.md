@@ -45,17 +45,8 @@
 
 ### Priority A — Tonight (before Annie sleeps ~7am UTC)
 
-- [ ] **A1: AI Agent — nuanced, informed decision-making**
-  - File: `apps/web/lib/agent/system-prompt.ts` + `apps/web/lib/agent/tools.ts`
-  - THE CORE PRODUCT INSIGHT: The agent must help homeowners make informed, empowered decisions for THEIR specific property. Not prescriptive lists. Nuanced guidance.
-  - Charisse's framework: Placement, Spacing, Maintenance, AND Plant Selection all matter together. The problem isn't the order — it's that most tools ONLY show plant selection and ignore everything else.
-  - Agent should: surface placement codes, spacing requirements, maintenance needs alongside plant recommendations
-  - Agent should: cite data sources ("this rating comes from [source]")  
-  - Agent should: explain WHY a plant works or doesn't for THIS specific situation
-  - Agent should: understand that "own the fuels, own the fire" = personal responsibility, empowerment
-  - Agent should: know 250 native plants in DB, support informed native plant choices
-  - Agent should: reference risk reduction data, character scores, zone placement codes
-  - Read `docs/stakeholder-insights.md` for full context
+- [x] **A1: AI Agent — nuanced, informed decision-making** — merged 04:17 UTC
+  - Rewrote system prompt + tools for empowered decision-making, source citations, property-specific nuance
   
 - [ ] **A2: Home page polish** — Task doc: `docs/tasks/todo/home-page-polish.md`
   - Make landing page compelling for stakeholders/demo Sunday 4pm
