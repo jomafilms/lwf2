@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 interface OrderItem {
   commonName: string;
   botanicalName: string;
@@ -69,6 +67,7 @@ function buildOrderHtml(payload: OrderPayload): string {
 
 export async function POST(req: NextRequest) {
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const payload: OrderPayload = await req.json();
 
     if (!payload.to || !payload.items?.length) {
