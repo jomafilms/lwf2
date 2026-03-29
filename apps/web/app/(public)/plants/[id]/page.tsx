@@ -254,7 +254,7 @@ export default async function PlantDetailPage({
 
             {presented.riskMitigationNotes && (
               <div className="mb-4">
-                <h3 className="font-medium text-orange-800 mb-2">Risk Mitigation Best Practices</h3>
+                <h3 className="font-medium text-orange-800 mb-2">Risk Reduction Notes — Best Practices</h3>
                 <p className="text-sm text-orange-800 leading-relaxed">
                   {presented.riskMitigationNotes}
                 </p>
