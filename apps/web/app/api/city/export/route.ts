@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       headers.join(","),
       ...exportData.map(row => [
         row.propertyId,
-        `"${row.address}"`, // Quote address in case of commas
+        `"${row.address}"`,
         row.lat,
         row.lng,
         row.propertyCreated ? new Date(row.propertyCreated).toISOString().split('T')[0] : "",
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
         row.estimatedCost || "",
         row.planCreated ? new Date(row.planCreated).toISOString().split('T')[0] : "",
         row.planSubmitted ? new Date(row.planSubmitted).toISOString().split('T')[0] : "",
-        `"${row.ownerEmail}"`, // Quote email in case of special characters
+        `"${row.ownerEmail}"`,
       ].join(","))
     ];
 

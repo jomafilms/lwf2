@@ -9,6 +9,7 @@ import {
   type ParcelBoundary,
 } from "@/components/map/PropertyMap";
 import { ChatPanel } from "@/components/agent/ChatPanel";
+import { AssessmentWizard, AssessmentSummary, type AssessmentData } from "@/components/assessment";
 import { useSession } from "@/lib/auth-client";
 import {
   ArrowLeft,
