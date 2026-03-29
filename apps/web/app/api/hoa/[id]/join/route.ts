@@ -5,7 +5,7 @@ import { eq, and, isNull } from "drizzle-orm";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -15,7 +15,7 @@ export async function POST(
 
     const body = await request.json();
     const { inviteCode } = body;
-    const orgId = params.id;
+    const { id: orgId } = await params;
 
     if (!inviteCode) {
       return NextResponse.json(

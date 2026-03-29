@@ -5,7 +5,7 @@ import { eq, and } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -13,7 +13,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const orgId = params.id;
+    const { id: orgId } = await params;
 
     // Check if user is a member
     const membership = await db
@@ -94,11 +94,11 @@ export async function GET(
     const members = Array.from(memberMap.values()).map(member => {
       if (member.assessedProperties > 0) {
         const scores = member.properties
-          .filter(p => p.complianceScore !== null)
-          .map(p => p.complianceScore);
+          .filter((p: { complianceScore: number | null }) => p.complianceScore !== null)
+          .map((p: { complianceScore: number | null }) => p.complianceScore!);
         
         member.avgComplianceScore = Math.round(
-          scores.reduce((sum, score) => sum + score, 0) / scores.length
+          scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length
         );
         
         if (member.avgComplianceScore >= 80) {

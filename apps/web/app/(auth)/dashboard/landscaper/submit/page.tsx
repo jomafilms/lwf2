@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrentUserRole } from "@/lib/user-role";
 import { db, plans, properties } from "@lwf/database";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, ne, desc, and } from "drizzle-orm";
 import Link from "next/link";
 import {
   FileText,
@@ -69,7 +69,7 @@ export default async function SubmitPlansPage() {
       and(
         eq(plans.createdBy, currentUser.id),
         // Plans that are submitted, under review, or approved
-        plans.status.notEqualTo("draft")
+        ne(plans.status, "draft")
       )
     )
     .orderBy(desc(plans.submittedAt))
@@ -177,7 +177,7 @@ export default async function SubmitPlansPage() {
                               <div className="flex items-center gap-1.5">
                                 <Calendar className="h-3 w-3" />
                                 <span className="text-gray-500">
-                                  Updated {new Date(plan.updatedAt).toLocaleDateString()}
+                                  Updated {plan.updatedAt ? new Date(plan.updatedAt).toLocaleDateString() : "—"}
                                 </span>
                               </div>
                             </div>
@@ -187,7 +187,7 @@ export default async function SubmitPlansPage() {
                                 <AlertTriangle className="h-3 w-3" />
                                 <span>
                                   Plan needs {!plan.complianceScore ? "compliance scoring" : ""}
-                                  {(!plan.complianceScore && plan.complianceScore < 70) ? " and " : ""}
+                                  {(!plan.complianceScore && (plan.complianceScore ?? 0) < 70) ? " and " : ""}
                                   {plan.complianceScore && plan.complianceScore < 70 ? "higher compliance (70%+ required)" : ""}
                                   {!plan.plantPlacements ? " plant placements" : ""}
                                 </span>

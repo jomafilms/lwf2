@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -14,7 +14,7 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const orgId = params.id;
+    const { id: orgId } = await params;
 
     // Check if user is an admin
     const membership = await db
