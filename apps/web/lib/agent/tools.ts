@@ -136,7 +136,7 @@ export async function executeTool(
             commonName: p.commonName,
             genus: p.genus,
             species: p.species,
-            images: p.images?.slice(0, 1),
+            images: (p as unknown as { images?: { imageUrl: string }[] }).images?.slice(0, 1),
           })),
         });
       }
