@@ -206,6 +206,74 @@ export async function executeTool(
         return JSON.stringify(rr);
       }
 
+      case "display_plants": {
+        const plantEntries = input.plants as {
+          plantId: string;
+          note?: string;
+        }[];
+        const cards = await Promise.all(
+          plantEntries.map(async (entry) => {
+            try {
+              const [plant, values, riskReduction] = await Promise.all([
+                getPlant(entry.plantId),
+                getPlantValues(entry.plantId),
+                getPlantRiskReduction(entry.plantId).catch(() => null),
+              ]);
+
+              const hizVals = values.filter(
+                (v) => v.attributeId === HIZ_ATTRIBUTE_ID
+              );
+              const waterVal = values.find(
+                (v) =>
+                  v.attributeId === "d9174148-6563-4f92-9673-01feb6a529ce"
+              );
+              const nativeVal = values.find(
+                (v) =>
+                  v.attributeId === "d5fb9f61-41dd-4e4e-bc5e-47eb24ecab46"
+              );
+              const deerVal = values.find(
+                (v) =>
+                  v.attributeId === "ff4c4d0e-35d5-4804-aea3-2a6334ef8cb5"
+              );
+              const benefitsVals = values.filter(
+                (v) =>
+                  v.attributeId === "ff75e529-5b5c-4461-8191-0382e33a4bd5"
+              );
+
+              return {
+                id: plant.id,
+                commonName: plant.commonName,
+                genus: plant.genus,
+                species: plant.species,
+                imageUrl: plant.primaryImage?.url || null,
+                characterScore: riskReduction?.characterScore ?? null,
+                placement: riskReduction?.placement ?? null,
+                zones: hizVals
+                  .map((v) => v.resolved?.value)
+                  .filter(Boolean) as string[],
+                waterNeeds: waterVal?.resolved?.value || null,
+                isNative: nativeVal?.resolved?.value === "Yes",
+                isDeerResistant:
+                  deerVal?.resolved?.value === "High (Usually)" ||
+                  deerVal?.resolved?.value === "Some",
+                isPollinatorFriendly: benefitsVals.some((v) =>
+                  v.resolved?.value?.toLowerCase().includes("pollinator")
+                ),
+                note: entry.note || undefined,
+              };
+            } catch {
+              return null;
+            }
+          })
+        );
+        const validCards = cards.filter(Boolean);
+        return JSON.stringify({
+          displayed: validCards.length,
+          plantIds: validCards.map((c) => c!.id),
+          _cards: validCards,
+        });
+      }
+
       case "get_user_preferences": {
         if (!context?.userId) {
           return JSON.stringify({
