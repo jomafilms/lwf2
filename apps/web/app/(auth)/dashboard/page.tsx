@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { db, properties } from "@lwf/database";
-import { eq, desc } from "drizzle-orm";
+import { db, properties, plans } from "@lwf/database";
+import { eq, desc, inArray } from "drizzle-orm";
 import Link from "next/link";
 import {
   Home,
@@ -13,6 +13,7 @@ import {
   Calendar,
   Layers,
   Plus,
+  FileText,
 } from "lucide-react";
 
 const roleBadgeColors: Record<string, string> = {
@@ -46,6 +47,24 @@ export default async function DashboardPage() {
     .from(properties)
     .where(eq(properties.ownerId, user.id))
     .orderBy(desc(properties.createdAt));
+
+  // Fetch plans for user's properties
+  const propertyIds = userProperties.map((p) => p.id);
+  const userPlans =
+    propertyIds.length > 0
+      ? await db
+          .select({ id: plans.id, propertyId: plans.propertyId })
+          .from(plans)
+          .where(inArray(plans.propertyId, propertyIds))
+      : [];
+
+  // Map: propertyId -> first planId
+  const propertyPlanMap = new Map<string, string>();
+  for (const plan of userPlans) {
+    if (plan.propertyId && !propertyPlanMap.has(plan.propertyId)) {
+      propertyPlanMap.set(plan.propertyId, plan.id);
+    }
+  }
 
   const sections = [
     {
@@ -148,6 +167,8 @@ export default async function DashboardPage() {
             <div className="grid gap-3 sm:grid-cols-2">
               {userProperties.map((prop) => {
                 const hasZones = !!prop.fireZones;
+                const hasPlan = propertyPlanMap.has(prop.id);
+                const firstPlanId = propertyPlanMap.get(prop.id);
                 const createdDate = prop.createdAt
                   ? new Date(prop.createdAt).toLocaleDateString("en-US", {
                       month: "short",
@@ -187,6 +208,18 @@ export default async function DashboardPage() {
                             )}
                           </span>
                         </div>
+                        {hasPlan && firstPlanId && (
+                          <Link
+                            href={`/plans/${firstPlanId}/document`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="mt-1.5 inline-flex items-center gap-1 rounded bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 hover:bg-emerald-100 transition-colors"
+                          >
+                            <FileText className="h-3 w-3" />
+                            View Plan Document
+                          </Link>
+                        )}
                       </div>
                       <MapPin className="h-4 w-4 flex-shrink-0 text-gray-300 group-hover:text-orange-400 transition-colors" />
                     </div>
