@@ -34,11 +34,23 @@ interface SearchParams {
 
 async function fetchPlantsWithValues(searchParams: SearchParams) {
   const page = parseInt(searchParams.page || '1', 10);
-  const offset = (page - 1) * PAGE_SIZE;
+  
+  // Check if we have active filters (excluding search)
+  const hasActiveFilters =
+    searchParams.zone ||
+    searchParams.native ||
+    searchParams.deer ||
+    searchParams.water ||
+    searchParams.pollinator;
+
+  // When filters are applied, always fetch from the beginning and get more results
+  // to account for filtering reducing the result set
+  const fetchLimit = hasActiveFilters ? PAGE_SIZE * 5 : PAGE_SIZE; // 5x when filtering  
+  const offset = hasActiveFilters ? 0 : (page - 1) * PAGE_SIZE; // Start from beginning when filtering
 
   const plantsResponse = await getPlants({
     search: searchParams.search || undefined,
-    limit: PAGE_SIZE,
+    limit: fetchLimit,
     offset,
     includeImages: true,
   });
@@ -232,9 +244,19 @@ async function PlantGrid({ searchParams }: { searchParams: SearchParams }) {
     ? filterPlants(plants, valuesMap, searchParams)
     : plants;
 
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  // For filtered results, disable pagination and show all results
+  let paginatedPlants = filteredPlants;
+  let totalPages = 1; // Only 1 page when filtering
+  let showingCount = filteredPlants.length;
+  let totalCount = total;
 
-  if (filteredPlants.length === 0) {
+  if (!hasActiveFilters) {
+    // Normal pagination for unfiltered results
+    totalPages = Math.ceil(total / PAGE_SIZE);
+    showingCount = plants.length;
+  }
+
+  if (paginatedPlants.length === 0) {
     return (
       <div className="text-center py-16">
         <svg
@@ -261,17 +283,31 @@ async function PlantGrid({ searchParams }: { searchParams: SearchParams }) {
   return (
     <>
       <p className="text-sm text-gray-500 mb-4">
-        Showing {filteredPlants.length} of {total.toLocaleString()} plants
-        {searchParams.search && (
-          <span>
-            {' '}
-            matching &ldquo;{searchParams.search}&rdquo;
-          </span>
+        {hasActiveFilters ? (
+          <>
+            Showing {showingCount} filtered plants
+            {searchParams.search && (
+              <span>
+                {' '}
+                matching &ldquo;{searchParams.search}&rdquo;
+              </span>
+            )}
+          </>
+        ) : (
+          <>
+            Showing {showingCount} of {totalCount.toLocaleString()} plants
+            {searchParams.search && (
+              <span>
+                {' '}
+                matching &ldquo;{searchParams.search}&rdquo;
+              </span>
+            )}
+          </>
         )}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filteredPlants.map((plant) => (
+        {paginatedPlants.map((plant) => (
           <PlantCard
             key={plant.id}
             plant={plant}

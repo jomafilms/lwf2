@@ -1,5 +1,7 @@
 import buffer from "@turf/buffer";
+import difference from "@turf/difference";
 import { polygon, featureCollection } from "@turf/helpers";
+import { ZONE_COLORS } from "@/lib/design-tokens";
 import type { Feature, Polygon, FeatureCollection } from "geojson";
 
 export interface FireZones {
@@ -53,12 +55,6 @@ export function fireZonesToGeoJSON(
     { ...zones.zone0, properties: { zone: "zone0", label: "Zone 0 (0-5ft)" } },
   ]);
 }
-
-export const ZONE_COLORS = {
-  zone0: "#EF4444",
-  zone1: "#F59E0B",
-  zone2: "#22C55E",
-} as const;
 
 export const ZONE_OPACITY = {
   zone0: 0.4,

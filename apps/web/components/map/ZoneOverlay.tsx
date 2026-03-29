@@ -1,6 +1,6 @@
 "use client";
 
-import { ZONE_COLORS } from "@/lib/geo/fire-zones";
+import { ZONE_COLORS } from "@/lib/design-tokens";
 
 interface ZoneOverlayProps {
   hasZones: boolean;
@@ -16,21 +16,21 @@ export function ZoneOverlay({ hasZones, isDrawing }: ZoneOverlayProps) {
         <div className="flex items-center gap-1.5">
           <span
             className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ background: ZONE_COLORS.zone0, opacity: 0.8 }}
+            style={{ background: ZONE_COLORS.zone0.hex, opacity: 0.8 }}
           />
           0-5ft
         </div>
         <div className="flex items-center gap-1.5">
           <span
             className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ background: ZONE_COLORS.zone1, opacity: 0.8 }}
+            style={{ background: ZONE_COLORS.zone1.hex, opacity: 0.8 }}
           />
           5-30ft
         </div>
         <div className="flex items-center gap-1.5">
           <span
             className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ background: ZONE_COLORS.zone2, opacity: 0.8 }}
+            style={{ background: ZONE_COLORS.zone2.hex, opacity: 0.8 }}
           />
           30-100ft
         </div>

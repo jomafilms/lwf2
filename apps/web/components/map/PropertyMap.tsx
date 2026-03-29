@@ -5,11 +5,10 @@ import { getMapboxToken } from "@/lib/geo/mapbox";
 import {
   calculateFireZones,
   fireZonesToGeoJSON,
-  ZONE_COLORS,
   ZONE_OPACITY,
   type FireZones,
 } from "@/lib/geo/fire-zones";
-import { MAP_COLORS } from "@/lib/design-tokens";
+import { MAP_COLORS, ZONE_COLORS } from "@/lib/design-tokens";
 import { Pencil, RotateCcw, Check, Undo2 } from "lucide-react";
 import type mapboxgl from "mapbox-gl";
 
@@ -69,7 +68,6 @@ export function PropertyMap({
 
     const initMap = async () => {
       const mapboxgl = (await import("mapbox-gl")).default;
-      await import("mapbox-gl/dist/mapbox-gl.css");
 
       mapboxgl.accessToken = getMapboxToken();
 
@@ -300,21 +298,21 @@ export function PropertyMap({
             <div className="flex items-center gap-1.5">
               <span
                 className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone0, opacity: 0.8 }}
+                style={{ background: ZONE_COLORS.zone0.hex, opacity: 0.8 }}
               />
               0-5ft
             </div>
             <div className="flex items-center gap-1.5">
               <span
                 className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone1, opacity: 0.8 }}
+                style={{ background: ZONE_COLORS.zone1.hex, opacity: 0.8 }}
               />
               5-30ft
             </div>
             <div className="flex items-center gap-1.5">
               <span
                 className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone2, opacity: 0.8 }}
+                style={{ background: ZONE_COLORS.zone2.hex, opacity: 0.8 }}
               />
               30-100ft
             </div>
@@ -369,9 +367,9 @@ function addMapLayers(map: mapboxgl.Map) {
     paint: {
       "fill-color": [
         "match", ["get", "zone"],
-        "zone0", ZONE_COLORS.zone0,
-        "zone1", ZONE_COLORS.zone1,
-        "zone2", ZONE_COLORS.zone2,
+        "zone0", ZONE_COLORS.zone0.hex,
+        "zone1", ZONE_COLORS.zone1.hex,
+        "zone2", ZONE_COLORS.zone2.hex,
         "#888",
       ],
       "fill-opacity": [
@@ -392,9 +390,9 @@ function addMapLayers(map: mapboxgl.Map) {
     paint: {
       "line-color": [
         "match", ["get", "zone"],
-        "zone0", ZONE_COLORS.zone0,
-        "zone1", ZONE_COLORS.zone1,
-        "zone2", ZONE_COLORS.zone2,
+        "zone0", ZONE_COLORS.zone0.hex,
+        "zone1", ZONE_COLORS.zone1.hex,
+        "zone2", ZONE_COLORS.zone2.hex,
         "#888",
       ],
       "line-width": 1.5,
