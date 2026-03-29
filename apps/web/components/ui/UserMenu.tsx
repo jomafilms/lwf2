@@ -12,6 +12,7 @@ import {
   Settings,
   LogOut,
   ChevronDown,
+  Users,
 } from 'lucide-react';
 
 export function UserMenu() {
@@ -57,8 +58,11 @@ export function UserMenu() {
     router.refresh();
   }
 
+  // Note: We can't fetch user role here since this is a client component
+  // The menu will show all options and the server will handle authorization
   const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/dashboard/landscaper', label: 'Landscaper Tools', icon: Users },
     { href: '/my-plants', label: 'My Plants', icon: TreePine },
     { href: '/dashboard', label: 'My Properties', icon: Home },
     { href: '/dashboard', label: 'Settings', icon: Settings },

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUserRole } from "@/lib/user-role";
 import { db, properties, plans } from "@lwf/database";
 import { eq, desc, inArray } from "drizzle-orm";
 import Link from "next/link";
@@ -14,6 +15,7 @@ import {
   Layers,
   Plus,
   FileText,
+  Users,
 } from "lucide-react";
 
 const roleBadgeColors: Record<string, string> = {
@@ -36,8 +38,8 @@ export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
-  // Default role — will come from user_profiles in a future iteration
-  const role = "homeowner";
+  // Get actual user role from database
+  const role = await getCurrentUserRole() || "homeowner";
   const badgeColor = roleBadgeColors[role] || roleBadgeColors.homeowner;
   const roleLabel = roleLabels[role] || "Homeowner";
 
@@ -66,7 +68,7 @@ export default async function DashboardPage() {
     }
   }
 
-  const sections = [
+  const baseSections = [
     {
       href: "/dashboard",
       label: "My Properties",
@@ -98,6 +100,18 @@ export default async function DashboardPage() {
       icon: Settings,
     },
   ];
+
+  // Add role-specific sections
+  const sections = [...baseSections];
+  
+  if (role === "landscaper") {
+    sections.unshift({
+      href: "/dashboard/landscaper",
+      label: "Landscaper Tools",
+      description: "Manage clients and create fire-safe plans",
+      icon: Users,
+    });
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -32,11 +32,28 @@ export const plans = pgTable("plans", {
   createdBy: text("created_by").references(() => user.id),
   name: text("name"),
   status: text("status", {
-    enum: ["draft", "submitted", "approved", "completed"],
+    enum: ["draft", "submitted", "under_review", "approved", "completed"],
   }).default("draft"),
   plantPlacements: jsonb("plant_placements"),
   estimatedCost: integer("estimated_cost"),
   complianceScore: integer("compliance_score"),
+  notes: text("notes"),
+  submittedAt: timestamp("submitted_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
+});
+
+export const landscaperClients = pgTable("landscaper_clients", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  landscaperId: text("landscaper_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  propertyId: uuid("property_id")
+    .notNull()
+    .references(() => properties.id, { onDelete: "cascade" }),
+  status: text("status", {
+    enum: ["active", "pending", "completed"],
+  }).default("active"),
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
