@@ -202,17 +202,22 @@ export async function executeTool(
           attributeIds: [HIZ_ATTRIBUTE_ID],
           resolve: true,
         });
-        // Filter to plants matching the requested zone
+        // Bulk API returns: { plantId: { attrId: [values] } }
         const matching: { plantId: string; value: string }[] = [];
         if (bulkResult && typeof bulkResult === "object") {
-          for (const [key, val] of Object.entries(bulkResult)) {
-            const v = val as { value?: string; resolved?: { value?: string } };
-            const resolved = v.resolved?.value || v.value || "";
-            if (resolved.includes(zone)) {
-              matching.push({
-                plantId: key.split("/")[0] || key,
-                value: resolved,
-              });
+          for (const [plantId, plantData] of Object.entries(bulkResult)) {
+            if (!plantData || typeof plantData !== "object") continue;
+            // plantData is { attributeId: [values] }
+            for (const attrValues of Object.values(plantData as Record<string, unknown>)) {
+              if (!Array.isArray(attrValues)) continue;
+              for (const v of attrValues) {
+                const val = v as { resolved?: { value?: string }; value?: string };
+                const resolved = val.resolved?.value || val.value || "";
+                if (resolved === zone) {
+                  matching.push({ plantId, value: resolved });
+                  break;
+                }
+              }
             }
           }
         }
