@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
   }
 
   const body = await req.json();
-  const { name, plantPlacements, estimatedCost, complianceScore, notes } = body;
+  const { name, plantPlacements, estimatedCost, readinessScore, notes } = body;
 
   const [plan] = await db
     .insert(plans)
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
       name: name ?? "Untitled Plan",
       plantPlacements: plantPlacements ?? null,
       estimatedCost: estimatedCost ?? null,
-      complianceScore: complianceScore ?? null,
+      readinessScore: readinessScore ?? null,
       notes: notes ?? null,
     })
     .returning();

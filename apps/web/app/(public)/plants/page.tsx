@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getPlants, getValuesBulk } from '@/lib/api/lwf';
 import type { Plant, ResolvedValue } from '@lwf/types';
-import { PlantCard } from '@/components/plants/PlantCard';
+import { PlantGridWithSlideOut } from '@/components/plants/PlantGridWithSlideOut';
 import { PlantFilters } from '@/components/plants/PlantFilters';
 import { PlantSearch } from '@/components/plants/PlantSearch';
 import { Pagination } from '@/components/plants/Pagination';
@@ -322,15 +322,10 @@ async function PlantGrid({ searchParams }: { searchParams: SearchParams }) {
         )}
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        {paginatedPlants.map((plant) => (
-          <PlantCard
-            key={plant.id}
-            plant={plant}
-            values={valuesMap[plant.id] || []}
-          />
-        ))}
-      </div>
+      <PlantGridWithSlideOut
+        plants={paginatedPlants}
+        valuesMap={valuesMap}
+      />
 
       {totalPages > 1 && (
         <div className="mt-8">

@@ -24,7 +24,7 @@ const CATEGORY_META: Record<
     emoji: "🔥",
     label: "Fire Safety",
     description:
-      "Based on plant character scores, zone placement compliance, and coverage ratio.",
+      "Based on plant character scores, zone placement readiness, and coverage ratio.",
   },
   pollinator: {
     emoji: "🦋",

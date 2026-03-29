@@ -7,6 +7,10 @@ import { Globe, BookmarkPlus } from "lucide-react";
 import { fetchTagItems, createTag, assignTag, type Tag } from "@/lib/tags/api";
 import { getPlant } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
+import { NurseryMatchCard } from "@/components/lists/NurseryMatchCard";
+import { FireReadinessCard } from "@/components/lists/FireReadinessCard";
+import { StarButton } from "@/components/lists/StarButton";
+import { PlantSlideOut } from "@/components/plants/PlantSlideOut";
 import type { Plant } from "@lwf/types";
 
 export default function PublicListPage() {
@@ -18,6 +22,7 @@ export default function PublicListPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -123,15 +128,26 @@ export default function PublicListPage() {
             </div>
           </div>
 
-          <button
-            onClick={handleSaveList}
-            disabled={saving}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 transition-colors text-sm font-medium"
-          >
-            <BookmarkPlus className="w-4 h-4" />
-            {saving ? "Saving…" : "Save This List"}
-          </button>
+          <div className="flex items-center gap-2">
+            <StarButton tagId={tagId} />
+            <button
+              onClick={handleSaveList}
+              disabled={saving}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 transition-colors text-sm font-medium"
+            >
+              <BookmarkPlus className="w-4 h-4" />
+              {saving ? "Saving…" : "Save This List"}
+            </button>
+          </div>
         </div>
+
+        {/* Summary Cards */}
+        {plants.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <NurseryMatchCard plantIds={plants.map(p => p.id)} />
+            <FireReadinessCard plantCount={plants.length} />
+          </div>
+        )}
 
         {/* Plant grid */}
         {plants.length === 0 ? (
@@ -141,10 +157,10 @@ export default function PublicListPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {plants.map((plant) => (
-              <Link
+              <button
                 key={plant.id}
-                href={`/plants/${plant.id}`}
-                className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                onClick={() => setSelectedPlantId(plant.id)}
+                className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden text-left"
               >
                 <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
                   {plant.primaryImage ? (
@@ -180,11 +196,16 @@ export default function PublicListPage() {
                     {[plant.genus, plant.species].filter(Boolean).join(" ")}
                   </p>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
         )}
       </div>
+      
+      <PlantSlideOut
+        plantId={selectedPlantId}
+        onClose={() => setSelectedPlantId(null)}
+      />
     </div>
   );
 }

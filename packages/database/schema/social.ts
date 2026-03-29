@@ -26,7 +26,7 @@ export const tagAssignments = pgTable("tag_assignments", {
   id: uuid("id").primaryKey().defaultRandom(),
   tagId: uuid("tag_id").references(() => tags.id, { onDelete: "cascade" }),
   targetType: text("target_type", {
-    enum: ["plant", "nursery", "property", "plan"],
+    enum: ["plant", "nursery", "property", "plan", "list"],
   }),
   targetId: text("target_id"),
 });

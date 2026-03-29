@@ -62,7 +62,7 @@ export default function HomePage() {
               Browse Plants
             </Link>
             <div className="sm:hidden">
-              <AddressSearch onSelect={handleSelect} />
+              <AddressSearch onSelect={handleSelect} placeholder="Search your address" />
             </div>
             <Link
               href="/map"
@@ -73,7 +73,7 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto mt-6 hidden max-w-md sm:block">
-            <AddressSearch onSelect={handleSelect} />
+            <AddressSearch onSelect={handleSelect} placeholder="Or start by entering your address" />
           </div>
         </div>
       </section>
@@ -207,6 +207,34 @@ export default function HomePage() {
           />
         </div>
       </section>
+
+      {/* Credibility Bar */}
+      <section className="border-y border-stone-200 bg-stone-50 px-4 py-8 sm:py-10">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-x-3 gap-y-3 sm:gap-x-6">
+          <CredBadge value="1,300+" label="plants" />
+          <Dot />
+          <CredBadge value="250+" label="native species" />
+          <Dot />
+          <CredBadge value="✓" label="data sourced & verified" />
+          <Dot />
+          <CredBadge value="📍" label="Built for Ashland, OR" />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="px-4 py-8 text-center sm:py-10">
+        <p className="text-xs leading-relaxed text-stone-400 sm:text-sm">
+          Data maintained by{" "}
+          <span className="font-medium text-stone-500">
+            Charisse Sydoriak
+          </span>
+          . Built at{" "}
+          <span className="font-medium text-stone-500">
+            Rogue Raise 2026
+          </span>
+          .
+        </p>
+      </footer>
     </main>
   );
 }
@@ -305,5 +333,22 @@ function BenefitCard({
         {description}
       </p>
     </div>
+  );
+}
+
+function CredBadge({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="flex items-center gap-1.5 text-xs sm:text-sm">
+      <span className="font-bold text-stone-700">{value}</span>
+      <span className="text-stone-500">{label}</span>
+    </div>
+  );
+}
+
+function Dot() {
+  return (
+    <span className="hidden text-stone-300 sm:inline" aria-hidden>
+      ·
+    </span>
   );
 }

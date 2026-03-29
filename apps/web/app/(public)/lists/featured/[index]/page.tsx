@@ -7,6 +7,7 @@ import { Star, BookmarkPlus, Building2 } from "lucide-react";
 import { createTag, assignTag } from "@/lib/tags/api";
 import { getPlant } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
+import { PlantSlideOut } from "@/components/plants/PlantSlideOut";
 import type { Plant } from "@lwf/types";
 
 interface FeaturedList {
@@ -44,6 +45,7 @@ export default function FeaturedListPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -79,9 +81,9 @@ export default function FeaturedListPage() {
                 subspeciesVarieties: null,
                 urls: null,
                 notes: null,
-                lastUpdated: null,
+                lastUpdated: "",
                 primaryImage: null,
-              } as Plant;
+              } as unknown as Plant;
             }
             const data = await res.json();
             return data.data as Plant;
@@ -95,9 +97,9 @@ export default function FeaturedListPage() {
               subspeciesVarieties: null,
               urls: null,
               notes: null,
-              lastUpdated: null,
+              lastUpdated: "",
               primaryImage: null,
-            } as Plant;
+            } as unknown as Plant;
           }
         })
       );
@@ -218,10 +220,10 @@ export default function FeaturedListPage() {
               const listItem = featuredList.plants[plantIndex];
               
               return (
-                <Link
+                <button
                   key={plant.id}
-                  href={`/plants/${plant.id}`}
-                  className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                  onClick={() => setSelectedPlantId(plant.id)}
+                  className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden text-left"
                 >
                   <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
                     {plant.primaryImage ? (
@@ -262,12 +264,17 @@ export default function FeaturedListPage() {
                       </p>
                     )}
                   </div>
-                </Link>
+                </button>
               );
             })}
           </div>
         )}
       </div>
+      
+      <PlantSlideOut
+        plantId={selectedPlantId}
+        onClose={() => setSelectedPlantId(null)}
+      />
     </div>
   );
 }

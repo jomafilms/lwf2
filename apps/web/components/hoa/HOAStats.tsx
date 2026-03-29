@@ -9,7 +9,7 @@ interface HOAStatsProps {
 
 interface Stats {
   memberCount: number;
-  avgComplianceScore: number;
+  avgReadinessScore: number;
   assessmentProgress: number;
   propertiesAssessed: number;
   totalProperties: number;
@@ -62,8 +62,8 @@ export function HOAStats({ orgId }: HOAStatsProps) {
     "text-red-600";
 
   const scoreColor = 
-    stats.avgComplianceScore >= 80 ? "text-green-600" :
-    stats.avgComplianceScore >= 60 ? "text-yellow-600" : 
+    stats.avgReadinessScore >= 80 ? "text-green-600" :
+    stats.avgReadinessScore >= 60 ? "text-yellow-600" : 
     "text-red-600";
 
   return (
@@ -88,9 +88,9 @@ export function HOAStats({ orgId }: HOAStatsProps) {
             <Shield className="h-5 w-5 text-green-600" />
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-600">Avg Compliance</p>
+            <p className="text-sm font-medium text-gray-600">Avg Readiness</p>
             <p className={`text-2xl font-bold ${scoreColor}`}>
-              {stats.avgComplianceScore > 0 ? `${stats.avgComplianceScore}%` : "—"}
+              {stats.avgReadinessScore > 0 ? `${stats.avgReadinessScore}%` : "—"}
             </p>
           </div>
         </div>

@@ -34,7 +34,7 @@ export default async function SubmitPlansPage() {
       name: plans.name,
       status: plans.status,
       propertyAddress: properties.address,
-      complianceScore: plans.complianceScore,
+      complianceScore: plans.readinessScore,
       estimatedCost: plans.estimatedCost,
       plantPlacements: plans.plantPlacements,
       notes: plans.notes,
@@ -59,7 +59,7 @@ export default async function SubmitPlansPage() {
       name: plans.name,
       status: plans.status,
       propertyAddress: properties.address,
-      complianceScore: plans.complianceScore,
+      complianceScore: plans.readinessScore,
       estimatedCost: plans.estimatedCost,
       submittedAt: plans.submittedAt,
     })

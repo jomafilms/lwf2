@@ -21,6 +21,8 @@ import {
 } from "@/lib/tags/api";
 import { getPlant } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
+import { NurseryMatchCard } from "@/components/lists/NurseryMatchCard";
+import { FireReadinessCard } from "@/components/lists/FireReadinessCard";
 import type { Plant } from "@lwf/types";
 
 interface PlantWithAssignment {
@@ -190,6 +192,14 @@ export default function ListDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Summary Cards */}
+        {plants.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <NurseryMatchCard plantIds={plants.map(p => p.plant.id)} />
+            <FireReadinessCard plantCount={plants.length} />
+          </div>
+        )}
 
         {/* Plant grid */}
         {plants.length === 0 ? (

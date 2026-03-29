@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, Filter, Globe, Lock, Building2, Star } from "lucide-react";
 import { fetchTags, type Tag } from "@/lib/tags/api";
 import { getPlant } from "@/lib/api/lwf";
+import { StarButton } from "@/components/lists/StarButton";
 
 interface TagWithCount extends Tag {
   itemCount: number;
@@ -259,8 +260,13 @@ export default function PublicListsPage() {
                     </span>
                   </div>
                   
-                  <div className="mt-3 text-gray-600 text-sm">
-                    Created {new Date(list.createdAt).toLocaleDateString()}
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-gray-600 text-sm">
+                      Created {new Date(list.createdAt).toLocaleDateString()}
+                    </span>
+                    <div onClick={(e) => e.preventDefault()}>
+                      <StarButton tagId={list.id} className="text-xs" />
+                    </div>
                   </div>
                 </div>
               </Link>

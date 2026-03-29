@@ -87,7 +87,7 @@ export default async function ClientPropertyPage({ params }: Props) {
       id: plans.id,
       name: plans.name,
       status: plans.status,
-      complianceScore: plans.complianceScore,
+      complianceScore: plans.readinessScore,
       estimatedCost: plans.estimatedCost,
       plantPlacements: plans.plantPlacements,
       notes: plans.notes,
