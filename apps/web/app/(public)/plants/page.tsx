@@ -32,10 +32,38 @@ interface SearchParams {
   [key: string]: string | undefined;
 }
 
+/** Parse bulk values API response into a flat map of plantId → ResolvedValue[] */
+function parseBulkValues(bulkResult: Record<string, unknown>): Record<string, ResolvedValue[]> {
+  const map: Record<string, ResolvedValue[]> = {};
+  const raw = bulkResult;
+  const dataObj = raw.data as Record<string, unknown> | undefined;
+  const valuesObj = (dataObj?.values || dataObj || raw) as Record<string, unknown>;
+
+  for (const [plantId, plantEntry] of Object.entries(valuesObj)) {
+    if (plantId === 'meta') continue;
+    if (Array.isArray(plantEntry)) {
+      map[plantId] = plantEntry as ResolvedValue[];
+    } else if (plantEntry && typeof plantEntry === 'object') {
+      const allValues: ResolvedValue[] = [];
+      for (const [attrId, attrValues] of Object.entries(plantEntry as Record<string, unknown>)) {
+        if (Array.isArray(attrValues)) {
+          allValues.push(...(attrValues as ResolvedValue[]).map(v => ({
+            ...v,
+            attributeId: v.attributeId || attrId,
+          })));
+        }
+      }
+      if (allValues.length > 0) {
+        map[plantId] = allValues;
+      }
+    }
+  }
+  return map;
+}
+
 async function fetchPlantsWithValues(searchParams: SearchParams) {
   const page = parseInt(searchParams.page || '1', 10);
-  
-  // Check if we have active filters (excluding search)
+
   const hasActiveFilters =
     searchParams.zone ||
     searchParams.native ||
@@ -43,13 +71,69 @@ async function fetchPlantsWithValues(searchParams: SearchParams) {
     searchParams.water ||
     searchParams.pollinator;
 
-  // When filters are applied, fetch all plants to filter across the full dataset
-  const fetchLimit = hasActiveFilters ? 2000 : PAGE_SIZE;
-  const offset = hasActiveFilters ? 0 : (page - 1) * PAGE_SIZE;
+  if (hasActiveFilters) {
+    // Step 1: Fetch ALL attribute values for the active filter attributes (no plantIds = all plants)
+    const filterAttrIds = [
+      ...(searchParams.zone ? [ATTR_IDS.HIZ] : []),
+      ...(searchParams.native === 'yes' ? [ATTR_IDS.OREGON_NATIVE] : []),
+      ...(searchParams.deer === 'yes' ? [ATTR_IDS.DEER_RESISTANCE] : []),
+      ...(searchParams.water ? [ATTR_IDS.WATER_AMOUNT] : []),
+      ...(searchParams.pollinator === 'yes' ? [ATTR_IDS.BENEFITS] : []),
+    ];
 
+    const bulkResult = await getValuesBulk({
+      attributeIds: filterAttrIds,
+      resolve: true,
+    });
+
+    const allValuesMap = parseBulkValues(bulkResult as Record<string, unknown>);
+
+    // Step 2: Filter to matching plant IDs
+    const matchingIds = Object.keys(allValuesMap).filter(plantId => {
+      const values = allValuesMap[plantId] || [];
+      return matchesFilters(values, searchParams);
+    });
+
+    if (matchingIds.length === 0) {
+      return { plants: [], total: 0, page: 1, valuesMap: {} };
+    }
+
+    // Step 3: Fetch the actual plant objects for matching IDs
+    // API doesn't support filtering by IDs, so fetch all and filter
+    const plantsResponse = await getPlants({
+      search: searchParams.search || undefined,
+      limit: 1000,
+      offset: 0,
+      includeImages: true,
+    });
+
+    const matchingSet = new Set(matchingIds);
+    const plants = plantsResponse.data.filter(p => matchingSet.has(p.id));
+
+    // Step 4: Fetch display attribute values for the matching plants
+    let valuesMap: Record<string, ResolvedValue[]> = {};
+    if (plants.length > 0) {
+      try {
+        const displayBulk = await getValuesBulk({
+          plantIds: plants.map(p => p.id),
+          attributeIds: Object.values(ATTR_IDS),
+          resolve: true,
+        });
+        valuesMap = parseBulkValues(displayBulk as Record<string, unknown>);
+      } catch {
+        // Use filter values as fallback
+        valuesMap = allValuesMap;
+      }
+    }
+
+    return { plants, total: plants.length, page: 1, valuesMap };
+  }
+
+  // No filters — simple paginated fetch
+  const offset = (page - 1) * PAGE_SIZE;
   const plantsResponse = await getPlants({
     search: searchParams.search || undefined,
-    limit: fetchLimit,
+    limit: PAGE_SIZE,
     offset,
     includeImages: true,
   });
@@ -57,52 +141,16 @@ async function fetchPlantsWithValues(searchParams: SearchParams) {
   const plants = plantsResponse.data;
   const total = plantsResponse.meta.pagination.total;
 
-  // Fetch attribute values for all plants in bulk
   let valuesMap: Record<string, ResolvedValue[]> = {};
-
   if (plants.length > 0) {
-    const plantIds = plants.map((p) => p.id);
-    const attributeIds = Object.values(ATTR_IDS);
-
     try {
       const bulkResult = await getValuesBulk({
-        plantIds,
-        attributeIds,
+        plantIds: plants.map(p => p.id),
+        attributeIds: Object.values(ATTR_IDS),
         resolve: true,
       });
-
-      // The bulk endpoint returns a structure keyed by plantId
-      // Parse it into our map
-      if (bulkResult && typeof bulkResult === 'object') {
-        const raw = bulkResult as Record<string, unknown>;
-        // API returns { data: { values: { plantId: { attrId: [...] } } } }
-        const dataObj = raw.data as Record<string, unknown> | undefined;
-        const valuesObj = (dataObj?.values || dataObj || raw) as Record<string, unknown>;
-        for (const plantId of plantIds) {
-          const plantEntry = valuesObj[plantId];
-          if (Array.isArray(plantEntry)) {
-            // Direct array of values
-            valuesMap[plantId] = plantEntry as ResolvedValue[];
-          } else if (plantEntry && typeof plantEntry === 'object') {
-            // Nested by attributeId: { attrId: [values] }
-            const allValues: ResolvedValue[] = [];
-            for (const [attrId, attrValues] of Object.entries(plantEntry as Record<string, unknown>)) {
-              if (Array.isArray(attrValues)) {
-                // Ensure each value has attributeId set
-                allValues.push(...(attrValues as ResolvedValue[]).map(v => ({
-                  ...v,
-                  attributeId: v.attributeId || attrId,
-                })));
-              }
-            }
-            if (allValues.length > 0) {
-              valuesMap[plantId] = allValues;
-            }
-          }
-        }
-      }
+      valuesMap = parseBulkValues(bulkResult as Record<string, unknown>);
     } catch {
-      // If bulk fetch fails, cards will just show without attribute pills
       console.warn('Failed to fetch bulk values for plant cards');
     }
   }
@@ -110,72 +158,34 @@ async function fetchPlantsWithValues(searchParams: SearchParams) {
   return { plants, total, page, valuesMap };
 }
 
-function filterPlants(
-  plants: Plant[],
-  valuesMap: Record<string, ResolvedValue[]>,
-  params: SearchParams
-): Plant[] {
-  return plants.filter((plant) => {
-    const values = valuesMap[plant.id] || [];
-
-    // Zone filter
-    if (params.zone) {
-      const zoneValues = values
-        .filter((v) => v.attributeId === ATTR_IDS.HIZ)
-        .map((v) => v.resolved?.value);
-      const zones = params.zone.split(',');
-      const hasMatchingZone = zones.some((z) => zoneValues.includes(z));
-      if (!hasMatchingZone) return false;
-    }
-
-    // Native filter
-    if (params.native === 'yes') {
-      const nativeValues = values.filter(
-        (v) => v.attributeId === ATTR_IDS.OREGON_NATIVE
-      );
-      if (!nativeValues.some((v) => v.resolved?.value === 'Yes')) return false;
-    }
-
-    // Deer resistant filter
-    if (params.deer === 'yes') {
-      const deerValues = values.filter(
-        (v) => v.attributeId === ATTR_IDS.DEER_RESISTANCE
-      );
-      if (
-        !deerValues.some(
-          (v) =>
-            v.resolved?.value === 'High (Usually)' ||
-            v.resolved?.value === 'Some'
-        )
-      )
-        return false;
-    }
-
-    // Water needs filter
-    if (params.water) {
-      const waterValues = values.filter(
-        (v) => v.attributeId === ATTR_IDS.WATER_AMOUNT
-      );
-      if (!waterValues.some((v) => v.resolved?.value === params.water))
-        return false;
-    }
-
-    // Pollinator filter
-    if (params.pollinator === 'yes') {
-      const benefitValues = values.filter(
-        (v) => v.attributeId === ATTR_IDS.BENEFITS
-      );
-      if (
-        !benefitValues.some((v) =>
-          v.resolved?.value?.toLowerCase().includes('pollinator')
-        )
-      )
-        return false;
-    }
-
-    return true;
-  });
+function matchesFilters(values: ResolvedValue[], params: SearchParams): boolean {
+  if (params.zone) {
+    const zoneValues = values
+      .filter(v => v.attributeId === ATTR_IDS.HIZ)
+      .map(v => v.resolved?.value);
+    const zones = params.zone.split(',');
+    if (!zones.some(z => zoneValues.includes(z))) return false;
+  }
+  if (params.native === 'yes') {
+    const nativeValues = values.filter(v => v.attributeId === ATTR_IDS.OREGON_NATIVE);
+    if (!nativeValues.some(v => v.resolved?.value === 'Yes')) return false;
+  }
+  if (params.deer === 'yes') {
+    const deerValues = values.filter(v => v.attributeId === ATTR_IDS.DEER_RESISTANCE);
+    if (!deerValues.some(v => v.resolved?.value === 'High (Usually)' || v.resolved?.value === 'Some')) return false;
+  }
+  if (params.water) {
+    const waterValues = values.filter(v => v.attributeId === ATTR_IDS.WATER_AMOUNT);
+    if (!waterValues.some(v => v.resolved?.value === params.water)) return false;
+  }
+  if (params.pollinator === 'yes') {
+    const benefitValues = values.filter(v => v.attributeId === ATTR_IDS.BENEFITS);
+    if (!benefitValues.some(v => v.resolved?.value?.toLowerCase().includes('pollinator'))) return false;
+  }
+  return true;
 }
+
+// filterPlants is now handled inside fetchPlantsWithValues via matchesFilters
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
@@ -250,7 +260,6 @@ async function PlantGrid({ searchParams }: { searchParams: SearchParams }) {
   const { plants, total, page, valuesMap } =
     await fetchPlantsWithValues(searchParams);
 
-  // Apply client-side filtering based on attribute values
   const hasActiveFilters =
     searchParams.zone ||
     searchParams.native ||
@@ -258,21 +267,10 @@ async function PlantGrid({ searchParams }: { searchParams: SearchParams }) {
     searchParams.water ||
     searchParams.pollinator;
 
-  const filteredPlants = hasActiveFilters
-    ? filterPlants(plants, valuesMap, searchParams)
-    : plants;
-
-  // For filtered results, disable pagination and show all results
-  let paginatedPlants = filteredPlants;
-  let totalPages = 1; // Only 1 page when filtering
-  let showingCount = filteredPlants.length;
-  let totalCount = total;
-
-  if (!hasActiveFilters) {
-    // Normal pagination for unfiltered results
-    totalPages = Math.ceil(total / PAGE_SIZE);
-    showingCount = plants.length;
-  }
+  const paginatedPlants = plants;
+  const totalPages = hasActiveFilters ? 1 : Math.ceil(total / PAGE_SIZE);
+  const showingCount = plants.length;
+  const totalCount = total;
 
   if (paginatedPlants.length === 0) {
     return (
