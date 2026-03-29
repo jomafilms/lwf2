@@ -9,6 +9,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "@lwf/database": "*",
     "@lwf/types": "*",
     "@neondatabase/serverless": "^0.10.0",
