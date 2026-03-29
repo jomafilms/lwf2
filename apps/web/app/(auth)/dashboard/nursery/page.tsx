@@ -236,9 +236,9 @@ export default function NurseryDashboardPage() {
               See what customers see
             </p>
           </Link>
-          <button
-            onClick={() => setEditing(!editing)}
-            className="group rounded-lg border bg-white p-4 shadow-sm hover:shadow-md transition-shadow text-left"
+          <Link
+            href={`/dashboard/nursery/profile?id=${nurseryId}`}
+            className="group rounded-lg border bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
           >
             <Pencil className="h-5 w-5 text-orange-600" />
             <h3 className="mt-2 text-sm font-semibold text-gray-900 group-hover:text-orange-600">
@@ -247,7 +247,7 @@ export default function NurseryDashboardPage() {
             <p className="mt-0.5 text-xs text-gray-500">
               Update nursery details
             </p>
-          </button>
+          </Link>
         </div>
 
         {/* Inventory Summary */}
