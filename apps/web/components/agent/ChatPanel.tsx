@@ -183,7 +183,7 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
                 <button
                   key={s}
                   onClick={() => sendMessage(s)}
-                  className="rounded-lg border border-neutral-200 px-3 py-2 text-left text-xs text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50"
+                  className="min-h-[44px] rounded-lg border border-neutral-200 px-4 py-3 text-left text-sm text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50 active:bg-neutral-100 sm:min-h-0 sm:px-3 sm:py-2 sm:text-xs"
                 >
                   {s}
                 </button>
