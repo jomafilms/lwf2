@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { AddressSearch } from "@/components/map/AddressSearch";
+import { MapPin, Flame, TreePine } from "lucide-react";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
 
 export default function Home() {
@@ -22,26 +23,27 @@ export default function Home() {
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
           FireScape
         </h1>
-        <p className="mt-4 text-lg text-neutral-600">
-          Fire-safe landscaping for your property. Enter your address to see
-          your fire zones and get plant recommendations.
+        <p className="mt-3 text-lg text-neutral-500">
+          See your fire zones. Find the right plants.
         </p>
+
         <div className="mt-8">
           <AddressSearch onSelect={handleSelect} />
         </div>
-        <div className="mt-6 flex items-center justify-center gap-6 text-sm text-neutral-500">
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block h-3 w-3 rounded-full bg-zone0" />
-            Zone 0 (0-5ft)
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block h-3 w-3 rounded-full bg-zone1" />
-            Zone 1 (5-30ft)
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block h-3 w-3 rounded-full bg-zone2" />
-            Zone 2 (30-100ft)
-          </span>
+
+        <div className="mt-10 flex justify-center gap-8 text-sm text-neutral-400">
+          <div className="flex flex-col items-center gap-1.5">
+            <MapPin className="h-5 w-5" />
+            <span>Map your property</span>
+          </div>
+          <div className="flex flex-col items-center gap-1.5">
+            <Flame className="h-5 w-5" />
+            <span>See fire zones</span>
+          </div>
+          <div className="flex flex-col items-center gap-1.5">
+            <TreePine className="h-5 w-5" />
+            <span>Get plant advice</span>
+          </div>
         </div>
       </div>
     </main>
