@@ -272,13 +272,10 @@ export default async function PlantDetailPage({
                   </summary>
                   <div className="mt-2 text-xs text-orange-700 leading-relaxed">
                     <p className="mb-2">
-                      The character score ({presented.characterScore.value}) is calculated based on multiple plant attributes 
-                      that affect fire behavior: leaf moisture, volatile compounds, dead material retention, 
-                      and overall flammability characteristics.
+                      Character score: <strong>{presented.characterScore.value}</strong> — based on leaf moisture content, volatile compounds, dead material retention, and growth characteristics.
                     </p>
                     <p>
-                      <strong>Scale:</strong> 1-3 = Low flammability, 4-6 = Moderate, 7-10 = High flammability. 
-                      Lower scores indicate better fire safety performance.
+                      <strong>Scale:</strong> 1–3 Low · 4–6 Moderate · 7–10 High · 10+ Very High
                     </p>
                   </div>
                 </details>
@@ -398,14 +395,14 @@ export default async function PlantDetailPage({
                 </svg>
               </summary>
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-sm text-gray-600 mb-4">
-                  Advanced view showing all human-readable attributes. Technical data and calculation intermediaries are excluded.
+                <p className="text-sm text-gray-500 mb-4">
+                  All available data for this plant. Source-specific technical fields are excluded.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {presented.allDisplayValues.map((attr, i) => (
                     <div key={i} className="flex justify-between py-2 border-b border-gray-100 last:border-b-0">
                       <span className="text-sm text-gray-600 font-medium">{attr.label}:</span>
-                      <span className="text-sm text-gray-900">{attr.value}</span>
+                      <span className="text-sm text-gray-900">{attr.value === 'true' ? 'Yes' : attr.value === 'false' ? 'No' : attr.value}</span>
                     </div>
                   ))}
                 </div>
