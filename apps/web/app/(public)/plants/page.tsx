@@ -126,9 +126,8 @@ async function fetchFeaturedPlants() {
 
 async function fetchCollections() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/lists/featured`);
-    if (!response.ok) throw new Error('Failed to fetch collections');
-    return await response.json();
+    const demoLists = (await import('@/lib/data/demo-lists.json')).default;
+    return demoLists.lists || [];
   } catch (error) {
     console.error('Error fetching collections:', error);
     return [];
