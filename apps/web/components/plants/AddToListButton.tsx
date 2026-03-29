@@ -138,7 +138,7 @@ export function AddToListButton({ plantId }: AddToListButtonProps) {
       </button>
 
       {open && (
-        <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-lg border border-gray-200 shadow-lg z-50 overflow-hidden">
+        <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg border border-gray-200 shadow-lg z-50 overflow-hidden">
           {/* Quick create */}
           <div className="p-2 border-b border-gray-100">
             <div className="flex gap-1">
