@@ -69,8 +69,9 @@ export function UserMenu() {
     { href: '/dashboard/chat', label: 'Chat Assistant', icon: MessageCircle },
     { href: '/dashboard/conversations', label: 'Chat History', icon: MessageCircle },
     { href: '/my-plants', label: 'My Plants', icon: TreePine },
+    { href: '/dashboard/lists', label: 'My Lists', icon: TreePine },
     { href: '/dashboard', label: 'My Properties', icon: Home },
-    { href: '/dashboard', label: 'Settings', icon: Settings },
+    { href: '/dashboard/preferences', label: 'My Preferences', icon: Settings },
   ];
 
   return (
