@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClientProviders } from "@/components/ui/ClientProviders";
 import { FloatingChatButton } from "@/components/agent/FloatingChatButton";
+import { DemoRoleSelector } from "@/components/ui/DemoRoleSelector";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({
         <ClientProviders>
           {children}
           <FloatingChatButton />
+          <DemoRoleSelector />
         </ClientProviders>
       </body>
     </html>

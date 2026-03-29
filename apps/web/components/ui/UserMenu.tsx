@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession, signOut } from '@/lib/auth-client';
+import { useDemoRole } from '@/lib/demo/use-demo-role';
 import {
   User,
   LayoutDashboard,
@@ -18,6 +19,7 @@ import {
 
 export function UserMenu() {
   const { data: session, isPending } = useSession();
+  const { demoRole, isDemoMode } = useDemoRole();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -88,6 +90,9 @@ export function UserMenu() {
             {initial}
           </span>
         )}
+        {isDemoMode && demoRole && (
+          <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-yellow-400 border border-white" />
+        )}
         <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
       </button>
 
@@ -98,6 +103,11 @@ export function UserMenu() {
               {user.name}
             </p>
             <p className="text-xs text-gray-500 truncate">{user.email}</p>
+            {isDemoMode && demoRole && (
+              <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+                🎭 Demo: {demoRole.replace('_', ' ')}
+              </span>
+            )}
           </div>
 
           <div className="py-1">

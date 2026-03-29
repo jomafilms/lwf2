@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrentUserRole } from "@/lib/user-role";
+import { getEffectiveRole } from "@/lib/demo/get-effective-role";
+import { getDemoRole } from "@/lib/demo/get-demo-role";
 import { db, properties, plans } from "@lwf/database";
 import { eq, desc, inArray } from "drizzle-orm";
 import Link from "next/link";
@@ -30,16 +32,19 @@ const roleLabels: Record<string, string> = {
   homeowner: "Homeowner",
   landscaper: "Landscaper",
   nursery_admin: "Nursery Admin",
+  hoa_admin: "HOA Admin",
   city_admin: "City Admin",
   platform_admin: "Platform Admin",
+  not_signed_in: "Not Signed In",
 };
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
-  // Get actual user role from database
-  const role = await getCurrentUserRole() || "homeowner";
+  // Get effective role (demo override or actual user role)
+  const role = await getEffectiveRole();
+  const demoRole = await getDemoRole();
   const badgeColor = roleBadgeColors[role] || roleBadgeColors.homeowner;
   const roleLabel = roleLabels[role] || "Homeowner";
 
@@ -68,73 +73,162 @@ export default async function DashboardPage() {
     }
   }
 
-  const baseSections = [
-    {
-      href: "/dashboard",
-      label: "My Properties",
-      description: "Manage your properties and fire zones",
-      icon: Home,
-    },
-    {
-      href: "/dashboard/certification",
-      label: "Insurance & Certification",
-      description: "Track Wildfire Prepared Home certification progress",
-      icon: Shield,
-    },
-    {
-      href: "/my-plants",
-      label: "My Plants",
-      description: "Your saved plants and lists",
-      icon: TreePine,
-    },
-    {
-      href: "/dashboard",
-      label: "My Lists",
-      description: "Custom plant lists and shopping lists",
-      icon: ListChecks,
-    },
-    {
-      href: "/dashboard/hoa",
-      label: "HOA & Community",
-      description: "Community compliance tracking and progress",
-      icon: FileText,
-    },
-    {
-      href: "/dashboard/preferences",
-      label: "Preferences",
-      description: "View and manage AI-learned preferences",
-      icon: Settings,
-    },
-  ];
+  // Define sections based on role
+  let sections: Array<{
+    href: string;
+    label: string;
+    description: string;
+    icon: any;
+  }> = [];
 
-  // Add role-specific sections
-  const sections = [...baseSections];
-  
-  if (role === "landscaper") {
-    sections.unshift({
-      href: "/dashboard/landscaper",
-      label: "Landscaper Tools",
-      description: "Manage clients and create fire-safe plans",
-      icon: Users,
-    });
-  }
-  
-  if (role === "city_admin") {
-    sections.unshift({
-      href: "/dashboard/city",
-      label: "City Analytics",
-      description: "Community-wide wildfire readiness progress",
-      icon: Calendar,
-    });
-  }
-  
-  if (role === "city_admin") {
-    sections.unshift({
-      href: "/dashboard/city",
-      label: "City Analytics",
-      description: "Community-wide wildfire readiness progress",
-      icon: Calendar,
-    });
+  switch (role) {
+    case "homeowner":
+      sections = [
+        {
+          href: "/dashboard",
+          label: "My Properties",
+          description: "Manage your properties and fire zones",
+          icon: Home,
+        },
+        {
+          href: "/dashboard/certification",
+          label: "Insurance & Certification",
+          description: "Track Wildfire Prepared Home certification progress",
+          icon: Shield,
+        },
+        {
+          href: "/my-plants",
+          label: "My Plants",
+          description: "Your saved plants and lists",
+          icon: TreePine,
+        },
+        {
+          href: "/dashboard/preferences",
+          label: "Preferences",
+          description: "View and manage AI-learned preferences",
+          icon: Settings,
+        },
+      ];
+      break;
+
+    case "landscaper":
+      sections = [
+        {
+          href: "/dashboard/landscaper",
+          label: "Client Management",
+          description: "Manage clients and create fire-safe plans",
+          icon: Users,
+        },
+        {
+          href: "/dashboard/plans",
+          label: "Active Plans",
+          description: "View and edit landscape plans",
+          icon: FileText,
+        },
+        {
+          href: "/dashboard/submissions",
+          label: "Plan Submissions",
+          description: "Submit plans for client approval",
+          icon: ListChecks,
+        },
+        {
+          href: "/my-plants",
+          label: "Plant Database",
+          description: "Browse fire-resistant plants",
+          icon: TreePine,
+        },
+      ];
+      break;
+
+    case "nursery_admin":
+      sections = [
+        {
+          href: "/dashboard/inventory",
+          label: "Inventory Management",
+          description: "Manage plant stock and fire-resistance ratings",
+          icon: TreePine,
+        },
+        {
+          href: "/dashboard/orders",
+          label: "Orders & Fulfillment",
+          description: "Process landscaper and homeowner orders",
+          icon: ListChecks,
+        },
+        {
+          href: "/dashboard/profile",
+          label: "Nursery Profile",
+          description: "Update business info and service areas",
+          icon: Settings,
+        },
+      ];
+      break;
+
+    case "hoa_admin":
+      sections = [
+        {
+          href: "/dashboard/members",
+          label: "Member Compliance",
+          description: "Track community wildfire preparedness",
+          icon: Users,
+        },
+        {
+          href: "/dashboard/compliance",
+          label: "Compliance Reports",
+          description: "Generate community progress reports",
+          icon: FileText,
+        },
+        {
+          href: "/dashboard/invites",
+          label: "Member Invitations",
+          description: "Invite residents to join FireScape",
+          icon: Users,
+        },
+      ];
+      break;
+
+    case "city_admin":
+      sections = [
+        {
+          href: "/dashboard/analytics",
+          label: "City Analytics",
+          description: "Community-wide wildfire readiness metrics",
+          icon: Calendar,
+        },
+        {
+          href: "/dashboard/export",
+          label: "Data Export",
+          description: "Export compliance data for planning",
+          icon: FileText,
+        },
+        {
+          href: "/dashboard/community",
+          label: "Community Stats",
+          description: "View HOA and neighborhood progress",
+          icon: Users,
+        },
+      ];
+      break;
+
+    case "not_signed_in":
+      sections = [
+        {
+          href: "/sign-in",
+          label: "Sign In Required",
+          description: "Please sign in to access your dashboard",
+          icon: Users,
+        },
+      ];
+      break;
+
+    default:
+      sections = [
+        {
+          href: "/dashboard",
+          label: "My Properties",
+          description: "Manage your properties and fire zones",
+          icon: Home,
+        },
+      ];
   }
 
   return (
@@ -165,12 +259,19 @@ export default async function DashboardPage() {
             <div>
               <h1 className="text-xl font-bold text-gray-900">{user.name}</h1>
               <p className="text-sm text-gray-500">{user.email}</p>
-              <span
-                className={`mt-1.5 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeColor}`}
-              >
-                <Shield className="h-3 w-3" />
-                {roleLabel}
-              </span>
+              <div className="mt-1.5 flex items-center gap-2">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeColor}`}
+                >
+                  <Shield className="h-3 w-3" />
+                  {roleLabel}
+                </span>
+                {demoRole && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
+                    🎭 Demo Mode
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
