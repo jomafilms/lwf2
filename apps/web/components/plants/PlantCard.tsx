@@ -45,9 +45,10 @@ function getBotanicalName(plant: Plant): string {
 interface PlantCardProps {
   plant: Plant;
   values?: ResolvedValue[];
+  onPlantClick?: (plantId: string) => void;
 }
 
-export function PlantCard({ plant, values = [] }: PlantCardProps) {
+export function PlantCard({ plant, values = [], onPlantClick }: PlantCardProps) {
   const { addToCart, isInCart } = useCart();
   const inCart = isInCart(plant.id);
 
