@@ -2,13 +2,14 @@
  * Grant Information Component
  * 
  * Lists available grant programs for fire mitigation with eligibility info.
- * Oregon-focused but includes federal programs.
+ * Uses regional context for county-specific programs.
  */
 
 import { AlertCircle, ExternalLink, DollarSign, Calendar } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { RegionalContext } from "../../lib/regional/context";
 
 interface GrantProgram {
   name: string;
@@ -186,11 +187,37 @@ function getStatusLabel(status: GrantProgram['status']): string {
   }
 }
 
+function convertRegionalGrants(regionalGrants: Array<{name: string; description: string; url?: string; eligibility?: string}>): GrantProgram[] {
+  return regionalGrants.map(grant => ({
+    name: grant.name,
+    provider: 'Local Authority',
+    maxAmount: 'Varies', 
+    deadline: 'Check with provider',
+    eligibility: grant.eligibility ? [grant.eligibility] : ['Contact provider for details'],
+    description: grant.description,
+    applicationUrl: grant.url || '#',
+    requirements: ['Contact provider for specific requirements'],
+    status: 'active' as const
+  }));
+}
+
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export function GrantInfo({ propertyLocation, estimatedCost, planScope }: GrantInfoProps) {
+  // Get regional context for county-specific grants
+  let regionalGrants: Array<{name: string; description: string; url?: string; eligibility?: string}> = [];
+  let countyName = '';
+  
+  if (propertyLocation?.county) {
+    // Use county from property data
+    const context = new RegionalContext(propertyLocation.county);
+    regionalGrants = context.getGrantPrograms();
+    countyName = context.getCountyName();
+  }
+  
   const eligibleGrants = getEligibleGrants(propertyLocation, estimatedCost, planScope);
-  const totalPotentialFunding = eligibleGrants.reduce((sum, grant) => {
+  const allGrants = [...eligibleGrants, ...convertRegionalGrants(regionalGrants)];
+  const totalPotentialFunding = allGrants.reduce((sum, grant) => {
     const amount = parseInt(grant.maxAmount.replace(/[^\d]/g, '')) * 100;
     return sum + amount;
   }, 0);
@@ -215,7 +242,7 @@ export function GrantInfo({ propertyLocation, estimatedCost, planScope }: GrantI
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{eligibleGrants.length}</div>
+              <div className="text-2xl font-bold text-green-700">{allGrants.length}</div>
               <div className="text-sm text-green-600">Eligible Programs</div>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg">
@@ -248,7 +275,7 @@ export function GrantInfo({ propertyLocation, estimatedCost, planScope }: GrantI
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Available Grant Programs</h3>
         
-        {eligibleGrants.length === 0 ? (
+        {allGrants.length === 0 ? (
           <Card>
             <CardContent className="pt-6">
               <div className="text-center text-gray-500">
@@ -262,7 +289,7 @@ export function GrantInfo({ propertyLocation, estimatedCost, planScope }: GrantI
             </CardContent>
           </Card>
         ) : (
-          eligibleGrants.map((grant, index) => {
+          allGrants.map((grant, index) => {
             const eligibility = getEstimatedEligibility(grant, estimatedCost);
             
             return (

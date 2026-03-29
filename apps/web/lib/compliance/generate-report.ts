@@ -3,10 +3,12 @@
  * 
  * Generates CC&R-compatible landscaping compliance reports for HOAs.
  * Based on CWPP standards and Dennis Holeman's requirements.
+ * Uses regional context for county-specific requirements.
  */
 
 import type { PlanPlant, ScoreResult } from "../scoring/types";
 import { calculateScores } from "../scoring/calculate";
+import { RegionalContext } from "../regional/context";
 
 export type ComplianceStatus = 'compliant' | 'needs-work' | 'non-compliant';
 
@@ -265,9 +267,46 @@ function assessCertificationProgress(
   return { met, unmet };
 }
 
+function generateSources(propertyLocation?: { lat: number; lng: number }): string[] {
+  const baseSources = [
+    "Living With Fire Plant Database",
+    "Community Wildfire Protection Plan (CWPP) Standards", 
+    "NFPA 1144 Standard for Reducing Structure Ignition Hazards",
+    "Firewise USA Guidelines"
+  ];
+
+  // Add regional sources if location provided
+  if (propertyLocation) {
+    const context = RegionalContext.fromCoordinates(propertyLocation.lat, propertyLocation.lng);
+    
+    if (context.isSupported()) {
+      const config = context.getConfig();
+      if (config) {
+        // Add state-specific sources
+        if (config.state === 'OR') {
+          baseSources.push("Oregon Department of Forestry Defensible Space Guidelines");
+        } else if (config.state === 'CA') {
+          baseSources.push("CAL FIRE Building and Landscape Guidelines");
+        }
+
+        // Add county-specific building codes
+        config.resources.buildingCodes?.forEach(code => {
+          baseSources.push(code);
+        });
+      }
+    }
+  } else {
+    // Default to Oregon sources for backward compatibility
+    baseSources.push("Oregon Department of Forestry Defensible Space Guidelines");
+  }
+
+  return baseSources;
+}
+
 export function generateComplianceReport(
   propertyAddress: string,
-  plants: PlanPlant[]
+  plants: PlanPlant[],
+  propertyLocation?: { lat: number; lng: number }
 ): ComplianceReport {
   const assessmentDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -322,12 +361,6 @@ export function generateComplianceReport(
     zones: zoneReports,
     recommendations: generateRecommendations(scores, zoneReports),
     certificationProgress: assessCertificationProgress(scores, zoneReports),
-    sources: [
-      "Living With Fire Plant Database",
-      "Community Wildfire Protection Plan (CWPP) Standards",
-      "NFPA 1144 Standard for Reducing Structure Ignition Hazards",
-      "Firewise USA Guidelines",
-      "Oregon Department of Forestry Defensible Space Guidelines"
-    ]
+    sources: generateSources(propertyLocation)
   };
 }
