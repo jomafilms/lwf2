@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { NurseryAvailability } from './NurseryAvailability';
+import { useCart } from '@/lib/cart/store';
+import { toast } from '@/components/ui/Toast';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -44,7 +46,20 @@ interface PlantCardProps {
 }
 
 export function PlantCard({ plant, values = [] }: PlantCardProps) {
-  const [saved, setSaved] = useState(false);
+  const { addToCart, isInCart } = useCart();
+  const inCart = isInCart(plant.id);
+
+  function handleAddToPlan() {
+    if (inCart) return;
+    addToCart({
+      lwfPlantId: plant.id,
+      commonName: plant.commonName,
+      botanicalName: getBotanicalName(plant),
+      imageUrl: plant.primaryImage?.url || null,
+      nurseryId: null,
+    });
+    toast('Added to plan!');
+  }
 
   const hizValues = getValuesForAttribute(values, ATTR_IDS.HIZ);
   const waterValues = getValuesForAttribute(values, ATTR_IDS.WATER_AMOUNT);
@@ -102,25 +117,17 @@ export function PlantCard({ plant, values = [] }: PlantCardProps) {
         </div>
       </Link>
 
-      {/* Bookmark button */}
+      {/* Add to Plan button */}
       <button
-        onClick={() => setSaved(!saved)}
-        className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors"
-        aria-label={saved ? 'Remove bookmark' : 'Save plant'}
+        onClick={handleAddToPlan}
+        className={`absolute top-2 right-2 px-2.5 py-1 text-xs font-medium rounded-full shadow-sm transition-colors ${
+          inCart
+            ? 'bg-green-500 text-white'
+            : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white hover:text-orange-600'
+        }`}
+        aria-label={inCart ? 'Already in your plan' : 'Add to plan'}
       >
-        <svg
-          className={`w-4 h-4 ${saved ? 'text-orange-500 fill-orange-500' : 'text-gray-400'}`}
-          fill={saved ? 'currentColor' : 'none'}
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-          />
-        </svg>
+        {inCart ? '✓ In Plan' : '+ Add to Plan'}
       </button>
 
       {/* Content */}
