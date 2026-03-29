@@ -186,7 +186,7 @@ export default async function DashboardPage() {
         {
           href: "/dashboard/invites",
           label: "Member Invitations",
-          description: "Invite residents to join FireScape",
+          description: "Invite residents to join LWF",
           icon: Users,
         },
       ];
@@ -242,7 +242,7 @@ export default async function DashboardPage() {
       <nav className="border-b bg-white">
         <div className="mx-auto max-w-4xl px-4 py-3">
           <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
-            ← Back to FireScape
+            ← Back to LWF
           </Link>
         </div>
       </nav>

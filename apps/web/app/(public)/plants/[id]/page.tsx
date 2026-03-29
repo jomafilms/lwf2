@@ -50,11 +50,11 @@ export async function generateMetadata({
   try {
     const plant = await getPlant(id);
     return {
-      title: `${plant.commonName} — FireScape`,
+      title: `${plant.commonName} — LWF`,
       description: `${plant.commonName} (${plant.genus} ${plant.species}) — fire-reluctant plant details, zone compatibility, and nursery availability.`,
     };
   } catch {
-    return { title: 'Plant Not Found — FireScape' };
+    return { title: 'Plant Not Found — LWF' };
   }
 }
 

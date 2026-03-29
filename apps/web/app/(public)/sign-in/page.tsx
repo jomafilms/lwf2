@@ -58,7 +58,7 @@ export default function SignInPage() {
             Welcome back
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            Sign in to your FireScape account
+            Sign in to your LWF account
           </p>
         </div>
 

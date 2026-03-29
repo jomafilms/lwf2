@@ -38,7 +38,7 @@ function groupSourcesByRegion(sources: Source[]) {
 
 export async function generateMetadata() {
   return {
-    title: 'Data Sources — FireScape',
+    title: 'Data Sources — LWF',
     description: 'All data sources used in the LWF plant database. Researched, sourced, and vetted by Charisse Sydoriak.',
   };
 }

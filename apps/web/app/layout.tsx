@@ -4,7 +4,7 @@ import { DemoRoleSelector } from "@/components/ui/DemoRoleSelector";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FireScape",
+  title: "LWF",
   description:
     "Fire-safety-first garden ecosystem. See your fire zones, get compliant plant recommendations, find local nursery pricing.",
 };

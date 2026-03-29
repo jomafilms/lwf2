@@ -262,7 +262,7 @@ function matchesFilters(values: ResolvedValue[], params: SearchParams): boolean 
 export const revalidate = 300;
 
 export const metadata = {
-  title: 'Browse Plants — FireScape',
+  title: 'Browse Plants — LWF',
   description:
     'Browse fire-reluctant plants for your landscape. Filter by zone, water needs, native status, and more.',
 };

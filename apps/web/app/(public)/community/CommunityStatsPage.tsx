@@ -127,7 +127,7 @@ export function CommunityStatsPage() {
         <div className="mx-auto max-w-6xl px-4 py-4">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
             <TreePine className="h-4 w-4" />
-            Back to FireScape
+            Back to LWF
           </Link>
         </div>
       </div>

@@ -13,7 +13,7 @@ export function SiteNav() {
       <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-14">
         <Link href="/" className="flex items-center gap-2 font-bold text-gray-900">
           <Flame className="h-5 w-5 text-orange-500" />
-          FireScape
+          LWF
         </Link>
 
         <div className="flex items-center gap-6 text-sm font-medium">
