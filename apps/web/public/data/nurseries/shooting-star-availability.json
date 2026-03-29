@@ -1,0 +1,152 @@
+{
+  "nursery_name": "Shooting Star Nursery",
+  "location": "Central Point, OR", 
+  "website": "https://roguevalleynursery.com",
+  "scraped_date": "2026-03-28",
+  "plants": [
+    {
+      "common_name": "English Lavender - 4\"",
+      "botanical_name": "Lavandula angustifolia",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "45",
+      "category": "Perennial",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "English Lavender - 1 gal",
+      "botanical_name": "Lavandula angustifolia", 
+      "price": "",
+      "container_size": "1 gal",
+      "availability": "23",
+      "category": "Perennial",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Deer Brush - 4\"",
+      "botanical_name": "Ceanothus integerrimus",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "12",
+      "category": "Shrub",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Deer Brush - 1 gal",
+      "botanical_name": "Ceanothus integerrimus",
+      "price": "",
+      "container_size": "1 gal",
+      "availability": "8",
+      "category": "Shrub",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Common Yarrow - 4\"",
+      "botanical_name": "Achillea millefolium",
+      "price": "",
+      "container_size": "4\"", 
+      "availability": "67",
+      "category": "Perennial",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Kinnikinnick - 4\"",
+      "botanical_name": "Arctostaphylos uva-ursi",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "15",
+      "category": "Groundcover",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Kinnikinnick - 1 gal",
+      "botanical_name": "Arctostaphylos uva-ursi",
+      "price": "",
+      "container_size": "1 gal", 
+      "availability": "0",
+      "category": "Groundcover",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Common Sage - 4\"",
+      "botanical_name": "Salvia officinalis",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "34",
+      "category": "Herb",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Manzanita - 1 gal",
+      "botanical_name": "Arctostaphylos manzanita",
+      "price": "",
+      "container_size": "1 gal",
+      "availability": "6",
+      "category": "Shrub",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Rosemary - 4\"",
+      "botanical_name": "Rosmarinus officinalis",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "89",
+      "category": "Herb",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Rosemary - 1 gal",
+      "botanical_name": "Rosmarinus officinalis",
+      "price": "",
+      "container_size": "1 gal",
+      "availability": "12",
+      "category": "Herb", 
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Penstemon - 4\"",
+      "botanical_name": "Penstemon heterophyllus",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "25",
+      "category": "Perennial",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Rock Rose - 1 gal",
+      "botanical_name": "Cistus purpureus",
+      "price": "",
+      "container_size": "1 gal",
+      "availability": "7",
+      "category": "Shrub",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Santolina - 4\"",
+      "botanical_name": "Santolina chamaecyparissus",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "18",
+      "category": "Perennial",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Sedum Autumn Joy - 4\"",
+      "botanical_name": "Sedum spectabile",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "41",
+      "category": "Perennial",
+      "url": "https://roguevalleynursery.com/retail/"
+    },
+    {
+      "common_name": "Native Buckwheat - 4\"",
+      "botanical_name": "Eriogonum fasciculatum",
+      "price": "",
+      "container_size": "4\"",
+      "availability": "9",
+      "category": "Shrub",
+      "url": "https://roguevalleynursery.com/retail/"
+    }
+  ]
+}

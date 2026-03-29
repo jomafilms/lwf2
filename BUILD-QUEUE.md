@@ -89,7 +89,7 @@
 
 - [x] **C1: P3-2 Regional template** — merged 10:20 UTC (feature/regional-template) — County abstraction system allows platform to work anywhere with minimal config. GIS APIs, field mappings, local resources all configurable per county.
 - [x] **C2: P3-1 Marketplace/transaction layer** — merged 11:35 UTC (feature/marketplace-layer) — Full order routing from homeowners→nurseries. Cart system, order management, fulfillment tracking. Revenue model designed in but not active.
-- [ ] **C3: P3-4 Landscape plan design tool** — Professional canvas for landscape plan creation. Place plants on zones, drag/drop, spacing guides, print to scale.
+- [x] **C3: P3-4 Landscape plan design tool** — merged 12:00 UTC (feature/plan-design-tool) — Professional canvas with plant placement, fire zone overlay, spacing guides, mature size visualization. Konva-based with save/load functionality.
 - [ ] **C4: P3-5 AR property walkthrough** — Camera-based property assessment using device camera. Plant identification via photo.
 - [ ] **C5: P3-6 Landscape plan scanner/reader** — Upload existing landscape plan image, AI extracts plant list and layout.
 - [ ] **C6: Climate adaptation tagging** — Flag plants showing climate stress, integrate climate projection data.
