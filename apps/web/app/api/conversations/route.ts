@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { conversations } from "@lwf2/database/schema/core";
+import { db, conversations } from "@lwf/database";
 import { getCurrentUser } from "@/lib/auth";
 import { eq, desc } from "drizzle-orm";
 
