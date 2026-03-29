@@ -5,10 +5,12 @@ import {
   getPlantValues,
   getPlantImages,
   getPlantRiskReduction,
+  getSources,
   LwfApiError,
 } from '@/lib/api/lwf';
-import type { ResolvedValue, RiskReduction, PlantImage } from '@lwf/types';
+import type { ResolvedValue, RiskReduction, PlantImage, Source } from '@lwf/types';
 import { NurseryAvailability } from '@/components/plants/NurseryAvailability';
+import { SourceCitation, SourceCitationList } from '@/components/plants/SourceCitation';
 
 // ─── Attribute grouping ──────────────────────────────────────────────────────
 
@@ -81,11 +83,14 @@ export default async function PlantDetailPage({
   }
 
   // Fetch everything in parallel
-  const [values, imagesResponse, riskReduction] = await Promise.all([
+  const [values, imagesResponse, riskReduction, sourcesResponse] = await Promise.all([
     getPlantValues(id).catch(() => [] as ResolvedValue[]),
     getPlantImages(id).catch(() => ({ plantId: id, images: [] as PlantImage[] })),
     getPlantRiskReduction(id).catch(() => null as RiskReduction | null),
+    getSources({ limit: 1000 }).catch(() => ({ data: [] as Source[], meta: { pagination: { total: 0, limit: 1000, offset: 0, hasMore: false } } })),
   ]);
+
+  const allSources = sourcesResponse.data;
 
   const images = imagesResponse.images || [];
   const allImages = plant.primaryImage
@@ -258,6 +263,29 @@ export default async function PlantDetailPage({
                       ))}
                     </div>
                   )}
+                
+                {/* Character Score Explanation */}
+                <div className="mt-4 pt-3 border-t border-orange-200">
+                  <details className="group">
+                    <summary className="cursor-pointer text-sm font-medium text-orange-900 hover:text-orange-700 flex items-center gap-1">
+                      Why this rating?
+                      <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </summary>
+                    <div className="mt-2 text-xs text-orange-700 leading-relaxed">
+                      <p className="mb-2">
+                        The character score ({riskReduction.characterScore}) is calculated based on multiple plant attributes 
+                        that affect fire behavior: leaf moisture, volatile compounds, dead material retention, 
+                        and overall flammability characteristics.
+                      </p>
+                      <p>
+                        <strong>Scale:</strong> 1-3 = Low flammability, 4-6 = Moderate, 7-10 = High flammability. 
+                        Lower scores indicate better fire safety performance.
+                      </p>
+                    </div>
+                  </details>
+                </div>
               </div>
             )}
 
@@ -301,9 +329,17 @@ export default async function PlantDetailPage({
         {/* Attribute sections */}
         {groups.length > 0 && (
           <div className="mt-10">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Plant Attributes
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">
+                Plant Attributes
+              </h2>
+              <Link
+                href="/sources"
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+              >
+                View All Sources →
+              </Link>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {groups.map((group) => (
                 <div
@@ -313,17 +349,53 @@ export default async function PlantDetailPage({
                   <h3 className="font-medium text-gray-900 mb-2">
                     {group.label}
                   </h3>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="space-y-2">
                     {group.values.map((val) => (
-                      <span
+                      <div
                         key={val.id}
-                        className="inline-flex items-center text-sm bg-gray-50 text-gray-700 px-2.5 py-1 rounded-lg border border-gray-100"
-                        title={val.resolved?.description || undefined}
+                        className="flex items-center gap-2"
                       >
-                        {val.resolved?.value || val.rawValue}
-                      </span>
+                        <span
+                          className="inline-flex items-center text-sm bg-gray-50 text-gray-700 px-2.5 py-1 rounded-lg border border-gray-100"
+                          title={val.resolved?.description || undefined}
+                        >
+                          {val.resolved?.value || val.rawValue}
+                        </span>
+                        
+                        {/* Source citation */}
+                        {val.sourceId && (
+                          <SourceCitation
+                            sourceId={val.sourceId}
+                            sourceValue={val.sourceValue}
+                            sources={allSources}
+                            variant="inline"
+                          />
+                        )}
+                      </div>
                     ))}
                   </div>
+                  
+                  {/* Group-level source summary if multiple sources */}
+                  {(() => {
+                    const groupSources = group.values
+                      .filter(val => val.sourceId)
+                      .map(val => ({ sourceId: val.sourceId, sourceValue: val.sourceValue }));
+                    
+                    if (groupSources.length > 1) {
+                      return (
+                        <div className="mt-3 pt-2 border-t border-gray-100">
+                          <div className="text-xs text-gray-500">
+                            Sources:
+                            <SourceCitationList 
+                              sources={groupSources}
+                              allSources={allSources}
+                            />
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                 </div>
               ))}
             </div>
@@ -344,6 +416,61 @@ export default async function PlantDetailPage({
             </p>
           </div>
         )}
+
+        {/* Data Provenance & Trust */}
+        <div className="mt-10 bg-blue-50 border border-blue-200 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+            Data Trust & Provenance
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p className="text-blue-800 mb-3 leading-relaxed">
+                Every data point for this plant has been <strong>researched, sourced, and vetted</strong> by 
+                Charisse Sydoriak, a fire safety expert and landscape professional.
+              </p>
+              
+              {(() => {
+                const sourcedValues = values.filter(val => val.sourceId);
+                const uniqueSources = Array.from(new Set(sourcedValues.map(val => val.sourceId)))
+                  .map(sourceId => allSources.find(s => s.id === sourceId))
+                  .filter(Boolean) as Source[];
+                
+                return (
+                  <div className="text-sm text-blue-700">
+                    <p className="mb-2">
+                      <strong>Sources for this plant:</strong> {uniqueSources.length} verified references
+                    </p>
+                    <p>
+                      <strong>Total data points:</strong> {sourcedValues.length} sourced attributes
+                    </p>
+                  </div>
+                );
+              })()}
+            </div>
+            
+            <div className="space-y-3">
+              <div>
+                <Link
+                  href="/sources"
+                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  View All Data Sources
+                </Link>
+              </div>
+              
+              <div className="text-xs text-blue-600 italic">
+                "Informed choice is the actual power" — Benjamin
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
