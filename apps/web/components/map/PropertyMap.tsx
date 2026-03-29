@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
 import { getMapboxToken } from "@/lib/geo/mapbox";
 import {
   calculateFireZones,
@@ -18,6 +17,13 @@ export interface SavedPropertyData {
   fireZones: FireZones;
 }
 
+export interface ParcelBoundary {
+  coordinates: [number, number][][];
+  address: string;
+  acreage: number;
+  accountNumber: string;
+}
+
 interface PropertyMapProps {
   center: { lat: number; lng: number };
   onDrawStart?: () => void;
@@ -27,6 +33,8 @@ interface PropertyMapProps {
     fireZones: FireZones;
   }) => void;
   savedData?: SavedPropertyData | null;
+  parcelBoundary?: ParcelBoundary | null;
+  onEditBoundary?: () => void;
 }
 
 type DrawState =
@@ -39,6 +47,8 @@ export function PropertyMap({
   onStructureDrawn,
   onZonesCalculated,
   savedData,
+  parcelBoundary,
+  onEditBoundary,
 }: PropertyMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -58,6 +68,8 @@ export function PropertyMap({
 
     const initMap = async () => {
       const mapboxgl = (await import("mapbox-gl")).default;
+      await import("mapbox-gl/dist/mapbox-gl.css");
+
       mapboxgl.accessToken = getMapboxToken();
 
       map = new mapboxgl.Map({
@@ -97,9 +109,14 @@ export function PropertyMap({
           setSourceData(map, "fire-zones", zonesGeoJSON);
           setHasZones(true);
         }
+
+        // Show parcel boundary if provided
+        if (parcelBoundary) {
+          showParcelBoundary(map, parcelBoundary);
+        }
       });
 
-      map.on("click", (e) => {
+      map.on("click", (e: { lngLat: { lng: number; lat: number } }) => {
         const state = drawStateRef.current;
         if (state.mode !== "drawing") return;
 
@@ -117,6 +134,18 @@ export function PropertyMap({
       mapRef.current = null;
     };
   }, [center]);
+
+  // Update parcel boundary when it changes after map init
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !map.isStyleLoaded()) return;
+
+    if (parcelBoundary) {
+      showParcelBoundary(map, parcelBoundary);
+    } else {
+      clearSource(map, "parcel-boundary");
+    }
+  }, [parcelBoundary]);
 
   const startDrawing = useCallback(() => {
     setDrawState({ mode: "drawing", points: [] });
@@ -146,7 +175,6 @@ export function PropertyMap({
     const coords = drawState.points;
     const closedCoords = [...coords, coords[0]];
 
-    // Show structure
     setSourceData(map, "structure", {
       type: "FeatureCollection",
       features: [
@@ -158,12 +186,10 @@ export function PropertyMap({
       ],
     });
 
-    // Calculate and show fire zones
     const zones = calculateFireZones(coords);
     const zonesGeoJSON = fireZonesToGeoJSON(zones);
     setSourceData(map, "fire-zones", zonesGeoJSON);
 
-    // Clear drawing preview
     clearSource(map, "draw-points");
     clearSource(map, "draw-line");
 
@@ -181,24 +207,46 @@ export function PropertyMap({
     <div className="relative h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
 
-      {/* Drawing controls — bottom center, touch-friendly */}
+      {/* Parcel info badge */}
+      {parcelBoundary && !isDrawing && (
+        <div className="absolute left-4 top-4 flex items-center gap-2">
+          <div className="rounded-lg bg-emerald-600/90 px-3 py-2 text-white shadow-lg backdrop-blur-sm">
+            <p className="text-xs font-semibold">✓ Property boundary found</p>
+            <p className="text-[11px] opacity-90">
+              {parcelBoundary.address} · {parcelBoundary.acreage} acres
+            </p>
+          </div>
+          {onEditBoundary && (
+            <button
+              onClick={onEditBoundary}
+              className="rounded-lg bg-white/90 px-3 py-2 text-xs font-medium shadow-lg backdrop-blur-sm hover:bg-white"
+            >
+              <Pencil className="mr-1 inline-block h-3 w-3" />
+              Edit
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Drawing controls */}
       <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2">
-        {!isDrawing && (
+        {!isDrawing && !hasZones && (
           <button
             onClick={startDrawing}
             className="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg hover:bg-neutral-50 active:bg-neutral-100 sm:py-2.5"
           >
-            {hasZones ? (
-              <>
-                <RotateCcw className="h-4 w-4" />
-                Redraw
-              </>
-            ) : (
-              <>
-                <Pencil className="h-4 w-4" />
-                Draw Structure
-              </>
-            )}
+            <Pencil className="h-4 w-4" />
+            {parcelBoundary ? "Draw Structure Footprint" : "Draw Structure"}
+          </button>
+        )}
+
+        {!isDrawing && hasZones && (
+          <button
+            onClick={startDrawing}
+            className="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg hover:bg-neutral-50 active:bg-neutral-100 sm:py-2.5"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Redraw
           </button>
         )}
 
@@ -244,7 +292,7 @@ export function PropertyMap({
         )}
       </div>
 
-      {/* Zone legend — bottom left, out of the way */}
+      {/* Zone legend */}
       {hasZones && !isDrawing && (
         <div className="absolute bottom-6 left-4 rounded-lg bg-black/70 px-3 py-2.5 text-white shadow-lg backdrop-blur-sm">
           <div className="flex items-center gap-4 text-xs">
@@ -279,14 +327,39 @@ export function PropertyMap({
 // ─── Helpers ──────────────────────────────────────────────────
 
 function addMapSources(map: mapboxgl.Map) {
-  const empty = { type: "FeatureCollection" as const, features: [] };
+  const empty: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
   map.addSource("draw-points", { type: "geojson", data: empty });
   map.addSource("draw-line", { type: "geojson", data: empty });
   map.addSource("structure", { type: "geojson", data: empty });
   map.addSource("fire-zones", { type: "geojson", data: empty });
+  map.addSource("parcel-boundary", { type: "geojson", data: empty });
 }
 
 function addMapLayers(map: mapboxgl.Map) {
+  // Parcel boundary fill (subtle)
+  map.addLayer({
+    id: "parcel-boundary-fill",
+    type: "fill",
+    source: "parcel-boundary",
+    paint: {
+      "fill-color": "#3B82F6",
+      "fill-opacity": 0.08,
+    },
+  });
+
+  // Parcel boundary outline
+  map.addLayer({
+    id: "parcel-boundary-outline",
+    type: "line",
+    source: "parcel-boundary",
+    paint: {
+      "line-color": "#3B82F6",
+      "line-width": 2.5,
+      "line-dasharray": [4, 2],
+      "line-opacity": 0.9,
+    },
+  });
+
   // Fire zone fills
   map.addLayer({
     id: "fire-zones-fill",
@@ -364,6 +437,45 @@ function addMapLayers(map: mapboxgl.Map) {
       "circle-stroke-width": 2.5,
     },
   });
+}
+
+function showParcelBoundary(map: mapboxgl.Map, parcel: ParcelBoundary) {
+  setSourceData(map, "parcel-boundary", {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: parcel.coordinates,
+        },
+        properties: {
+          address: parcel.address,
+          acreage: parcel.acreage,
+        },
+      },
+    ],
+  });
+
+  // Fit map to parcel bounds
+  try {
+    const coords = parcel.coordinates[0];
+    if (coords && coords.length > 2) {
+      let minLng = Infinity, minLat = Infinity, maxLng = -Infinity, maxLat = -Infinity;
+      for (const [lng, lat] of coords) {
+        if (lng < minLng) minLng = lng;
+        if (lat < minLat) minLat = lat;
+        if (lng > maxLng) maxLng = lng;
+        if (lat > maxLat) maxLat = lat;
+      }
+      map.fitBounds(
+        [[minLng, minLat], [maxLng, maxLat]],
+        { padding: 80, maxZoom: 19, duration: 1000 }
+      );
+    }
+  } catch {
+    // fitBounds is best-effort
+  }
 }
 
 function clearSource(map: mapboxgl.Map, id: string) {

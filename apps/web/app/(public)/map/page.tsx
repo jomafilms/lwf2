@@ -6,6 +6,7 @@ import { AddressSearch } from "@/components/map/AddressSearch";
 import {
   PropertyMap,
   type SavedPropertyData,
+  type ParcelBoundary,
 } from "@/components/map/PropertyMap";
 import { ChatPanel } from "@/components/agent/ChatPanel";
 import { useSession } from "@/lib/auth-client";
@@ -18,12 +19,9 @@ import {
   Check,
   Loader2,
   FileText,
-  BarChart3,
 } from "lucide-react";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
 import type { FireZones } from "@/lib/geo/fire-zones";
-import { ScoresPanel } from "@/components/scoring/ScoresPanel";
-import type { PlanPlant } from "@/lib/scoring";
 
 type Step = "view" | "draw" | "zones";
 
@@ -46,8 +44,10 @@ export default function MapPage() {
   >("idle");
   const [savedData, setSavedData] = useState<SavedPropertyData | null>(null);
   const [planId, setPlanId] = useState<string | null>(null);
-  const [scoresOpen, setScoresOpen] = useState(false);
-  const [planPlants, setPlanPlants] = useState<PlanPlant[]>([]);
+
+  // Parcel auto-detection state
+  const [parcelBoundary, setParcelBoundary] = useState<ParcelBoundary | null>(null);
+  const [parcelLoading, setParcelLoading] = useState(false);
 
   // Load saved property from URL param
   useEffect(() => {
@@ -82,7 +82,6 @@ export default function MapPage() {
             .catch(() => {});
         })
         .catch(() => {
-          // Property not found or not authorized — just show address search
           setSavedPropertyId(null);
           setSaveState("idle");
         });
@@ -91,18 +90,44 @@ export default function MapPage() {
 
   // Load from lat/lng params
   useEffect(() => {
-    if (searchParams.get("property")) return; // skip if loading from property
+    if (searchParams.get("property")) return;
     const lat = searchParams.get("lat");
     const lng = searchParams.get("lng");
     const address = searchParams.get("address");
     if (lat && lng) {
-      setLocation({
+      const loc = {
         lat: parseFloat(lat),
         lng: parseFloat(lng),
         address: address || `${lat}, ${lng}`,
-      });
+      };
+      setLocation(loc);
+      // Auto-detect parcel for lat/lng params too
+      fetchParcelBoundary(parseFloat(lat), parseFloat(lng));
     }
   }, [searchParams]);
+
+  // Fetch parcel boundary from GIS API
+  const fetchParcelBoundary = useCallback(async (lat: number, lng: number) => {
+    setParcelLoading(true);
+    setParcelBoundary(null);
+    try {
+      const res = await fetch(`/api/parcels?lat=${lat}&lng=${lng}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.found && data.parcel) {
+        setParcelBoundary({
+          coordinates: data.parcel.boundary,
+          address: data.parcel.address,
+          acreage: data.parcel.acreage,
+          accountNumber: data.parcel.accountNumber,
+        });
+      }
+    } catch {
+      // Parcel lookup failed — silently fall back to manual
+    } finally {
+      setParcelLoading(false);
+    }
+  }, []);
 
   const handleAddressSelect = (result: GeocodingResult) => {
     setLocation(result);
@@ -113,6 +138,10 @@ export default function MapPage() {
     setZoneData(null);
     setSavedData(null);
     setPlanId(null);
+    setParcelBoundary(null);
+
+    // Auto-detect parcel boundary
+    fetchParcelBoundary(result.lat, result.lng);
   };
 
   const handleZonesCalculated = useCallback((data: ZoneData) => {
@@ -121,11 +150,16 @@ export default function MapPage() {
     setSavedPropertyId(null);
   }, []);
 
+  const handleEditBoundary = useCallback(() => {
+    // Clear parcel boundary and let user draw manually
+    setParcelBoundary(null);
+    setStep("view");
+  }, []);
+
   const handleSave = async () => {
     if (!location || !zoneData) return;
 
     if (!session?.user) {
-      // Redirect to sign-in with return URL
       const returnUrl = `/map?lat=${location.lat}&lng=${location.lng}&address=${encodeURIComponent(location.address)}`;
       router.push(`/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`);
       return;
@@ -152,7 +186,6 @@ export default function MapPage() {
       setSavedPropertyId(property.id);
       setSaveState("saved");
 
-      // Update URL without full navigation
       const url = new URL(window.location.href);
       url.searchParams.set("property", property.id);
       url.searchParams.delete("lat");
@@ -195,6 +228,7 @@ export default function MapPage() {
             setSavedPropertyId(null);
             setSaveState("idle");
             setSavedData(null);
+            setParcelBoundary(null);
           }}
           className="rounded p-1.5 hover:bg-neutral-100"
           title="Back to search"
@@ -206,6 +240,12 @@ export default function MapPage() {
           <p className="truncate text-xs font-medium sm:text-sm">
             {location.address}
           </p>
+          {parcelLoading && (
+            <p className="flex items-center gap-1 text-[10px] text-neutral-400">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Looking up property boundary…
+            </p>
+          )}
         </div>
 
         {/* Step indicator — desktop only */}
@@ -271,7 +311,7 @@ export default function MapPage() {
           </button>
         )}
 
-        {/* Download Plan button — visible when there's a saved plan */}
+        {/* Download Plan button */}
         {planId && (
           <a
             href={`/plans/${planId}/document`}
@@ -282,23 +322,6 @@ export default function MapPage() {
             <FileText className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Download Plan</span>
           </a>
-        )}
-
-        {/* Scores toggle */}
-        {step === "zones" && planPlants.length > 0 && (
-          <button
-            onClick={() => setScoresOpen(!scoresOpen)}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
-              scoresOpen
-                ? "bg-emerald-100 text-emerald-900"
-                : "bg-emerald-600 text-white hover:bg-emerald-700"
-            }`}
-          >
-            <BarChart3 className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">
-              {scoresOpen ? "Hide scores" : "Scores"}
-            </span>
-          </button>
         )}
 
         {/* Chat toggle */}
@@ -329,11 +352,13 @@ export default function MapPage() {
             onStructureDrawn={() => setStep("zones")}
             onZonesCalculated={handleZonesCalculated}
             savedData={savedData}
+            parcelBoundary={parcelBoundary}
+            onEditBoundary={handleEditBoundary}
           />
         </div>
 
-        {/* Guided prompt */}
-        {step === "view" && (
+        {/* Guided prompt — only when no parcel boundary */}
+        {step === "view" && !parcelBoundary && !parcelLoading && (
           <div className="absolute bottom-20 left-1/2 -translate-x-1/2 sm:bottom-8">
             <div className="rounded-xl bg-white px-4 py-2.5 shadow-lg sm:px-5 sm:py-3">
               <p className="text-xs font-medium text-neutral-700 sm:text-sm">
@@ -343,10 +368,14 @@ export default function MapPage() {
           </div>
         )}
 
-        {/* Scores panel — bottom-left overlay */}
-        {scoresOpen && planPlants.length > 0 && (
-          <div className="absolute bottom-4 left-4 z-10 w-[340px] max-h-[70dvh] overflow-y-auto rounded-2xl border bg-white/95 p-4 shadow-xl backdrop-blur-sm sm:w-[400px]">
-            <ScoresPanel plants={planPlants} />
+        {/* Guided prompt — parcel found, draw structure */}
+        {step === "view" && parcelBoundary && (
+          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 sm:bottom-8">
+            <div className="rounded-xl bg-white px-4 py-2.5 shadow-lg sm:px-5 sm:py-3">
+              <p className="text-xs font-medium text-neutral-700 sm:text-sm">
+                Property found! Now draw your building footprint
+              </p>
+            </div>
           </div>
         )}
 
