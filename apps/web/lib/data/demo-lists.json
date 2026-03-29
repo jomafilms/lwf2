@@ -1,0 +1,1033 @@
+{
+<<<<<<< Updated upstream
+  "generated": "2026-03-29T15:12:11.403Z",
+  "lists": [
+    {
+=======
+  "generated": "2026-03-29T19:27:38.863Z",
+  "lists": [
+    {
+      "name": "Zone 0 Safe Plants (0-5ft)",
+      "organization": {
+        "type": "community",
+        "name": "Rogue Valley Fire Safe Council"
+      },
+      "description": "Fire-reluctant plants suitable for the closest zone to structures (0-5 feet). These plants have been evaluated for low flammability and are safe for defensible space.",
+      "plants": [
+        {
+          "plantId": "892fa211-7bb0-49ec-a394-c1d57e9e6865",
+          "commonName": "Aeonium",
+          "botanicalName": "Aeonium decorum, simsii",
+          "reason": "Zone 0-5 approved (Charisse's list)"
+        },
+        {
+          "plantId": "ceb38976-4d1a-4698-8b5c-99a73b34e0bb",
+          "commonName": "Carpet bugleweed",
+          "botanicalName": "Ajuga reptans",
+          "reason": "Zone 0-5 approved (Charisse's list)",
+          "imageUrl": "https://bs.plantnet.org/image/o/537f02aead08645eaabec85e618d47a38e297b13"
+        },
+        {
+          "plantId": "4cb70785-0d00-4b48-9280-6b392d1938d8",
+          "commonName": "Hooker's, tapper tipped onion",
+          "botanicalName": "Allium acuminatum",
+          "reason": "Zone 0-5 approved (Charisse's list)",
+          "imageUrl": "https://bs.plantnet.org/image/o/df2642246ac363b942d923797b17455ba00e7cba"
+        },
+        {
+          "plantId": "f51d4bd2-926b-49e6-823f-0b6acc70d3a5",
+          "commonName": "Nodding onion",
+          "botanicalName": "Allium cernum",
+          "reason": "Zone 0-5 approved (Consider)",
+          "imageUrl": "https://bs.plantnet.org/image/o/10804d6a939e34f6f2acbde54b7ebee317333d7a"
+        },
+        {
+          "plantId": "d59a48e4-8947-455f-bf64-6ee711fb1bf2",
+          "commonName": "Star of Persia allium",
+          "botanicalName": "Allium cristophii",
+          "reason": "Zone 0-5 approved (Consider)",
+          "imageUrl": "https://bs.plantnet.org/image/o/ad9e71132cdbc42af93ac606c058e1b5b51e4fbe"
+        },
+        {
+          "plantId": "88403139-a113-47f2-ab23-a837110cb93e",
+          "commonName": "Ivory Queen allium",
+          "botanicalName": "Allium karataviense",
+          "reason": "Zone 0-5 approved (Consider)",
+          "imageUrl": "https://bs.plantnet.org/image/o/4e3b8905f009eafc617d8edc2c0d2c613b5a7087"
+        },
+        {
+          "plantId": "bb0df762-0c8a-458a-b53f-c814f581b9a1",
+          "commonName": "Chives",
+          "botanicalName": "Allium schoenoprasum",
+          "reason": "Zone 0-5 approved (Consider)",
+          "imageUrl": "https://bs.plantnet.org/image/o/5e033417dbfff7e86535bd7f431bb4162804a0c9"
+        }
+      ]
+    },
+    {
+      "name": "Oregon Native Fire-Reluctant Plants",
+      "organization": {
+        "type": "community",
+        "name": "Southern Oregon Native Plant Society"
+      },
+      "description": "Native plants from Oregon that provide fire protection while supporting local ecosystems and wildlife.",
+      "plants": [
+        {
+          "plantId": "b9568b79-a7a8-4ce2-acf1-1ebe6d0153b8",
+          "commonName": "Oregon vine maple",
+          "botanicalName": "Acer circinatum",
+          "reason": "Oregon native • Low fire risk (score: 3)",
+          "imageUrl": "https://bs.plantnet.org/image/o/c3a2b8c0a4526f9f18adb3b49aa280d1e4a2d1c8"
+        },
+        {
+          "plantId": "bf20a3b0-be67-42e7-91c1-baecfa68e7b3",
+          "commonName": "Rocky mountain maple",
+          "botanicalName": "Acer glabrum",
+          "reason": "Oregon native • Low fire risk (score: 3)",
+          "imageUrl": "https://bs.plantnet.org/image/o/c54073a8841566679dfd8c62a6582daef4be9e13"
+        },
+        {
+          "plantId": "0b037b67-405d-4c79-87fa-eabb01468680",
+          "commonName": "Big leaf maple, Oregon maple",
+          "botanicalName": "Acer macrophyllum",
+          "reason": "Oregon native • Low fire risk (score: 4)",
+          "imageUrl": "https://bs.plantnet.org/image/o/e6fa01abb9db3d583e3a804a672a982550575082"
+        },
+        {
+          "plantId": "d88568a3-5ab5-43db-8614-3814b4376dea",
+          "commonName": "California buckeye",
+          "botanicalName": "Aesculus californica",
+          "reason": "Oregon native • Low fire risk (score: 4)"
+        },
+        {
+          "plantId": "4cb70785-0d00-4b48-9280-6b392d1938d8",
+          "commonName": "Hooker's, tapper tipped onion",
+          "botanicalName": "Allium acuminatum",
+          "reason": "Oregon native • Low fire risk (score: 2)",
+          "imageUrl": "https://bs.plantnet.org/image/o/df2642246ac363b942d923797b17455ba00e7cba"
+        },
+        {
+          "plantId": "81d4edb4-e7ea-4d72-ba85-0cb29a2c6c83",
+          "commonName": "Ornamental alliums, onions",
+          "botanicalName": "Allium spp.",
+          "reason": "Oregon native • Low fire risk (score: 2)",
+          "imageUrl": "https://bs.plantnet.org/image/o/1722dd557a90022974d0de6946e0ab8e9fcab8b8"
+        },
+        {
+          "plantId": "b7624726-b651-461c-8d15-56b3679773be",
+          "commonName": "Mountain/thin-leaved/gray alder",
+          "botanicalName": "Alnus incana tenuifolia",
+          "reason": "Oregon native • Low fire risk (score: 6)",
+          "imageUrl": "https://bs.plantnet.org/image/o/8fc756a6fba9b6b8e2cba8294b71a122331ec493"
+        },
+        {
+          "plantId": "62b29f6c-9253-4262-8b27-aab35953d337",
+          "commonName": "White alder",
+          "botanicalName": "Alnus rhombifolia",
+          "reason": "Oregon native • Low fire risk (score: 5)",
+          "imageUrl": "https://bs.plantnet.org/image/o/30df6a0bd26b46f16fe9a4498e4de7e7adda651c"
+        },
+        {
+          "plantId": "6912dc15-711e-4ad3-8f1c-abee63cefd27",
+          "commonName": "Red alder",
+          "botanicalName": "Alnus rubra",
+          "reason": "Oregon native • Low fire risk (score: 5)",
+          "imageUrl": "https://bs.plantnet.org/image/o/58fc3282289cf606412008da81be2ce40ed6120f"
+        },
+        {
+          "plantId": "b12d6857-d986-4bbe-865f-03700da7e1f9",
+          "commonName": "Pacific sericeberry",
+          "botanicalName": "Amelancier alnifolia 'Regent' Dwarf",
+          "reason": "Oregon native • Low fire risk (score: 5)"
+        },
+        {
+          "plantId": "5c511c76-8b11-4556-894e-b9fd5d5e08ba",
+          "commonName": "Pearly everlasting",
+          "botanicalName": "Anaphalis margaritiacea",
+          "reason": "Oregon native • Low fire risk (score: 6)",
+          "imageUrl": "https://bs.plantnet.org/image/o/ae7e6ccc447f75c7a513758f6e2c1314c603a791"
+        },
+        {
+          "plantId": "6b668fba-4276-47c2-8825-0b45f3a09f8e",
+          "commonName": "Little-leaf & Rosy Pussytoes",
+          "botanicalName": "Antennaria microphylla",
+          "reason": "Oregon native • Low fire risk (score: 4)",
+          "imageUrl": "https://bs.plantnet.org/image/o/78c7bfb10e180c4eae4ebae09adf6e9e057d9bc3"
+        },
+        {
+          "plantId": "992916a3-652c-4da0-8697-a19892e5a404",
+          "commonName": "Small-leaf Pussytoes",
+          "botanicalName": "Antennaria parvifolia (syn microphylla)",
+          "reason": "Oregon native • Low fire risk (score: 4)",
+          "imageUrl": "https://bs.plantnet.org/image/o/14c983d9baf7031f5d54752fd1d231b9fd61088e"
+        },
+        {
+          "plantId": "85fa2162-52ca-4a66-a3b6-dc7adfe821e3",
+          "commonName": "Pink pussytoes",
+          "botanicalName": "Antennaria rosea",
+          "reason": "Oregon native • Low fire risk (score: 4)",
+          "imageUrl": "https://bs.plantnet.org/image/o/1652a0d694f7224b596330fed558c39c0fecce5d"
+        },
+        {
+          "plantId": "03c75df0-0565-4124-9a32-1165a17098cb",
+          "commonName": "California, vanilla sweetgrass",
+          "botanicalName": "Anthoxanthum occidentale",
+          "reason": "Oregon native • Low fire risk (score: 6)",
+          "imageUrl": "https://d2seqvvyy3b8p2.cloudfront.net/1a9f02f01620bb05d0c6d130263e4377.jpg"
+        },
+        {
+          "plantId": "7bcff6ca-1368-4342-a6d6-e3d51e0e354c",
+          "commonName": "Indian hemp, Dogbane",
+          "botanicalName": "Apocynum cannabinum",
+          "reason": "Oregon native • Low fire risk (score: 2)",
+          "imageUrl": "https://bs.plantnet.org/image/o/1a18bf8fdd691d4341d1d2ea3d631bbcabad6c45"
+        },
+        {
+          "plantId": "f84cb55f-3515-4693-bca6-9307d15f9bed",
+          "commonName": "Western Columbine",
+          "botanicalName": "Aquilegia formosa",
+          "reason": "Oregon native • Low fire risk (score: 2)",
+          "imageUrl": "https://bs.plantnet.org/image/o/75e6d58dfa9cce234ddb7853d4b067d72bffe9bd"
+        },
+        {
+          "plantId": "f8c5eb6c-ada8-40fc-ba8b-78632f27f200",
+          "commonName": "Elk clover",
+          "botanicalName": "Aralia californica",
+          "reason": "Oregon native • Low fire risk (score: 6)"
+        },
+        {
+          "plantId": "9704e2da-4bb3-4fdd-83c1-7531f989d803",
+          "commonName": "Pacific madrone",
+          "botanicalName": "Arbutus menziesii",
+          "reason": "Oregon native • Low fire risk (score: 4)",
+          "imageUrl": "https://bs.plantnet.org/image/o/37537f21e3fb7de6a4c977f971465201168aa054"
+        },
+        {
+          "plantId": "8c8f6945-20e2-4955-8402-6c0566c1dbdc",
+          "commonName": "Bristly or hairy manzanita",
+          "botanicalName": "Arctostaphylos columbiana",
+          "reason": "Oregon native",
+          "imageUrl": "https://bs.plantnet.org/image/o/bed0589eb6d1f5b05354dab1d96d5234b6f28c2a"
+        }
+      ]
+    },
+    {
+>>>>>>> Stashed changes
+      "name": "City of Ashland — Restricted Plants",
+      "organization": {
+        "type": "city",
+        "name": "City of Ashland"
+      },
+      "description": "Plants that are restricted or prohibited within city limits due to fire risk, invasive nature, or local ordinances.",
+      "plants": [
+        {
+<<<<<<< Updated upstream
+          "plantId": "5b2ca061-b5b7-40fa-9941-269c17c52413",
+          "commonName": "Abelia",
+          "botanicalName": "Abelia (syn Linnaea) spp.",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "1b78126d-1f69-44b0-a06b-47116e41270d",
+          "commonName": "Glossy abelia",
+          "botanicalName": "Abelia (syn Linnaea) x grandiflora",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "08fa60f5-0bb0-4b43-b1ab-eca47fc94c51",
+          "commonName": "White forsythia, Korean Abelia",
+          "botanicalName": "Abeliophyllum distichum",
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "0783904c-e434-4536-b6cd-5e8b6283c8d3",
+          "commonName": "White fir",
+          "botanicalName": "Abies concolor",
+          "reason": "Requires evaluation for fire risk"
+=======
+          "plantId": "0783904c-e434-4536-b6cd-5e8b6283c8d3",
+          "commonName": "White fir",
+          "botanicalName": "Abies concolor",
+          "reason": "High flammability (score: 13)",
+          "imageUrl": "https://bs.plantnet.org/image/o/f3bd61a94db7294e0fad1eb060e1a8903b8338b7"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "a39d5c68-d480-4cd7-986f-734b0e3416ac",
+          "commonName": "Spanish fir",
+          "botanicalName": "Abies pinsapo",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "High flammability (score: 10)",
+          "imageUrl": "https://bs.plantnet.org/image/o/59733dc0033c93533dd69ea574d5964b59e67fce"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "68fa2b1d-9c12-4567-8ddb-6a18e3c2dc97",
+          "commonName": "Firs",
+          "botanicalName": "Abies spp.",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "High flammability (score: 14)",
+          "imageUrl": "https://bs.plantnet.org/image/o/8e171a19f992a34d5d44693472320f6044a5d561"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "731c5977-7de3-4797-b2a2-92aeb96a3309",
+          "commonName": "Velvetleaf",
+          "botanicalName": "Abutilon theophrasti",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+        },
+        {
+          "plantId": "4c11c367-0d1a-4609-9000-49d94409e6cd",
+          "commonName": "Chinese Lantern, Flowering maple",
+          "botanicalName": "Abutilon x hybridum",
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/d8fcf618a7695629980757d11fc836d49717499b"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "69923d0f-ae24-44ab-8c03-2790223aed8b",
+          "commonName": "Fernleaf acacia & purple leaf acacia",
+<<<<<<< Updated upstream
+          "botanicalName": "Acacia baileyana",
+          "reason": "Requires evaluation for fire risk"
+=======
+          "botanicalName": "Acacia baileyana Purpurea",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/0e97041ec5129dbe2d3f5163964acf67add1dd76"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "cf3d95c7-c9f1-46b8-89bc-b935f14ea008",
+          "commonName": "Acacia",
+          "botanicalName": "Acacia spp.",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "High flammability (score: 15)",
+          "imageUrl": "https://bs.plantnet.org/image/o/656dde71846bf3c7d5ff6ae81162364f4776ab1e"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "e19e0841-98b6-404b-9ad6-571d88f94726",
+          "commonName": "Biddy-biddy",
+          "botanicalName": "Acaena novae-zelandiae",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/94d2aeed97f1c5cc6befe12ecdf1c9be21055eee"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "3c9f3823-40b0-4581-af44-63a1f198539e",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus mollis",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/09cc2ba9e227a0a99082a948fca14e9d1d8a755c"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "5a520ca5-0fc0-454d-83ec-d9769b0a6af9",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus spp.",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/09cc2ba9e227a0a99082a948fca14e9d1d8a755c"
+        },
+        {
+          "plantId": "ef7bcf92-5bd9-4bdb-8942-f9ad868647b5",
+          "commonName": "Amur maple",
+          "botanicalName": "Acer ginnala",
+          "reason": "Invasive qualities: Invasive"
+        },
+        {
+          "plantId": "10e9337c-0804-4b11-8550-a5a68b3fcf03",
+          "commonName": "Box elder",
+          "botanicalName": "Acer negundo",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/cdf9f30ae2819e928fc1d152e9434e83e1b4556d"
+        },
+        {
+          "plantId": "1d91c0ef-c7d7-4a04-88a1-b9d368e067e0",
+          "commonName": "Japanese maple",
+          "botanicalName": "Acer palmatum",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "53160464-c1f5-4db4-a24a-e84830ba69a6",
+          "commonName": "Lace leaf Japanese maple",
+          "botanicalName": "Acer palmatum 'Dissectum",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "a6c9cadd-6049-422b-a293-9baeecc97f84",
+          "commonName": "Senkaki Japanese maple",
+          "botanicalName": "Acer palmatum 'Sango Kaku",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "0cb54df3-5941-4bdc-bc90-b195df7d514d",
+          "commonName": "Red Japanese maple",
+          "botanicalName": "Acer palmatum 'Atropurpureum'",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "c1fd83cd-1e68-4ff9-9f31-1def554084b4",
+          "commonName": "Harlequin and Norway maple",
+          "botanicalName": "Acer platanoides",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/3f67eefdeb9588b3fcd8cd65ce24a2f11cd6e6bb"
+        },
+        {
+          "plantId": "e71160b7-596f-4758-a421-e0e6d185dcb1",
+          "commonName": "Sycamore maple",
+          "botanicalName": "Acer pseudoplatanus",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/eb6373c5f52327ead500bd2ea145734b2491cbe5"
+        },
+        {
+          "plantId": "7500c7ed-4617-4da5-9389-11ad2b13b47c",
+          "commonName": "Silver maple, white maple",
+          "botanicalName": "Acer saccharinum",
+          "reason": "Invasive qualities: Invasive",
+          "imageUrl": "https://bs.plantnet.org/image/o/c145c2daa0ca840cd6040f95cf3a5d67cbf9d7ff"
+        }
+      ]
+    },
+    {
+      "name": "Deer-Resistant Choices",
+      "organization": {
+        "type": "community",
+        "name": "Rogue Valley Gardeners Association"
+      },
+      "description": "Plants that deer typically avoid, perfect for properties in areas with high deer populations.",
+      "plants": [
+        {
+          "plantId": "1b78126d-1f69-44b0-a06b-47116e41270d",
+          "commonName": "Glossy abelia",
+          "botanicalName": "Abelia (syn Linnaea) x grandiflora",
+          "reason": "Deer resistance: High (Usually)"
+        },
+        {
+          "plantId": "08fa60f5-0bb0-4b43-b1ab-eca47fc94c51",
+          "commonName": "White forsythia, Korean Abelia",
+          "botanicalName": "Abeliophyllum distichum",
+          "reason": "Deer resistance: Some",
+          "imageUrl": "https://bs.plantnet.org/image/o/41d5e6af327497ca460667d41a69b2a28ac17f21"
+        },
+        {
+          "plantId": "0783904c-e434-4536-b6cd-5e8b6283c8d3",
+          "commonName": "White fir",
+          "botanicalName": "Abies concolor",
+          "reason": "Deer resistance: Very High",
+          "imageUrl": "https://bs.plantnet.org/image/o/f3bd61a94db7294e0fad1eb060e1a8903b8338b7"
+        },
+        {
+          "plantId": "a39d5c68-d480-4cd7-986f-734b0e3416ac",
+          "commonName": "Spanish fir",
+          "botanicalName": "Abies pinsapo",
+          "reason": "Deer resistance: Very High",
+          "imageUrl": "https://bs.plantnet.org/image/o/59733dc0033c93533dd69ea574d5964b59e67fce"
+        },
+        {
+          "plantId": "68fa2b1d-9c12-4567-8ddb-6a18e3c2dc97",
+          "commonName": "Firs",
+          "botanicalName": "Abies spp.",
+          "reason": "Deer resistance: Very High",
+          "imageUrl": "https://bs.plantnet.org/image/o/8e171a19f992a34d5d44693472320f6044a5d561"
+        },
+        {
+          "plantId": "69923d0f-ae24-44ab-8c03-2790223aed8b",
+          "commonName": "Fernleaf acacia & purple leaf acacia",
+          "botanicalName": "Acacia baileyana Purpurea",
+          "reason": "Deer resistance: Some",
+          "imageUrl": "https://bs.plantnet.org/image/o/0e97041ec5129dbe2d3f5163964acf67add1dd76"
+        },
+        {
+          "plantId": "3c9f3823-40b0-4581-af44-63a1f198539e",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus mollis",
+          "reason": "Deer resistance: Some",
+          "imageUrl": "https://bs.plantnet.org/image/o/09cc2ba9e227a0a99082a948fca14e9d1d8a755c"
+        },
+        {
+          "plantId": "5a520ca5-0fc0-454d-83ec-d9769b0a6af9",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus spp.",
+          "reason": "Deer resistance: Some",
+          "imageUrl": "https://bs.plantnet.org/image/o/09cc2ba9e227a0a99082a948fca14e9d1d8a755c"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "0e198be2-086f-4984-8d69-d9ec840ab8ac",
+          "commonName": "Pineapple Guava, Feijoa",
+          "botanicalName": "Acca (syn Feijoa) sellowiana",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "Deer resistance: Some",
+          "imageUrl": "https://bs.plantnet.org/image/o/33344f34731dfeb5ea4f7f7bbce41d053fc6a93d"
+        },
+        {
+          "plantId": "b9568b79-a7a8-4ce2-acf1-1ebe6d0153b8",
+          "commonName": "Oregon vine maple",
+          "botanicalName": "Acer circinatum",
+          "reason": "Deer resistance: High (Usually)",
+          "imageUrl": "https://bs.plantnet.org/image/o/c3a2b8c0a4526f9f18adb3b49aa280d1e4a2d1c8"
+        },
+        {
+          "plantId": "452c3646-cd2c-4025-8123-9c9384b83771",
+          "commonName": "Bigtooth Maple",
+          "botanicalName": "Acer grandidentatum",
+          "reason": "Deer resistance: Some"
+        },
+        {
+          "plantId": "0b037b67-405d-4c79-87fa-eabb01468680",
+          "commonName": "Big leaf maple, Oregon maple",
+          "botanicalName": "Acer macrophyllum",
+          "reason": "Deer resistance: High (Usually)",
+          "imageUrl": "https://bs.plantnet.org/image/o/e6fa01abb9db3d583e3a804a672a982550575082"
+        },
+        {
+          "plantId": "10e9337c-0804-4b11-8550-a5a68b3fcf03",
+          "commonName": "Box elder",
+          "botanicalName": "Acer negundo",
+          "reason": "Deer resistance: Very High",
+          "imageUrl": "https://bs.plantnet.org/image/o/cdf9f30ae2819e928fc1d152e9434e83e1b4556d"
+        },
+        {
+          "plantId": "2990e3a0-25ed-47db-9e33-aca81ef3140f",
+          "commonName": "Oshio Beni Japanese maple",
+          "botanicalName": "Acer palmatum 'Oshio Beni",
+          "reason": "Deer resistance: High (Usually)",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "d3006014-16c8-420c-8536-b2fc0ac4debd",
+          "commonName": "Shishigashira Japanese maple",
+          "botanicalName": "Acer palmatum 'Shishigashira",
+          "reason": "Deer resistance: High (Usually)",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "1d91c0ef-c7d7-4a04-88a1-b9d368e067e0",
+          "commonName": "Japanese maple",
+          "botanicalName": "Acer palmatum",
+          "reason": "Deer resistance: High (Usually)",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "d806f387-2fc8-4b6b-a4de-79bad0974483",
+          "commonName": "Bloodgood Japanese maple",
+          "botanicalName": "Acer palmatum 'Bloodgood",
+          "reason": "Deer resistance: High (Usually)",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "47c69c53-4ebb-43ac-aeec-9b0f9564c264",
+          "commonName": "Bihou Japanese maple",
+          "botanicalName": "Acer palmatum 'Bihou'",
+          "reason": "Deer resistance: High (Usually)",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        }
+      ]
+    },
+    {
+      "name": "Low Water Fire-Reluctant Plants",
+      "organization": {
+        "type": "community",
+        "name": "Southern Oregon Water Conservation Council"
+      },
+      "description": "Water-wise plants that provide fire protection while reducing irrigation needs during dry seasons.",
+      "plants": [
+        {
+          "plantId": "0e198be2-086f-4984-8d69-d9ec840ab8ac",
+          "commonName": "Pineapple Guava, Feijoa",
+          "botanicalName": "Acca (syn Feijoa) sellowiana",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/33344f34731dfeb5ea4f7f7bbce41d053fc6a93d"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "32ab9644-75de-4062-bccd-c3dd25fdbaa4",
+          "commonName": "Trident Maple",
+          "botanicalName": "Acer buergeranum",
+<<<<<<< Updated upstream
+          "reason": "Requires evaluation for fire risk"
+=======
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/09c677df9b26f871ab33bf006a4479f32c303ccb"
+        },
+        {
+          "plantId": "d88568a3-5ab5-43db-8614-3814b4376dea",
+          "commonName": "California buckeye",
+          "botanicalName": "Aesculus californica",
+          "reason": "Low water • Fire-reluctant"
+        },
+        {
+          "plantId": "54cd9392-fb72-4ec2-b36b-89101641d8c7",
+          "commonName": "Bubblegum mint",
+          "botanicalName": "Agastache cana",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://d2seqvvyy3b8p2.cloudfront.net/5fd7155f0f1e93aca26a6f85c0cf3175.jpg"
+        },
+        {
+          "plantId": "44cd5488-053e-4450-9bb6-5188a594826c",
+          "commonName": "Century plant",
+          "botanicalName": "Agave americana 'Alba Picata'",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/7dbb6922ff2cfb6854577d4be12cab983532259e"
+        },
+        {
+          "plantId": "eaf307da-7e3e-47c0-a8af-885dec40b8c7",
+          "commonName": "Agave",
+          "botanicalName": "Agave victoriae-reginae",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/2722c4a4e6f864e2cb58ca78e1b16f2f41552149"
+        },
+        {
+          "plantId": "f51d4bd2-926b-49e6-823f-0b6acc70d3a5",
+          "commonName": "Nodding onion",
+          "botanicalName": "Allium cernum",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/10804d6a939e34f6f2acbde54b7ebee317333d7a"
+        },
+        {
+          "plantId": "f3d94486-79c5-4ff3-b075-fb20bd50fcc2",
+          "commonName": "Dwarf aloe",
+          "botanicalName": "Aloe aristata",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://d2seqvvyy3b8p2.cloudfront.net/d68b28af2d3fd3cfaf27705dcda23c73.jpg"
+        },
+        {
+          "plantId": "30adc771-0571-4083-b1fa-8786e80db1b8",
+          "commonName": "Aloe",
+          "botanicalName": "Aloe brevifolia",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/c65c94ff359fef340fee9ef1bd90b72808883a79"
+        },
+        {
+          "plantId": "18071d16-aca0-48a0-a935-36e05ecb874c",
+          "commonName": "Spider aloe",
+          "botanicalName": "Aloe x spinosissima",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/4b8d60220df8988d53739b7890a8bf187a1f306a"
+        },
+        {
+          "plantId": "6d111912-2ba2-44d5-86f9-da18923a735d",
+          "commonName": "Naked lady, belladona lady",
+          "botanicalName": "Amaryllis belladonna",
+          "reason": "Very Low water • Fire-reluctant"
+        },
+        {
+          "plantId": "5c511c76-8b11-4556-894e-b9fd5d5e08ba",
+          "commonName": "Pearly everlasting",
+          "botanicalName": "Anaphalis margaritiacea",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/ae7e6ccc447f75c7a513758f6e2c1314c603a791"
+        },
+        {
+          "plantId": "6b668fba-4276-47c2-8825-0b45f3a09f8e",
+          "commonName": "Little-leaf & Rosy Pussytoes",
+          "botanicalName": "Antennaria microphylla",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/78c7bfb10e180c4eae4ebae09adf6e9e057d9bc3"
+        },
+        {
+          "plantId": "02204c32-4a8e-4954-9be1-9236379496cc",
+          "commonName": "Pussytoes or cat's ears",
+          "botanicalName": "Antennaria spp.",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/05547b5322f216d23127724e175a1ae7f3af7f40"
+        },
+        {
+          "plantId": "03c75df0-0565-4124-9a32-1165a17098cb",
+          "commonName": "California, vanilla sweetgrass",
+          "botanicalName": "Anthoxanthum occidentale",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://d2seqvvyy3b8p2.cloudfront.net/1a9f02f01620bb05d0c6d130263e4377.jpg"
+        },
+        {
+          "plantId": "753b6de5-7172-46a7-a157-1e2a762a705a",
+          "commonName": "Rockcress",
+          "botanicalName": "Arabis spp.",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/08b1892360f7de9be255fa77a8030762ba981466"
+        },
+        {
+          "plantId": "9704e2da-4bb3-4fdd-83c1-7531f989d803",
+          "commonName": "Pacific madrone",
+          "botanicalName": "Arbutus menziesii",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/37537f21e3fb7de6a4c977f971465201168aa054"
+        },
+        {
+          "plantId": "2ce17753-599f-4bd4-bba2-5358f847e209",
+          "commonName": "Strawberry tree",
+          "botanicalName": "Arbutus unedo 'compacta'",
+          "reason": "Low water • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/c41fdca72fdd5e6f6491434adf92ed5998112d94"
+>>>>>>> Stashed changes
+        }
+      ]
+    },
+    {
+<<<<<<< Updated upstream
+      "name": "Mountain Meadows HOA — Preferred Zone 0 Plants",
+=======
+      "name": "Mountain Meadows HOA — Preferred Plants",
+>>>>>>> Stashed changes
+      "organization": {
+        "type": "hoa",
+        "name": "Mountain Meadows HOA"
+      },
+<<<<<<< Updated upstream
+      "description": "Community-approved plants for close-to-structure placement (0-5 feet). Low maintenance, deer resistant, and fire-reluctant.",
+      "plants": [
+        {
+          "plantId": "5b2ca061-b5b7-40fa-9941-269c17c52413",
+          "commonName": "Abelia",
+          "botanicalName": "Abelia (syn Linnaea) spp.",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "1b78126d-1f69-44b0-a06b-47116e41270d",
+          "commonName": "Glossy abelia",
+          "botanicalName": "Abelia (syn Linnaea) x grandiflora",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "08fa60f5-0bb0-4b43-b1ab-eca47fc94c51",
+          "commonName": "White forsythia, Korean Abelia",
+          "botanicalName": "Abeliophyllum distichum",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "0783904c-e434-4536-b6cd-5e8b6283c8d3",
+          "commonName": "White fir",
+          "botanicalName": "Abies concolor",
+          "reason": "HOA approved characteristics"
+=======
+      "description": "Community-approved plants for close-to-structure placement. Low maintenance, deer resistant, and fire-reluctant selections that meet HOA landscaping standards.",
+      "plants": [
+        {
+          "plantId": "0783904c-e434-4536-b6cd-5e8b6283c8d3",
+          "commonName": "White fir",
+          "botanicalName": "Abies concolor",
+          "reason": "Deer resistant • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/f3bd61a94db7294e0fad1eb060e1a8903b8338b7"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "a39d5c68-d480-4cd7-986f-734b0e3416ac",
+          "commonName": "Spanish fir",
+          "botanicalName": "Abies pinsapo",
+<<<<<<< Updated upstream
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "68fa2b1d-9c12-4567-8ddb-6a18e3c2dc97",
+          "commonName": "Firs",
+          "botanicalName": "Abies spp.",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "731c5977-7de3-4797-b2a2-92aeb96a3309",
+          "commonName": "Velvetleaf",
+          "botanicalName": "Abutilon theophrasti",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "4c11c367-0d1a-4609-9000-49d94409e6cd",
+          "commonName": "Chinese Lantern, Flowering maple",
+          "botanicalName": "Abutilon x hybridum",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "69923d0f-ae24-44ab-8c03-2790223aed8b",
+          "commonName": "Fernleaf acacia & purple leaf acacia",
+          "botanicalName": "Acacia baileyana",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "cf3d95c7-c9f1-46b8-89bc-b935f14ea008",
+          "commonName": "Acacia",
+          "botanicalName": "Acacia spp.",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "e19e0841-98b6-404b-9ad6-571d88f94726",
+          "commonName": "Biddy-biddy",
+          "botanicalName": "Acaena novae-zelandiae",
+          "reason": "HOA approved characteristics"
+=======
+          "reason": "Deer resistant • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/59733dc0033c93533dd69ea574d5964b59e67fce"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "3c9f3823-40b0-4581-af44-63a1f198539e",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus mollis",
+<<<<<<< Updated upstream
+          "reason": "HOA approved characteristics"
+=======
+          "reason": "Zone 0-1 approved • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/09cc2ba9e227a0a99082a948fca14e9d1d8a755c"
+>>>>>>> Stashed changes
+        },
+        {
+          "plantId": "5a520ca5-0fc0-454d-83ec-d9769b0a6af9",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus spp.",
+<<<<<<< Updated upstream
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "0e198be2-086f-4984-8d69-d9ec840ab8ac",
+          "commonName": "Pineapple Guava, Feijoa",
+          "botanicalName": "Acca (syn Feijoa) sellowiana",
+          "reason": "HOA approved characteristics"
+        },
+        {
+          "plantId": "32ab9644-75de-4062-bccd-c3dd25fdbaa4",
+          "commonName": "Trident Maple",
+          "botanicalName": "Acer buergeranum",
+          "reason": "HOA approved characteristics"
+        }
+      ]
+    },
+    {
+      "name": "Rogue Valley Native Fire-Reluctant Plants",
+      "organization": {
+        "type": "community",
+        "name": "Rogue Valley Fire Safe Council"
+      },
+      "description": "Native and adapted plants that provide good fire protection while supporting local ecosystems.",
+      "plants": [
+        {
+          "plantId": "f7bb1faa-18a1-4ec2-b4e8-c5a973c8f121",
+          "commonName": "Native Bleeding Heart",
+          "botanicalName": "Dicentra formosa",
+          "reason": "Native to Rogue Valley region • Good fire characteristics"
+=======
+          "reason": "Zone 0-1 approved • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/09cc2ba9e227a0a99082a948fca14e9d1d8a755c"
+        },
+        {
+          "plantId": "b9568b79-a7a8-4ce2-acf1-1ebe6d0153b8",
+          "commonName": "Oregon vine maple",
+          "botanicalName": "Acer circinatum",
+          "reason": "Deer resistant • Oregon native • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/c3a2b8c0a4526f9f18adb3b49aa280d1e4a2d1c8"
+        },
+        {
+          "plantId": "bf20a3b0-be67-42e7-91c1-baecfa68e7b3",
+          "commonName": "Rocky mountain maple",
+          "botanicalName": "Acer glabrum",
+          "reason": "Oregon native • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/c54073a8841566679dfd8c62a6582daef4be9e13"
+        },
+        {
+          "plantId": "0b037b67-405d-4c79-87fa-eabb01468680",
+          "commonName": "Big leaf maple, Oregon maple",
+          "botanicalName": "Acer macrophyllum",
+          "reason": "Deer resistant • Oregon native • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/e6fa01abb9db3d583e3a804a672a982550575082"
+        },
+        {
+          "plantId": "d806f387-2fc8-4b6b-a4de-79bad0974483",
+          "commonName": "Bloodgood Japanese maple",
+          "botanicalName": "Acer palmatum 'Bloodgood",
+          "reason": "Deer resistant • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "d3340605-efbb-4da9-87e5-b310d7792cd6",
+          "commonName": "Common Yarrow",
+          "botanicalName": "Achillea millefolium many cultivars",
+          "reason": "Deer resistant • Oregon native",
+          "imageUrl": "https://bs.plantnet.org/image/o/d788a757cd8bac8c3b1378a970c078a7a937a174"
+        },
+        {
+          "plantId": "892fa211-7bb0-49ec-a394-c1d57e9e6865",
+          "commonName": "Aeonium",
+          "botanicalName": "Aeonium decorum, simsii",
+          "reason": "Zone 0-1 approved • Fire-reluctant"
+        },
+        {
+          "plantId": "d88568a3-5ab5-43db-8614-3814b4376dea",
+          "commonName": "California buckeye",
+          "botanicalName": "Aesculus californica",
+          "reason": "Deer resistant • Oregon native • Fire-reluctant"
+        },
+        {
+          "plantId": "7399411b-d02b-4f9a-a90d-48a80a4e31b0",
+          "commonName": "Dwarf Liliy of the Valley",
+          "botanicalName": "Agapanthus TBD 'Peter Pan'",
+          "reason": "Zone 0-1 approved • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/51cb86b9d4e9f5a5bd3f0193f434550ed45094d4"
+        },
+        {
+          "plantId": "27648f2c-63ff-4dc1-a032-98d4048b38c0",
+          "commonName": "Lily of the Nile",
+          "botanicalName": "Agapanthus africanus, campanulatus,",
+          "reason": "Zone 0-1 approved • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/6fb1181cbe7a8c69a5201c0d06860678b3fc042c"
+        },
+        {
+          "plantId": "b5dd1e05-b708-4d11-be93-788e380e996c",
+          "commonName": "Lily of the Nile",
+          "botanicalName": "Agapanthus praecox orientalis",
+          "reason": "Zone 0-1 approved • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/51cb86b9d4e9f5a5bd3f0193f434550ed45094d4"
+        },
+        {
+          "plantId": "eaa6c6b9-77bc-47bc-a838-c2c0d39934d4",
+          "commonName": "Lily-of-the-nile",
+          "botanicalName": "Agapanthus spp.",
+          "reason": "Zone 0-1 approved • Fire-reluctant",
+          "imageUrl": "https://bs.plantnet.org/image/o/6fb1181cbe7a8c69a5201c0d06860678b3fc042c"
+>>>>>>> Stashed changes
+        }
+      ]
+    },
+    {
+      "name": "Pollinator Garden — Fire-Safe Picks",
+      "organization": {
+        "type": "community",
+        "name": "Southern Oregon Pollinator Project"
+      },
+<<<<<<< Updated upstream
+      "description": "Plants that support beneficial insects while maintaining fire-safe garden practices.",
+      "plants": []
+    }
+  ]
+}
+=======
+      "description": "Plants that support beneficial insects while maintaining fire-safe garden practices. Perfect for eco-friendly defensible space.",
+      "plants": [
+        {
+          "plantId": "5b2ca061-b5b7-40fa-9941-269c17c52413",
+          "commonName": "Abelia",
+          "botanicalName": "Abelia (syn Linnaea) spp. & hybrids",
+          "reason": "Pollinator benefits • Consider"
+        },
+        {
+          "plantId": "5a520ca5-0fc0-454d-83ec-d9769b0a6af9",
+          "commonName": "Bears breeches",
+          "botanicalName": "Acanthus spp.",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/09cc2ba9e227a0a99082a948fca14e9d1d8a755c"
+        },
+        {
+          "plantId": "32ab9644-75de-4062-bccd-c3dd25fdbaa4",
+          "commonName": "Trident Maple",
+          "botanicalName": "Acer buergeranum",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/09c677df9b26f871ab33bf006a4479f32c303ccb"
+        },
+        {
+          "plantId": "b9568b79-a7a8-4ce2-acf1-1ebe6d0153b8",
+          "commonName": "Oregon vine maple",
+          "botanicalName": "Acer circinatum",
+          "reason": "Pollinator benefits • Charisse's list",
+          "imageUrl": "https://bs.plantnet.org/image/o/c3a2b8c0a4526f9f18adb3b49aa280d1e4a2d1c8"
+        },
+        {
+          "plantId": "bf20a3b0-be67-42e7-91c1-baecfa68e7b3",
+          "commonName": "Rocky mountain maple",
+          "botanicalName": "Acer glabrum",
+          "reason": "Pollinator benefits • Charisse's list",
+          "imageUrl": "https://bs.plantnet.org/image/o/c54073a8841566679dfd8c62a6582daef4be9e13"
+        },
+        {
+          "plantId": "0b037b67-405d-4c79-87fa-eabb01468680",
+          "commonName": "Big leaf maple, Oregon maple",
+          "botanicalName": "Acer macrophyllum",
+          "reason": "Pollinator benefits • Charisse's list",
+          "imageUrl": "https://bs.plantnet.org/image/o/e6fa01abb9db3d583e3a804a672a982550575082"
+        },
+        {
+          "plantId": "d806f387-2fc8-4b6b-a4de-79bad0974483",
+          "commonName": "Bloodgood Japanese maple",
+          "botanicalName": "Acer palmatum 'Bloodgood",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/607dc707c1858fb676308978386ea9a3a7952f2a"
+        },
+        {
+          "plantId": "e081473c-e3a1-426f-a913-dc9fab18e4d6",
+          "commonName": "Red pointe maple",
+          "botanicalName": "Acer rubrum 'Frank Jr'",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/c1023eba3ca60bfc8efadb3710586b9f8109d435"
+        },
+        {
+          "plantId": "1a5dab80-7dbe-4fec-8900-5d725fbbf0cd",
+          "commonName": "October glory",
+          "botanicalName": "Acer rubrum 'October glory'",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/c1023eba3ca60bfc8efadb3710586b9f8109d435"
+        },
+        {
+          "plantId": "bdab2d61-3d49-496f-934d-18c3d98fc18a",
+          "commonName": "Red maple",
+          "botanicalName": "Acer rubrum var & cultivars",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/c1023eba3ca60bfc8efadb3710586b9f8109d435"
+        },
+        {
+          "plantId": "7500c7ed-4617-4da5-9389-11ad2b13b47c",
+          "commonName": "Silver maple, white maple",
+          "botanicalName": "Acer saccharinum",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/c145c2daa0ca840cd6040f95cf3a5d67cbf9d7ff"
+        },
+        {
+          "plantId": "13f64244-3190-4a27-842a-78b29e2a9062",
+          "commonName": "Sugar maple",
+          "botanicalName": "Acer saccharum",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/64468534aac063b8ce25935c22941ceed8fa0f49"
+        },
+        {
+          "plantId": "8a49651e-28ab-4b0c-a4ad-c1dfb99f22d2",
+          "commonName": "Southern sugar maple",
+          "botanicalName": "Acer saccharum floridanum",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/64468534aac063b8ce25935c22941ceed8fa0f49"
+        },
+        {
+          "plantId": "f881edf5-17ff-406c-af36-cd92e7116e19",
+          "commonName": "Jeffersred maple or Freeman maple",
+          "botanicalName": "Acer x freemanii 'Autumn Blaze'",
+          "reason": "Pollinator benefits • Consider"
+        },
+        {
+          "plantId": "2eedbf00-ce66-42d7-864f-c9f845cd7850",
+          "commonName": "Yarrow",
+          "botanicalName": "Achillea clypeolata x 'Moonshine' 'Anthea'",
+          "reason": "Pollinator benefits • Consider",
+          "imageUrl": "https://bs.plantnet.org/image/o/55b8179c4760b7205d944383d50d24a4c2addf10"
+        }
+      ]
+    }
+  ]
+}
+>>>>>>> Stashed changes

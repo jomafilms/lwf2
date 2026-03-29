@@ -84,7 +84,8 @@ function formatBotanicalName(plant: Plant): string {
 async function createZone0SafePlants(): Promise<SeedList> {
   console.error('Creating Zone 0 Safe Plants list...');
   
-  const plants = await getPlants(100, true);
+  // Get more plants since we're looking for specific criteria
+  const plants = await getPlants(200, true);
   const hizValues = await getBulkHIZValues();
   
   const zone0Plants: SeedListPlant[] = [];
@@ -93,22 +94,26 @@ async function createZone0SafePlants(): Promise<SeedList> {
     const plantHIZ = hizValues[plant.id]?.[HIZ_ATTRIBUTE_ID];
     if (!plantHIZ) continue;
     
-    const hasZone0 = plantHIZ.some((hiz: any) => hiz.resolved.value === '0-5');
+    const hasZone0 = plantHIZ.some((hiz: any) => hiz.resolved && hiz.resolved.value === '0-5');
     if (hasZone0) {
       // Get plant values to find list choice
       try {
         const values = await getPlantValues(plant.id);
         const listChoiceValue = values.find(v => v.attributeName === 'List Choice');
         
-        zone0Plants.push({
-          plantId: plant.id,
-          commonName: plant.commonName,
-          botanicalName: formatBotanicalName(plant),
-          reason: listChoiceValue ? `Suitable for Zone 0-5 (${listChoiceValue.resolved.value})` : 'Suitable for Zone 0-5',
-          imageUrl: plant.primaryImage?.url
-        });
-        
-        if (zone0Plants.length >= 20) break;
+        // Only include plants that are considered appropriate
+        if (listChoiceValue && listChoiceValue.resolved && listChoiceValue.resolved.value &&
+            (listChoiceValue.resolved.value === 'Consider' || listChoiceValue.resolved.value === "Charisse's list")) {
+          zone0Plants.push({
+            plantId: plant.id,
+            commonName: plant.commonName,
+            botanicalName: formatBotanicalName(plant),
+            reason: `Zone 0-5 approved (${listChoiceValue.resolved.value})`,
+            imageUrl: plant.primaryImage?.url
+          });
+          
+          if (zone0Plants.length >= 20) break;
+        }
       } catch (error) {
         console.error(`Error getting values for ${plant.commonName}:`, error);
       }
@@ -282,7 +287,7 @@ async function createDeerResistantChoices(): Promise<SeedList> {
 async function createLowWaterFireReluctant(): Promise<SeedList> {
   console.error('Creating Low Water Fire-Reluctant Plants list...');
   
-  const plants = await getPlants(120, true);
+  const plants = await getPlants(200, true);
   const lowWaterPlants: SeedListPlant[] = [];
   
   for (const plant of plants) {
@@ -291,26 +296,37 @@ async function createLowWaterFireReluctant(): Promise<SeedList> {
       const waterNeed = values.find(v => v.attributeName === 'Water Need');
       const droughtTolerant = values.find(v => v.attributeName === 'Drought Tolerant');
       const listChoice = values.find(v => v.attributeName === 'List Choice');
+      const waterAmount = values.find(v => v.attributeName === 'Water Amount');
       
-      if ((waterNeed && (waterNeed.resolved.value === 'Low' || waterNeed.resolved.value === 'Very Low')) ||
-          (droughtTolerant && droughtTolerant.resolved.value === 'Yes')) {
+      let isLowWater = false;
+      let waterReason = '';
+      
+      if (waterNeed && waterNeed.resolved && waterNeed.resolved.value && 
+          (waterNeed.resolved.value === 'Low' || waterNeed.resolved.value === 'Very Low')) {
+        isLowWater = true;
+        waterReason = `${waterNeed.resolved.value} water need`;
+      } else if (waterAmount && waterAmount.resolved && waterAmount.resolved.value &&
+                 (waterAmount.resolved.value === 'Low' || waterAmount.resolved.value === 'Very Low')) {
+        isLowWater = true;
+        waterReason = `${waterAmount.resolved.value} water`;
+      } else if (droughtTolerant && droughtTolerant.resolved && droughtTolerant.resolved.value === 'Yes') {
+        isLowWater = true;
+        waterReason = 'Drought tolerant';
+      }
+      
+      if (isLowWater && 
+          listChoice && listChoice.resolved && listChoice.resolved.value &&
+          (listChoice.resolved.value === 'Consider' || listChoice.resolved.value === "Charisse's list")) {
         
-        if (listChoice && (listChoice.resolved.value === 'Consider' || listChoice.resolved.value === "Charisse's list")) {
-          let reason = 'Low water needs';
-          if (droughtTolerant && droughtTolerant.resolved.value === 'Yes') {
-            reason += ' • Drought tolerant';
-          }
-          
-          lowWaterPlants.push({
-            plantId: plant.id,
-            commonName: plant.commonName,
-            botanicalName: formatBotanicalName(plant),
-            reason,
-            imageUrl: plant.primaryImage?.url
-          });
-          
-          if (lowWaterPlants.length >= 18) break;
-        }
+        lowWaterPlants.push({
+          plantId: plant.id,
+          commonName: plant.commonName,
+          botanicalName: formatBotanicalName(plant),
+          reason: `${waterReason} • Fire-reluctant`,
+          imageUrl: plant.primaryImage?.url
+        });
+        
+        if (lowWaterPlants.length >= 18) break;
       }
     } catch (error) {
       console.error(`Error processing ${plant.commonName}:`, error);
