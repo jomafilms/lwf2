@@ -22,7 +22,7 @@ import {
   type Tag,
   type TagAssignment,
 } from "@/lib/tags/api";
-import { getPlant } from "@/lib/api/lwf";
+import { getPlantClient as getPlant } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
 import { NurseryMatchCard } from "@/components/lists/NurseryMatchCard";
 import { FireReadinessCard } from "@/components/lists/FireReadinessCard";

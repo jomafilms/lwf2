@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Globe, BookmarkPlus } from "lucide-react";
 import { fetchTagItems, createTag, assignTag, type Tag } from "@/lib/tags/api";
-import { getPlant } from "@/lib/api/lwf";
+import { getPlantClient as getPlant } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
 import { NurseryMatchCard } from "@/components/lists/NurseryMatchCard";
 import { FireReadinessCard } from "@/components/lists/FireReadinessCard";

@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Search, Filter, Globe, Lock, Building2, Star } from "lucide-react";
 import { fetchTags, type Tag } from "@/lib/tags/api";
-import { getPlant } from "@/lib/api/lwf";
 import { StarButton } from "@/components/lists/StarButton";
 
 interface TagWithCount extends Tag {
