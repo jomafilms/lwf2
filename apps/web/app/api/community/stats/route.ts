@@ -15,34 +15,53 @@ export async function GET(request: NextRequest) {
       .from(properties)
       .innerJoin(plans, sql`${properties.id} = ${plans.propertyId}`);
 
-    const [avgScoreResult] = await db
-      .select({ avg: avg(plans.readinessScore) })
-      .from(plans)
-      .where(isNotNull(plans.readinessScore));
+    let avgScoreResult: { avg: string | null } = { avg: null };
+    try {
+      const [result] = await db
+        .select({ avg: avg(plans.readinessScore) })
+        .from(plans)
+        .where(isNotNull(plans.readinessScore));
+      avgScoreResult = result;
+    } catch {
+      // readinessScore column may not exist yet — try complianceScore
+      try {
+        const [result] = await db
+          .select({ avg: avg(plans.complianceScore) })
+          .from(plans)
+          .where(isNotNull(plans.complianceScore));
+        avgScoreResult = result;
+      } catch {
+        // Neither column exists — use default
+      }
+    }
 
     // Score distribution without individual property details
-    const scoreDistribution = await db
-      .select({
-        tier: sql<string>`
-          CASE 
-            WHEN readiness_score >= 80 THEN 'fire-ready'
-            WHEN readiness_score >= 50 THEN 'needs-work'
-            WHEN readiness_score < 50 THEN 'needs attention'
-            ELSE 'unassessed'
-          END
-        `,
-        count: count(),
-      })
+    let scoreDistribution: { tier: string; count: number }[] = [];
+    try {
+      scoreDistribution = await db
+        .select({
+          tier: sql<string>`
+            CASE 
+              WHEN COALESCE(readiness_score, compliance_score) >= 80 THEN 'fire-ready'
+              WHEN COALESCE(readiness_score, compliance_score) >= 50 THEN 'needs-work'
+              WHEN COALESCE(readiness_score, compliance_score) < 50 THEN 'needs attention'
+              ELSE 'unassessed'
+            END
+          `,
+          count: count(),
+        })
       .from(plans)
-      .where(isNotNull(plans.readinessScore))
       .groupBy(sql`
         CASE 
-          WHEN readiness_score >= 80 THEN 'fire-ready'
-          WHEN readiness_score >= 50 THEN 'needs-work'
-          WHEN readiness_score < 50 THEN 'needs attention'
+          WHEN COALESCE(readiness_score, compliance_score) >= 80 THEN 'fire-ready'
+          WHEN COALESCE(readiness_score, compliance_score) >= 50 THEN 'needs-work'
+          WHEN COALESCE(readiness_score, compliance_score) < 50 THEN 'needs attention'
           ELSE 'unassessed'
         END
       `);
+    } catch {
+      // Column doesn't exist yet — empty distribution is fine
+    }
 
     // Monthly progress for public display
     const monthlyProgress = await db
