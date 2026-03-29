@@ -207,15 +207,20 @@ export default async function PlantDetailPage({
                   Learn More
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {plant.urls.map((url, i) => (
+                  {plant.urls.map((rawUrl, i) => {
+                    // URLs may be "Label|https://..." format
+                    const parts = rawUrl.split('|');
+                    const href = parts.length > 1 ? parts[parts.length - 1].trim() : parts[0].trim();
+                    const label = parts.length > 1 ? parts[0].trim() : (() => { try { return new URL(href).hostname.replace('www.', ''); } catch { return href; } })();
+                    return (
                     <a
                       key={i}
-                      href={url}
+                      href={href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700 underline"
                     >
-                      {new URL(url).hostname.replace('www.', '')}
+                      {label}
                       <svg
                         className="w-3 h-3"
                         fill="none"
@@ -230,7 +235,8 @@ export default async function PlantDetailPage({
                         />
                       </svg>
                     </a>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}

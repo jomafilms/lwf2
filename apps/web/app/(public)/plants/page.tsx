@@ -66,12 +66,12 @@ function parseBulkValues(bulkResult: Record<string, unknown>): Record<string, Re
 
 async function fetchFeaturedPlants() {
   try {
-    // Fetch plants that are Zone 0-5 rated AND have images AND have interesting attributes
+    // Fetch enough plants to find ones with images (most don't have images)
     const plantsResponse = await getPlants({
-      limit: 20,
+      limit: 200,
       includeImages: true,
     });
-    
+
     const plantsWithImages = plantsResponse.data.filter(plant => plant.primaryImage?.url);
     
     if (plantsWithImages.length === 0) {
