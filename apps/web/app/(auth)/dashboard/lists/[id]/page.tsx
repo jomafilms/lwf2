@@ -36,6 +36,7 @@ export default function ListDetailPage() {
   const [tag, setTag] = useState<Tag | null>(null);
   const [plants, setPlants] = useState<PlantWithAssignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showExport, setShowExport] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -177,6 +178,15 @@ export default function ListDetailPage() {
                   Copy Link
                 </button>
               )}
+
+              {/* Export options */}
+              <button
+                onClick={() => setShowExport(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Export
+              </button>
             </div>
           </div>
         </div>
@@ -252,6 +262,30 @@ export default function ListDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Export Modal */}
+      {showExport && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => setShowExport(false)}>
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm mx-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Export List</h3>
+            <p className="text-sm text-gray-500 mb-4">Download your plant list in your preferred format.</p>
+            <div className="space-y-2">
+              <button className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-sm" onClick={() => { setShowExport(false); toast("CSV export coming soon — built on existing LWF export engine"); }}>
+                📄 Export as CSV
+              </button>
+              <button className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-sm" onClick={() => { setShowExport(false); toast("Excel export coming soon — built on existing LWF export engine"); }}>
+                📊 Export as Excel
+              </button>
+              <button className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-sm" onClick={() => { setShowExport(false); toast("PDF export coming soon — built on existing LWF report generator"); }}>
+                📋 Export as PDF Report
+              </button>
+            </div>
+            <button className="mt-4 w-full text-center text-sm text-gray-400 hover:text-gray-600" onClick={() => setShowExport(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
