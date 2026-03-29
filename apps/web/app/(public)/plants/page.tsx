@@ -398,64 +398,7 @@ async function FeaturedPlantsRow() {
   }
 
   return (
-    <div className="overflow-x-auto">
-      <div className="flex gap-4 pb-4" style={{ scrollSnapType: 'x mandatory' }}>
-        {plants.map((plant) => (
-          <div key={plant.id} className="flex-none w-80" style={{ scrollSnapAlign: 'start' }}>
-            <FeaturedPlantCard 
-              plant={plant} 
-              values={valuesMap[plant.id] || []} 
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function FeaturedPlantCard({ plant, values }: { plant: Plant; values: ResolvedValue[] }) {
-  const hizValues = values.filter(v => v.attributeId === ATTR_IDS.HIZ);
-  const nativeValues = values.filter(v => v.attributeId === ATTR_IDS.OREGON_NATIVE);
-  const deerValues = values.filter(v => v.attributeId === ATTR_IDS.DEER_RESISTANCE);
-  const benefitsValues = values.filter(v => v.attributeId === ATTR_IDS.BENEFITS);
-
-  const isNative = nativeValues.some(v => v.resolved?.value === 'Yes');
-  const isDeerResistant = deerValues.some(v => 
-    v.resolved?.value === 'High (Usually)' || v.resolved?.value === 'Some'
-  );
-  const isPollinator = benefitsValues.some(v => 
-    v.resolved?.value?.toLowerCase().includes('pollinator')
-  );
-
-  const zone = hizValues[0]?.resolved?.value;
-  let zoneBadge = '';
-  let zoneColor = '';
-  if (zone) {
-    zoneBadge = `${zone} ft`;
-    if (zone === '0-5') {
-      zoneColor = 'bg-red-100 text-red-800 border-red-200';
-    } else if (zone === '5-10') {
-      zoneColor = 'bg-orange-100 text-orange-800 border-orange-200';
-    } else {
-      zoneColor = 'bg-gray-100 text-gray-700 border-gray-200';
-    }
-  }
-
-  let highlightBadge = '';
-  let highlightIcon = '';
-  if (isDeerResistant) {
-    highlightBadge = 'Deer Resistant';
-    highlightIcon = '🦌';
-  } else if (isNative) {
-    highlightBadge = 'Native';
-    highlightIcon = '🌿';
-  } else if (isPollinator) {
-    highlightBadge = 'Pollinator';
-    highlightIcon = '🦋';
-  }
-
-  return (
-    <PlantCard plant={plant} values={values} />
+    <PlantGridWithSlideOut plants={plants} valuesMap={valuesMap} />
   );
 }
 
