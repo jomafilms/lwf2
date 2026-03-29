@@ -183,11 +183,11 @@ export default async function HOADashboardPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-700">Community Preferred Plants</span>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">15 plants</span>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">See list</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-700">Restricted Species</span>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">8 plants</span>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">See list</span>
               </div>
             </div>
             <div className="mt-4 pt-4 border-t border-gray-200">
