@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
@@ -10,6 +10,12 @@ import {
   Loader2,
   ExternalLink,
   Eye,
+  Building2,
+  Upload,
+  Phone,
+  Mail,
+  Globe,
+  MapPin,
 } from "lucide-react";
 import { LogoUploadForm } from "@/components/nursery/profile/LogoUploadForm";
 import { BasicInfoForm } from "@/components/nursery/profile/BasicInfoForm";
@@ -42,6 +48,7 @@ export default function NurseryProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const logoInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 

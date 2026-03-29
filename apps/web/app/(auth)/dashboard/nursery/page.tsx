@@ -8,6 +8,8 @@ import {
   Building2,
   Loader2,
   ArrowLeft,
+  Package,
+  Leaf,
 } from "lucide-react";
 import { NurseryStats } from "@/components/nursery/NurseryStats";
 import { NurseryActions } from "@/components/nursery/NurseryActions";
