@@ -8,8 +8,7 @@
 import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { db } from "../../../../../packages/database";
-import { properties } from "../../../../../packages/database/schema";
+import { db, properties } from "@lwf/database";
 import { CostEstimator } from "../../../../components/cost/CostEstimator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../components/ui/card";
 import { Loader2, Calculator, ArrowLeft } from "lucide-react";

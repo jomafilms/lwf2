@@ -265,17 +265,7 @@ export default async function CertificationPage({ searchParams }: PageProps) {
         </div>
       </main>
 
-      {/* Print Styles */}
-      <style jsx global>{`
-        @media print {
-          nav { display: none !important; }
-          .no-print { display: none !important; }
-          .print\\:block { display: block !important; }
-          .bg-gray-50 { background: white !important; }
-          .shadow-sm, .shadow-md { box-shadow: none !important; }
-          .border { border: 1px solid #e5e7eb !important; }
-        }
-      `}</style>
+      {/* Print styles handled by Tailwind print: variant */}
     </div>
   );
 }

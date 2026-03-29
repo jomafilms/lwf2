@@ -406,8 +406,8 @@ export async function executeTool(
         }
         
         if (scores.length > 1) {
-          const maxScore = Math.max(...scores);
-          const minScore = Math.min(...scores);
+          const maxScore = Math.max(...scores.filter((s): s is number => s !== null));
+          const minScore = Math.min(...scores.filter((s): s is number => s !== null));
           const bestPlant = validPlants.find((p) => p!.characterScore === maxScore)?.commonName;
           
           summary += `. Fire safety: ${bestPlant} has the highest fire character score (${maxScore}/100) vs ${minScore}/100.`;

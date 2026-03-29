@@ -57,10 +57,10 @@ export async function GET(
 
     const planData = latestPlan.length > 0 ? {
       plantPlacements: latestPlan[0].plantPlacements as PlanPlant[] || [],
-      complianceScore: latestPlan[0].complianceScore
+      complianceScore: latestPlan[0].complianceScore ?? undefined
     } : {
       plantPlacements: [],
-      complianceScore: null
+      complianceScore: undefined
     };
 
     // Assess certification status

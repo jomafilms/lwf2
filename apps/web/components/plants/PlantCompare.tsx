@@ -99,7 +99,7 @@ function findBestInRow(plantData: PlantWithData[], metric: string): number {
         if (waterLevel.includes('medium') || waterLevel.includes('moderate')) return 2;
         return 1;
       });
-      return waterScores.indexOf(Math.max(...waterScores));
+      const maxWater = Math.max(...waterScores.map(Number)); return waterScores.indexOf(maxWater as 1 | 2 | 3) as 0 | 1 | 2;
     
     case 'maintenance':
       // Low maintenance is "better"
@@ -109,7 +109,7 @@ function findBestInRow(plantData: PlantWithData[], metric: string): number {
         if (level === 'Medium') return 2;
         return 1;
       });
-      return maintenanceScores.indexOf(Math.max(...maintenanceScores));
+      const maxMaint = Math.max(...maintenanceScores.map(Number)); return maintenanceScores.indexOf(maxMaint as 1 | 2 | 3) as 0 | 1 | 2;
     
     default:
       return -1;
