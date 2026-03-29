@@ -40,7 +40,7 @@ export async function GET(
         propertyId: properties.id,
         propertyAddress: properties.address,
         planId: plans.id,
-        complianceScore: plans.complianceScore,
+        readinessScore: plans.readinessScore,
         planStatus: plans.status,
       })
       .from(orgMembers)
@@ -78,13 +78,13 @@ export async function GET(
         const property = {
           id: row.propertyId,
           address: row.propertyAddress,
-          complianceScore: row.complianceScore,
+          readinessScore: row.readinessScore,
           planStatus: row.planStatus,
         };
         
         member.properties.push(property);
         
-        if (row.complianceScore !== null) {
+        if (row.readinessScore !== null) {
           member.assessedProperties++;
         }
       }
@@ -94,8 +94,8 @@ export async function GET(
     const members = Array.from(memberMap.values()).map(member => {
       if (member.assessedProperties > 0) {
         const scores = member.properties
-          .filter((p: { complianceScore: number | null }) => p.complianceScore !== null)
-          .map((p: { complianceScore: number | null }) => p.complianceScore!);
+          .filter((p: { readinessScore: number | null }) => p.readinessScore !== null)
+          .map((p: { readinessScore: number | null }) => p.readinessScore!);
         
         member.avgComplianceScore = Math.round(
           scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length

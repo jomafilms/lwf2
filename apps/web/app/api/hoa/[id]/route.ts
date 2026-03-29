@@ -48,7 +48,7 @@ export async function GET(
         propertyId: properties.id,
         propertyAddress: properties.address,
         planId: plans.id,
-        complianceScore: plans.complianceScore,
+        readinessScore: plans.readinessScore,
       })
       .from(orgMembers)
       .leftJoin(properties, eq(properties.ownerId, orgMembers.userId))

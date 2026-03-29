@@ -47,12 +47,12 @@ export async function GET(request: NextRequest) {
         count: count(),
       })
       .from(plans)
-      .where(isNotNull(plans.complianceScore))
+      .where(isNotNull(plans.readinessScore))
       .groupBy(sql`
         CASE 
-          WHEN compliance_score >= 80 THEN 'compliant'
-          WHEN compliance_score >= 50 THEN 'needs-work'
-          WHEN compliance_score < 50 THEN 'non-compliant'
+          WHEN readiness_score >= 80 THEN 'fire-ready'
+          WHEN readiness_score >= 50 THEN 'needs-work'
+          WHEN readiness_score < 50 THEN 'needs attention'
           ELSE 'unassessed'
         END
       `);

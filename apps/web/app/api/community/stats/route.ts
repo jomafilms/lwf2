@@ -16,30 +16,30 @@ export async function GET(request: NextRequest) {
       .innerJoin(plans, sql`${properties.id} = ${plans.propertyId}`);
 
     const [avgScoreResult] = await db
-      .select({ avg: avg(plans.complianceScore) })
+      .select({ avg: avg(plans.readinessScore) })
       .from(plans)
-      .where(isNotNull(plans.complianceScore));
+      .where(isNotNull(plans.readinessScore));
 
     // Score distribution without individual property details
     const scoreDistribution = await db
       .select({
         tier: sql<string>`
           CASE 
-            WHEN compliance_score >= 80 THEN 'compliant'
-            WHEN compliance_score >= 50 THEN 'needs-work'
-            WHEN compliance_score < 50 THEN 'non-compliant'
+            WHEN readiness_score >= 80 THEN 'fire-ready'
+            WHEN readiness_score >= 50 THEN 'needs-work'
+            WHEN readiness_score < 50 THEN 'needs attention'
             ELSE 'unassessed'
           END
         `,
         count: count(),
       })
       .from(plans)
-      .where(isNotNull(plans.complianceScore))
+      .where(isNotNull(plans.readinessScore))
       .groupBy(sql`
         CASE 
-          WHEN compliance_score >= 80 THEN 'compliant'
-          WHEN compliance_score >= 50 THEN 'needs-work'
-          WHEN compliance_score < 50 THEN 'non-compliant'
+          WHEN readiness_score >= 80 THEN 'fire-ready'
+          WHEN readiness_score >= 50 THEN 'needs-work'
+          WHEN readiness_score < 50 THEN 'needs attention'
           ELSE 'unassessed'
         END
       `);

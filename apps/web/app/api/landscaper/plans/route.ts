@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         status: plans.status,
         propertyId: plans.propertyId,
         propertyAddress: properties.address,
-        complianceScore: plans.complianceScore,
+        readinessScore: plans.readinessScore,
         estimatedCost: plans.estimatedCost,
         plantPlacements: plans.plantPlacements,
         notes: plans.notes,
