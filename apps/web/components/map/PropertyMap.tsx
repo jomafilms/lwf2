@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import "mapbox-gl/dist/mapbox-gl.css";
 import { getMapboxToken } from "@/lib/geo/mapbox";
 import {
   calculateFireZones,
@@ -57,8 +58,6 @@ export function PropertyMap({
 
     const initMap = async () => {
       const mapboxgl = (await import("mapbox-gl")).default;
-      await import("mapbox-gl/dist/mapbox-gl.css");
-
       mapboxgl.accessToken = getMapboxToken();
 
       map = new mapboxgl.Map({
