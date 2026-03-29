@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PlanCanvas } from "./PlanCanvas";
+import { ZONE_COLORS } from "@/lib/design-tokens";
 
 interface Property {
   id: string;
@@ -68,21 +69,21 @@ function generateZones(property: Property) {
         id: "zone-0",
         name: "Zone 0 (0-5ft)",
         bounds: { x: 50, y: 50, width: 200, height: 200 },
-        color: "#ef4444",
+        color: ZONE_COLORS.zone0.hex,
         requirements: ["Low flammability plants only", "No dead foliage", "5ft clearance"]
       },
       {
         id: "zone-1",
         name: "Zone 1 (5-30ft)",
         bounds: { x: 250, y: 50, width: 300, height: 300 },
-        color: "#f59e0b",
+        color: ZONE_COLORS.zone1.hex,
         requirements: ["Fire-resistant plants", "Proper spacing", "Well maintained"]
       },
       {
         id: "zone-2",
         name: "Zone 2 (30-100ft)",
         bounds: { x: 550, y: 50, width: 400, height: 400 },
-        color: "#22c55e",
+        color: ZONE_COLORS.zone2.hex,
         requirements: ["Fuel breaks", "Emergency access", "Vegetation thinning"]
       }
     ];
@@ -94,14 +95,14 @@ function generateZones(property: Property) {
       id: "zone-0",
       name: "Zone 0 (0-5ft)",
       bounds: { x: 50, y: 50, width: 200, height: 200 },
-      color: "#ef4444",
+      color: ZONE_COLORS.zone0.hex,
       requirements: ["Low flammability plants only"]
     },
     {
       id: "zone-1", 
       name: "Zone 1 (5-30ft)",
       bounds: { x: 250, y: 50, width: 300, height: 300 },
-      color: "#f59e0b",
+      color: ZONE_COLORS.zone1.hex,
       requirements: ["Fire-resistant plants"]
     }
   ];

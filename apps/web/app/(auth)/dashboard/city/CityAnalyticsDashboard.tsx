@@ -15,6 +15,7 @@ import {
 import { ProgressBar } from "@/components/charts/ProgressBar";
 import { DonutChart } from "@/components/charts/DonutChart";
 import { BarChart } from "@/components/charts/BarChart";
+import { CHART_COLORS, SCORE_COLORS } from "@/lib/design-tokens";
 
 interface CityStats {
   overview: {
@@ -43,10 +44,10 @@ interface CityStats {
 }
 
 const tierColors = {
-  compliant: "#22c55e", // green
-  "needs-work": "#eab308", // yellow
-  "non-compliant": "#ef4444", // red
-  unassessed: "#9ca3af", // gray
+  compliant: SCORE_COLORS.high.hex, // green
+  "needs-work": SCORE_COLORS.medium.hex, // yellow
+  "non-compliant": SCORE_COLORS.low.hex, // red
+  unassessed: CHART_COLORS.muted, // gray
 };
 
 const tierLabels = {
@@ -147,13 +148,13 @@ export function CityAnalyticsDashboard() {
   const scoreDistributionData = stats.scoreDistribution.map(item => ({
     label: tierLabels[item.tier as keyof typeof tierLabels] || item.tier,
     value: item.count,
-    color: tierColors[item.tier as keyof typeof tierColors] || "#9ca3af",
+    color: tierColors[item.tier as keyof typeof tierColors] || CHART_COLORS.muted,
   }));
 
   const timeSeriesData = stats.timeSeries.slice(-12).map(item => ({
     label: item.monthLabel,
     value: item.count,
-    color: "#3b82f6",
+    color: CHART_COLORS.primary,
   }));
 
   return (

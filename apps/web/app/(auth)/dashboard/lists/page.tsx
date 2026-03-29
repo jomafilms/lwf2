@@ -19,18 +19,10 @@ import {
   fetchTagAssignments,
   type Tag,
 } from "@/lib/tags/api";
+import { CHART_COLORS } from "@/lib/design-tokens";
 import { toast } from "@/components/ui/Toast";
 
-const LIST_COLORS = [
-  "#ef4444",
-  "#f97316",
-  "#eab308",
-  "#22c55e",
-  "#06b6d4",
-  "#3b82f6",
-  "#8b5cf6",
-  "#ec4899",
-];
+const LIST_COLORS = CHART_COLORS.palette;
 
 const VISIBILITY_ICONS = {
   private: Lock,
@@ -218,7 +210,7 @@ export default function ListsPage() {
                     <div
                       className="w-4 h-4 rounded-full flex-shrink-0"
                       style={{
-                        backgroundColor: tag.color || "#9ca3af",
+                        backgroundColor: tag.color || CHART_COLORS.muted,
                       }}
                     />
 

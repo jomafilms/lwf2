@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CHART_COLORS } from "@/lib/design-tokens";
 
 interface DonutChartProps {
   data: Array<{
@@ -44,7 +45,7 @@ export function DonutChart({
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke="#f3f4f6"
+            stroke={CHART_COLORS.muted}
             strokeWidth={strokeWidth}
           />
           

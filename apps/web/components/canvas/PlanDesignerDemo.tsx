@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ZONE_COLORS, MAP_COLORS } from "@/lib/design-tokens";
 import {
   Select,
   SelectContent,
@@ -57,7 +58,7 @@ const DEMO_ZONES: CanvasZone[] = [
   {
     id: "zone-0",
     name: "Zone 0 (0-5ft)",
-    color: "#ef4444",
+    color: ZONE_COLORS.zone0.hex,
     x: 50,
     y: 50,
     width: 200,
@@ -66,7 +67,7 @@ const DEMO_ZONES: CanvasZone[] = [
   {
     id: "zone-1",
     name: "Zone 1 (5-30ft)",
-    color: "#f59e0b", 
+    color: ZONE_COLORS.zone1.hex, 
     x: 270,
     y: 50,
     width: 300,
@@ -75,7 +76,7 @@ const DEMO_ZONES: CanvasZone[] = [
   {
     id: "zone-2",
     name: "Zone 2 (30-100ft)",
-    color: "#22c55e",
+    color: ZONE_COLORS.zone2.hex,
     x: 590,
     y: 50,
     width: 350,
@@ -279,7 +280,7 @@ export function PlanDesignerDemo() {
                   width: "100%", 
                   height: "500px",
                   backgroundImage: showGrid ? 
-                    'radial-gradient(circle, #e5e7eb 1px, transparent 1px)' : 'none',
+                    `radial-gradient(circle, ${MAP_COLORS.structureStroke} 1px, transparent 1px)` : 'none',
                   backgroundSize: '20px 20px',
                   cursor: selectedTool === 'plant' ? 'crosshair' : 'default'
                 }}
@@ -325,7 +326,7 @@ export function PlanDesignerDemo() {
                           height: `${radius * 2}px`,
                           backgroundColor: 'rgba(34, 197, 94, 0.1)',
                           borderStyle: 'dashed',
-                          borderColor: isSelected ? '#3b82f6' : '#22c55e',
+                          borderColor: isSelected ? MAP_COLORS.parcelStroke : ZONE_COLORS.zone2.hex,
                           borderWidth: isSelected ? '3px' : '2px',
                         }}
                       />
@@ -336,7 +337,7 @@ export function PlanDesignerDemo() {
                         style={{
                           left: `${placement.x * (zoom / 100)}px`,
                           top: `${placement.y * (zoom / 100)}px`,
-                          backgroundColor: isSelected ? '#3b82f6' : '#16a34a',
+                          backgroundColor: isSelected ? MAP_COLORS.parcelFill : ZONE_COLORS.zone2.hex,
                         }}
                         onClick={(e) => {
                           e.stopPropagation();

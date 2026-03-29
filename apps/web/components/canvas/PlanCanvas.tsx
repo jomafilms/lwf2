@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ZONE_COLORS, MAP_COLORS } from "@/lib/design-tokens";
 
 interface PlantPlacement {
   id: string;
@@ -61,21 +62,21 @@ const DEFAULT_ZONES: Zone[] = [
     id: "zone-0",
     name: "Zone 0 (0-5ft)",
     bounds: { x: 50, y: 50, width: 200, height: 200 },
-    color: "#ef4444",
+    color: ZONE_COLORS.zone0.hex,
     requirements: ["Low flammability", "No dead foliage", "5ft clearance"]
   },
   {
     id: "zone-1", 
     name: "Zone 1 (5-30ft)",
     bounds: { x: 250, y: 50, width: 300, height: 300 },
-    color: "#f59e0b",
+    color: ZONE_COLORS.zone1.hex,
     requirements: ["Fire-resistant", "Proper spacing", "Maintained"]
   },
   {
     id: "zone-2",
     name: "Zone 2 (30-100ft)", 
     bounds: { x: 550, y: 50, width: 400, height: 400 },
-    color: "#22c55e",
+    color: ZONE_COLORS.zone2.hex,
     requirements: ["Fuel breaks", "Emergency access", "Thinned vegetation"]
   }
 ];
@@ -266,7 +267,7 @@ export function PlanCanvas({
                 y={0}
                 width={propertyBounds.width}
                 height={propertyBounds.height}
-                stroke="#94a3b8"
+                stroke={MAP_COLORS.parcelStroke}
                 strokeWidth={2}
                 dash={[5, 5]}
                 fill="rgba(248, 250, 252, 0.5)"
@@ -309,7 +310,7 @@ export function PlanCanvas({
                       y={placement.y}
                       radius={radius}
                       fill="rgba(34, 197, 94, 0.2)"
-                      stroke={isSelected ? "#3b82f6" : "#22c55e"}
+                      stroke={isSelected ? MAP_COLORS.parcelStroke : ZONE_COLORS.zone2.hex}
                       strokeWidth={isSelected ? 3 : 1}
                       dash={[3, 3]}
                     />
@@ -319,7 +320,7 @@ export function PlanCanvas({
                       x={placement.x}
                       y={placement.y}
                       radius={6}
-                      fill={isSelected ? "#3b82f6" : "#16a34a"}
+                      fill={isSelected ? MAP_COLORS.parcelFill : ZONE_COLORS.zone2.hex}
                       stroke="white"
                       strokeWidth={2}
                       draggable={!readOnly}
@@ -340,7 +341,7 @@ export function PlanCanvas({
                       text={placement.plantName}
                       fontSize={10}
                       align="center"
-                      fill="#374151"
+                      fill={MAP_COLORS.structureFill}
                     />
 
                     {/* Quantity badge */}
@@ -350,7 +351,7 @@ export function PlanCanvas({
                           x={placement.x + 15}
                           y={placement.y - 10}
                           radius={8}
-                          fill="#dc2626"
+                          fill={ZONE_COLORS.zone0.hex}
                         />
                         <Text
                           x={placement.x + 10}
@@ -370,7 +371,7 @@ export function PlanCanvas({
                           x={placement.x}
                           y={placement.y}
                           radius={radius + 20} // 20ft recommended spacing
-                          stroke="#f59e0b"
+                          stroke={ZONE_COLORS.zone1.hex}
                           strokeWidth={1}
                           dash={[2, 4]}
                           opacity={0.5}
@@ -388,7 +389,7 @@ export function PlanCanvas({
                     <Line
                       key={`v-${i}`}
                       points={[i * 50, 0, i * 50, canvasHeight]}
-                      stroke="#e2e8f0"
+                      stroke={MAP_COLORS.structureStroke}
                       strokeWidth={1}
                       opacity={0.3}
                     />
@@ -397,7 +398,7 @@ export function PlanCanvas({
                     <Line
                       key={`h-${i}`}
                       points={[0, i * 50, canvasWidth, i * 50]}
-                      stroke="#e2e8f0"
+                      stroke={MAP_COLORS.structureStroke}
                       strokeWidth={1}
                       opacity={0.3}
                     />

@@ -9,6 +9,7 @@ import {
   ZONE_OPACITY,
   type FireZones,
 } from "@/lib/geo/fire-zones";
+import { MAP_COLORS } from "@/lib/design-tokens";
 import { Pencil, RotateCcw, Check, Undo2 } from "lucide-react";
 import type mapboxgl from "mapbox-gl";
 
@@ -342,7 +343,7 @@ function addMapLayers(map: mapboxgl.Map) {
     type: "fill",
     source: "parcel-boundary",
     paint: {
-      "fill-color": "#3B82F6",
+      "fill-color": MAP_COLORS.parcelFill,
       "fill-opacity": 0.08,
     },
   });
@@ -353,7 +354,7 @@ function addMapLayers(map: mapboxgl.Map) {
     type: "line",
     source: "parcel-boundary",
     paint: {
-      "line-color": "#3B82F6",
+      "line-color": MAP_COLORS.parcelStroke,
       "line-width": 2.5,
       "line-dasharray": [4, 2],
       "line-opacity": 0.9,
@@ -406,13 +407,13 @@ function addMapLayers(map: mapboxgl.Map) {
     id: "structure-fill",
     type: "fill",
     source: "structure",
-    paint: { "fill-color": "#1e293b", "fill-opacity": 0.6 },
+    paint: { "fill-color": MAP_COLORS.structureFill, "fill-opacity": 0.6 },
   });
   map.addLayer({
     id: "structure-outline",
     type: "line",
     source: "structure",
-    paint: { "line-color": "#f8fafc", "line-width": 2 },
+    paint: { "line-color": MAP_COLORS.structureStroke, "line-width": 2 },
   });
 
   // Draw preview
@@ -421,7 +422,7 @@ function addMapLayers(map: mapboxgl.Map) {
     type: "line",
     source: "draw-line",
     paint: {
-      "line-color": "#ffffff",
+      "line-color": MAP_COLORS.drawLine,
       "line-width": 2,
       "line-dasharray": [3, 2],
     },
@@ -432,8 +433,8 @@ function addMapLayers(map: mapboxgl.Map) {
     source: "draw-points",
     paint: {
       "circle-radius": 7,
-      "circle-color": "#ffffff",
-      "circle-stroke-color": "#1e293b",
+      "circle-color": MAP_COLORS.drawPoint,
+      "circle-stroke-color": MAP_COLORS.drawPointStroke,
       "circle-stroke-width": 2.5,
     },
   });

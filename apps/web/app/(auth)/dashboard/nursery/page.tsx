@@ -6,15 +6,12 @@ import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import {
   Building2,
-  Upload,
-  ExternalLink,
-  Pencil,
-  Package,
   Loader2,
   ArrowLeft,
-  Save,
-  Leaf,
 } from "lucide-react";
+import { NurseryStats } from "@/components/nursery/NurseryStats";
+import { NurseryActions } from "@/components/nursery/NurseryActions";
+import { NurseryProfile } from "@/components/nursery/NurseryProfile";
 
 interface NurseryData {
   id: string;
@@ -121,6 +118,10 @@ export default function NurseryDashboardPage() {
     }
   }
 
+  function handleFormChange(field: keyof typeof form, value: string | boolean) {
+    setForm(prev => ({ ...prev, [field]: value }));
+  }
+
   if (loading || authPending) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -211,44 +212,7 @@ export default function NurseryDashboardPage() {
         )}
 
         {/* Quick Actions */}
-        <div className="grid gap-3 sm:grid-cols-3">
-          <Link
-            href={`/dashboard/nursery/inventory?id=${nurseryId}`}
-            className="group rounded-lg border bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
-          >
-            <Upload className="h-5 w-5 text-green-600" />
-            <h3 className="mt-2 text-sm font-semibold text-gray-900 group-hover:text-green-600">
-              Upload Inventory
-            </h3>
-            <p className="mt-0.5 text-xs text-gray-500">
-              CSV upload or manual entry
-            </p>
-          </Link>
-          <Link
-            href={`/nurseries/${nurseryId}`}
-            className="group rounded-lg border bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
-          >
-            <ExternalLink className="h-5 w-5 text-blue-600" />
-            <h3 className="mt-2 text-sm font-semibold text-gray-900 group-hover:text-blue-600">
-              View Public Page
-            </h3>
-            <p className="mt-0.5 text-xs text-gray-500">
-              See what customers see
-            </p>
-          </Link>
-          <Link
-            href={`/dashboard/nursery/profile?id=${nurseryId}`}
-            className="group rounded-lg border bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
-          >
-            <Pencil className="h-5 w-5 text-orange-600" />
-            <h3 className="mt-2 text-sm font-semibold text-gray-900 group-hover:text-orange-600">
-              Edit Profile
-            </h3>
-            <p className="mt-0.5 text-xs text-gray-500">
-              Update nursery details
-            </p>
-          </Link>
-        </div>
+        <NurseryActions nurseryId={nurseryId} />
 
         {/* Inventory Summary */}
         <div className="rounded-lg border bg-white p-6 shadow-sm">

@@ -15,6 +15,7 @@ import {
 import { ProgressBar } from "@/components/charts/ProgressBar";
 import { DonutChart } from "@/components/charts/DonutChart";
 import { BarChart } from "@/components/charts/BarChart";
+import { SCORE_COLORS, CHART_COLORS } from "@/lib/design-tokens";
 
 interface CommunityStats {
   community: {
@@ -38,10 +39,10 @@ interface CommunityStats {
 }
 
 const tierColors = {
-  compliant: "#22c55e", // green
-  "needs-work": "#eab308", // yellow
-  "non-compliant": "#ef4444", // red
-  unassessed: "#9ca3af", // gray
+  compliant: SCORE_COLORS.high.hex, // green
+  "needs-work": SCORE_COLORS.medium.hex, // yellow
+  "non-compliant": SCORE_COLORS.low.hex, // red
+  unassessed: CHART_COLORS.muted, // gray (keeping this as a fallback since it's not part of scoring)
 };
 
 const tierLabels = {
@@ -110,13 +111,13 @@ export function CommunityStatsPage() {
     .map(item => ({
       label: tierLabels[item.tier as keyof typeof tierLabels] || item.tier,
       value: item.count,
-      color: tierColors[item.tier as keyof typeof tierColors] || "#9ca3af",
+      color: tierColors[item.tier as keyof typeof tierColors] || CHART_COLORS.muted,
     }));
 
   const monthlyData = stats.monthlyProgress.slice(-12).map(item => ({
     label: item.monthLabel.split(' ')[0], // Short month names for better mobile display
     value: item.count,
-    color: "#059669", // green-600
+    color: SCORE_COLORS.high.hex, // green
   }));
 
   return (
