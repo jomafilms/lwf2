@@ -12,6 +12,10 @@ import type { Plant, ResolvedValue } from "@lwf/types";
 
 interface PlantDetailInlineExpandProps {
   selectedId: string | null;
+  /** Pre-loaded plant object from the grid (avoids re-fetch) */
+  selectedPlant?: Plant | null;
+  /** Pre-loaded values from the grid */
+  selectedValues?: ResolvedValue[];
   gridRef: React.RefObject<HTMLElement | null>;
   cardRefs: React.RefObject<Map<string, HTMLElement>>;
   onClose: () => void;
@@ -19,6 +23,8 @@ interface PlantDetailInlineExpandProps {
 
 export function PlantDetailInlineExpand({
   selectedId,
+  selectedPlant,
+  selectedValues,
   gridRef,
   cardRefs,
   onClose,
@@ -33,13 +39,21 @@ export function PlantDetailInlineExpand({
   const [presentation, setPresentation] = useState<PlantPresentation | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Fetch plant data
+  // Use pre-loaded data if available, otherwise fetch
   useEffect(() => {
     if (!selectedId) {
       setPlant(null);
       setPresentation(null);
       return;
     }
+
+    if (selectedPlant) {
+      setPlant(selectedPlant);
+      setPresentation(presentPlant(selectedValues || []));
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     getPlantClient(selectedId)
       .then((data) => {
@@ -49,7 +63,7 @@ export function PlantDetailInlineExpand({
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [selectedId]);
+  }, [selectedId, selectedPlant, selectedValues]);
 
   // Position calculation
   const calculatePosition = useCallback(() => {
@@ -190,14 +204,7 @@ export function PlantDetailInlineExpand({
             </div>
           ) : plant && presentation ? (
             <div className="p-4 space-y-3">
-              {/* Image row */}
-              {imageUrl && (
-                <div className="h-32 rounded-lg overflow-hidden">
-                  <img src={imageUrl} alt={plant.commonName} className="w-full h-full object-cover" />
-                </div>
-              )}
-
-              {/* Name */}
+              {/* Name — no image needed, card already shows it */}
               <div>
                 <h3 className="font-bold text-gray-900 text-base">{plant.commonName}</h3>
                 <p className="text-xs text-gray-500 italic">{plant.genus} {plant.species}</p>
@@ -246,13 +253,14 @@ export function PlantDetailInlineExpand({
               )}
 
               {/* Actions */}
-              <div className="flex gap-2 pt-2 border-t border-gray-100">
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
                 <AddToListButton plantId={plant.id} />
                 <PlanToggleButton
                   plantId={plant.id}
                   commonName={plant.commonName}
                   botanicalName={`${plant.genus} ${plant.species}`}
                   imageUrl={imageUrl || null}
+                  variant="pill"
                 />
               </div>
 

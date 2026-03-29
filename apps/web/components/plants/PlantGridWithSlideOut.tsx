@@ -73,6 +73,8 @@ export function PlantGridWithSlideOut({
         {isDesktop && selectedId && (
           <PlantDetailInlineExpand
             selectedId={selectedId}
+            selectedPlant={plants.find(p => p.id === selectedId) || null}
+            selectedValues={valuesMap[selectedId] || []}
             gridRef={gridRef}
             cardRefs={cardRefs}
             onClose={handleClose}
