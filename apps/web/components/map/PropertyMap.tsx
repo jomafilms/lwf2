@@ -7,14 +7,25 @@ import {
   fireZonesToGeoJSON,
   ZONE_COLORS,
   ZONE_OPACITY,
+  type FireZones,
 } from "@/lib/geo/fire-zones";
 import { Pencil, RotateCcw, Check, Undo2 } from "lucide-react";
 import type mapboxgl from "mapbox-gl";
+
+export interface SavedPropertyData {
+  structureFootprints: [number, number][];
+  fireZones: FireZones;
+}
 
 interface PropertyMapProps {
   center: { lat: number; lng: number };
   onDrawStart?: () => void;
   onStructureDrawn?: (coords: [number, number][]) => void;
+  onZonesCalculated?: (data: {
+    structureCoords: [number, number][];
+    fireZones: FireZones;
+  }) => void;
+  savedData?: SavedPropertyData | null;
 }
 
 type DrawState =
@@ -25,6 +36,8 @@ export function PropertyMap({
   center,
   onDrawStart,
   onStructureDrawn,
+  onZonesCalculated,
+  savedData,
 }: PropertyMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -61,6 +74,30 @@ export function PropertyMap({
       map.on("load", () => {
         addMapSources(map);
         addMapLayers(map);
+
+        // Load saved property data if available
+        if (savedData) {
+          const coords = savedData.structureFootprints;
+          const closedCoords = [...coords, coords[0]];
+
+          setSourceData(map, "structure", {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: {
+                  type: "Polygon",
+                  coordinates: [closedCoords],
+                },
+                properties: {},
+              },
+            ],
+          });
+
+          const zonesGeoJSON = fireZonesToGeoJSON(savedData.fireZones);
+          setSourceData(map, "fire-zones", zonesGeoJSON);
+          setHasZones(true);
+        }
       });
 
       map.on("click", (e) => {
@@ -135,7 +172,8 @@ export function PropertyMap({
     setDrawState({ mode: "idle" });
     setHasZones(true);
     onStructureDrawn?.(coords);
-  }, [drawState, onStructureDrawn]);
+    onZonesCalculated?.({ structureCoords: coords, fireZones: zones });
+  }, [drawState, onStructureDrawn, onZonesCalculated]);
 
   const isDrawing = drawState.mode === "drawing";
   const pointCount = isDrawing ? drawState.points.length : 0;

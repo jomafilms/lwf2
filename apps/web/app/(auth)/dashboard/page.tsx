@@ -1,62 +1,75 @@
-import { redirect } from 'next/navigation';
-import { getCurrentUser } from '@/lib/auth';
-import Link from 'next/link';
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
+import { db, properties } from "@lwf/database";
+import { eq, desc } from "drizzle-orm";
+import Link from "next/link";
 import {
   Home,
   TreePine,
   ListChecks,
   Settings,
   Shield,
-} from 'lucide-react';
+  MapPin,
+  Calendar,
+  Layers,
+  Plus,
+} from "lucide-react";
 
 const roleBadgeColors: Record<string, string> = {
-  homeowner: 'bg-green-100 text-green-800',
-  landscaper: 'bg-blue-100 text-blue-800',
-  nursery_admin: 'bg-purple-100 text-purple-800',
-  city_admin: 'bg-amber-100 text-amber-800',
-  platform_admin: 'bg-red-100 text-red-800',
+  homeowner: "bg-green-100 text-green-800",
+  landscaper: "bg-blue-100 text-blue-800",
+  nursery_admin: "bg-purple-100 text-purple-800",
+  city_admin: "bg-amber-100 text-amber-800",
+  platform_admin: "bg-red-100 text-red-800",
 };
 
 const roleLabels: Record<string, string> = {
-  homeowner: 'Homeowner',
-  landscaper: 'Landscaper',
-  nursery_admin: 'Nursery Admin',
-  city_admin: 'City Admin',
-  platform_admin: 'Platform Admin',
+  homeowner: "Homeowner",
+  landscaper: "Landscaper",
+  nursery_admin: "Nursery Admin",
+  city_admin: "City Admin",
+  platform_admin: "Platform Admin",
 };
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  if (!user) redirect('/sign-in');
+  if (!user) redirect("/sign-in");
 
   // Default role — will come from user_profiles in a future iteration
-  const role = 'homeowner';
+  const role = "homeowner";
   const badgeColor = roleBadgeColors[role] || roleBadgeColors.homeowner;
-  const roleLabel = roleLabels[role] || 'Homeowner';
+  const roleLabel = roleLabels[role] || "Homeowner";
+
+  // Fetch user's saved properties
+  const userProperties = await db
+    .select()
+    .from(properties)
+    .where(eq(properties.ownerId, user.id))
+    .orderBy(desc(properties.createdAt));
 
   const sections = [
     {
-      href: '/dashboard',
-      label: 'My Properties',
-      description: 'Manage your properties and fire zones',
+      href: "/dashboard",
+      label: "My Properties",
+      description: "Manage your properties and fire zones",
       icon: Home,
     },
     {
-      href: '/my-plants',
-      label: 'My Plants',
-      description: 'Your saved plants and lists',
+      href: "/my-plants",
+      label: "My Plants",
+      description: "Your saved plants and lists",
       icon: TreePine,
     },
     {
-      href: '/dashboard',
-      label: 'My Lists',
-      description: 'Custom plant lists and shopping lists',
+      href: "/dashboard",
+      label: "My Lists",
+      description: "Custom plant lists and shopping lists",
       icon: ListChecks,
     },
     {
-      href: '/dashboard',
-      label: 'Preferences',
-      description: 'Notification and display settings',
+      href: "/dashboard",
+      label: "Preferences",
+      description: "Notification and display settings",
       icon: Settings,
     },
   ];
@@ -78,7 +91,7 @@ export default async function DashboardPage() {
             {user.image ? (
               <img
                 src={user.image}
-                alt={user.name || ''}
+                alt={user.name || ""}
                 className="h-16 w-16 rounded-full object-cover"
               />
             ) : (
@@ -97,6 +110,91 @@ export default async function DashboardPage() {
               </span>
             </div>
           </div>
+        </div>
+
+        {/* Saved Properties */}
+        <div className="mt-6">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
+              My Properties
+            </h2>
+            <Link
+              href="/map"
+              className="flex items-center gap-1.5 rounded-lg bg-orange-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-orange-600 transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              Add Property
+            </Link>
+          </div>
+
+          {userProperties.length === 0 ? (
+            <div className="rounded-lg border border-dashed bg-white p-8 text-center">
+              <MapPin className="mx-auto h-8 w-8 text-gray-300" />
+              <p className="mt-2 text-sm font-medium text-gray-600">
+                No properties saved yet
+              </p>
+              <p className="mt-1 text-xs text-gray-400">
+                Go to the map, draw your structure, and save your property.
+              </p>
+              <Link
+                href="/map"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600 transition-colors"
+              >
+                <MapPin className="h-4 w-4" />
+                Map Your Property
+              </Link>
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {userProperties.map((prop) => {
+                const hasZones = !!prop.fireZones;
+                const createdDate = prop.createdAt
+                  ? new Date(prop.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                  : null;
+
+                return (
+                  <Link
+                    key={prop.id}
+                    href={`/map?property=${prop.id}`}
+                    className="group rounded-lg border bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+                          {prop.address}
+                        </p>
+                        <div className="mt-1.5 flex items-center gap-3 text-xs text-gray-500">
+                          {createdDate && (
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              {createdDate}
+                            </span>
+                          )}
+                          <span className="flex items-center gap-1">
+                            <Layers className="h-3 w-3" />
+                            {hasZones ? (
+                              <span className="text-green-600 font-medium">
+                                Zones calculated
+                              </span>
+                            ) : (
+                              <span className="text-gray-400">
+                                No zones yet
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                      <MapPin className="h-4 w-4 flex-shrink-0 text-gray-300 group-hover:text-orange-400 transition-colors" />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Quick links */}

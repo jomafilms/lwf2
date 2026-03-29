@@ -1,22 +1,83 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { AddressSearch } from "@/components/map/AddressSearch";
-import { PropertyMap } from "@/components/map/PropertyMap";
+import {
+  PropertyMap,
+  type SavedPropertyData,
+} from "@/components/map/PropertyMap";
 import { ChatPanel } from "@/components/agent/ChatPanel";
-import { ArrowLeft, MessageSquare, X, ChevronDown } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
+import {
+  ArrowLeft,
+  MessageSquare,
+  X,
+  ChevronDown,
+  Save,
+  Check,
+  Loader2,
+} from "lucide-react";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
+import type { FireZones } from "@/lib/geo/fire-zones";
 
 type Step = "view" | "draw" | "zones";
 
+interface ZoneData {
+  structureCoords: [number, number][];
+  fireZones: FireZones;
+}
+
 export default function MapPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { data: session } = useSession();
   const [location, setLocation] = useState<GeocodingResult | null>(null);
   const [step, setStep] = useState<Step>("view");
   const [chatOpen, setChatOpen] = useState(false);
+  const [zoneData, setZoneData] = useState<ZoneData | null>(null);
+  const [savedPropertyId, setSavedPropertyId] = useState<string | null>(null);
+  const [saveState, setSaveState] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const [savedData, setSavedData] = useState<SavedPropertyData | null>(null);
 
+  // Load saved property from URL param
   useEffect(() => {
+    const propertyId = searchParams.get("property");
+    if (propertyId) {
+      setSavedPropertyId(propertyId);
+      setSaveState("saved");
+      fetch(`/api/properties/${propertyId}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to load property");
+          return res.json();
+        })
+        .then((property) => {
+          setLocation({
+            lat: property.lat,
+            lng: property.lng,
+            address: property.address,
+          });
+          if (property.structureFootprints && property.fireZones) {
+            setSavedData({
+              structureFootprints: property.structureFootprints,
+              fireZones: property.fireZones,
+            });
+            setStep("zones");
+          }
+        })
+        .catch(() => {
+          // Property not found or not authorized — just show address search
+          setSavedPropertyId(null);
+          setSaveState("idle");
+        });
+    }
+  }, [searchParams]);
+
+  // Load from lat/lng params
+  useEffect(() => {
+    if (searchParams.get("property")) return; // skip if loading from property
     const lat = searchParams.get("lat");
     const lng = searchParams.get("lng");
     const address = searchParams.get("address");
@@ -33,6 +94,60 @@ export default function MapPage() {
     setLocation(result);
     setStep("view");
     setChatOpen(false);
+    setSavedPropertyId(null);
+    setSaveState("idle");
+    setZoneData(null);
+    setSavedData(null);
+  };
+
+  const handleZonesCalculated = useCallback((data: ZoneData) => {
+    setZoneData(data);
+    setSaveState("idle");
+    setSavedPropertyId(null);
+  }, []);
+
+  const handleSave = async () => {
+    if (!location || !zoneData) return;
+
+    if (!session?.user) {
+      // Redirect to sign-in with return URL
+      const returnUrl = `/map?lat=${location.lat}&lng=${location.lng}&address=${encodeURIComponent(location.address)}`;
+      router.push(`/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`);
+      return;
+    }
+
+    setSaveState("saving");
+
+    try {
+      const res = await fetch("/api/properties", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          address: location.address,
+          lat: location.lat,
+          lng: location.lng,
+          structureFootprints: zoneData.structureCoords,
+          fireZones: zoneData.fireZones,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Save failed");
+
+      const property = await res.json();
+      setSavedPropertyId(property.id);
+      setSaveState("saved");
+
+      // Update URL without full navigation
+      const url = new URL(window.location.href);
+      url.searchParams.set("property", property.id);
+      url.searchParams.delete("lat");
+      url.searchParams.delete("lng");
+      url.searchParams.delete("address");
+      window.history.replaceState({}, "", url.toString());
+    } catch {
+      setSaveState("error");
+      setTimeout(() => setSaveState("idle"), 3000);
+    }
   };
 
   if (!location) {
@@ -61,6 +176,10 @@ export default function MapPage() {
             setLocation(null);
             setStep("view");
             setChatOpen(false);
+            setZoneData(null);
+            setSavedPropertyId(null);
+            setSaveState("idle");
+            setSavedData(null);
           }}
           className="rounded p-1.5 hover:bg-neutral-100"
           title="Back to search"
@@ -104,6 +223,39 @@ export default function MapPage() {
           ))}
         </div>
 
+        {/* Save button — appears after zones */}
+        {step === "zones" && (zoneData || savedPropertyId) && (
+          <button
+            onClick={handleSave}
+            disabled={saveState === "saving" || saveState === "saved"}
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
+              saveState === "saved"
+                ? "bg-green-100 text-green-800"
+                : saveState === "saving"
+                  ? "bg-neutral-100 text-neutral-500"
+                  : saveState === "error"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-orange-500 text-white hover:bg-orange-600"
+            }`}
+          >
+            {saveState === "saving" && (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            )}
+            {saveState === "saved" && <Check className="h-3.5 w-3.5" />}
+            {saveState === "idle" && <Save className="h-3.5 w-3.5" />}
+            {saveState === "error" && <Save className="h-3.5 w-3.5" />}
+            <span className="hidden sm:inline">
+              {saveState === "saving"
+                ? "Saving…"
+                : saveState === "saved"
+                  ? "Saved ✓"
+                  : saveState === "error"
+                    ? "Error — retry"
+                    : "Save Property"}
+            </span>
+          </button>
+        )}
+
         {/* Chat toggle */}
         {step === "zones" && (
           <button
@@ -130,6 +282,8 @@ export default function MapPage() {
             center={{ lat: location.lat, lng: location.lng }}
             onDrawStart={() => setStep("draw")}
             onStructureDrawn={() => setStep("zones")}
+            onZonesCalculated={handleZonesCalculated}
+            savedData={savedData}
           />
         </div>
 
