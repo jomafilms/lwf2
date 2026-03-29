@@ -6,6 +6,8 @@ import {
   getPlantRiskReduction,
   getValuesBulk,
 } from "@/lib/api/lwf";
+import { db, userProfiles } from "@lwf/database";
+import { eq } from "drizzle-orm";
 
 // HIZ attribute ID from IMPLEMENTATION.md
 const HIZ_ATTRIBUTE_ID = "b908b170-70c9-454d-a2ed-d86f98cb3de1";
@@ -77,11 +79,47 @@ export const toolDefinitions: Anthropic.Tool[] = [
       required: ["plantId"],
     },
   },
+  {
+    name: "get_user_preferences",
+    description:
+      "Load the current user's saved preferences (deer resistance, water needs, native-only, max height, aesthetic prefs, etc.). Call this at the start of every conversation to personalize recommendations.",
+    input_schema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "save_user_preference",
+    description:
+      "Save a user preference for future conversations. Use when the user mentions a constraint like 'I have deer', 'only low-water plants', 'no plants taller than 6 feet', 'only Oregon natives', or aesthetic preferences like 'no pink flowers'.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        key: {
+          type: "string",
+          description:
+            "Preference key, e.g. 'deerResistant', 'waterNeeds', 'nativeOnly', 'maxHeight', 'aestheticPrefs', 'maintenance', 'notes'",
+        },
+        value: {
+          description:
+            "Preference value — can be a string, number, boolean, or array of strings",
+        },
+      },
+      required: ["key", "value"],
+    },
+  },
 ];
+
+// Context passed from the chat route to identify the current user
+export interface ToolContext {
+  userId?: string;
+}
 
 export async function executeTool(
   name: string,
-  input: Record<string, unknown>
+  input: Record<string, unknown>,
+  context?: ToolContext
 ): Promise<string> {
   try {
     switch (name) {
@@ -152,6 +190,67 @@ export async function executeTool(
       case "get_plant_risk_reduction": {
         const rr = await getPlantRiskReduction(input.plantId as string);
         return JSON.stringify(rr);
+      }
+
+      case "get_user_preferences": {
+        if (!context?.userId) {
+          return JSON.stringify({
+            preferences: {},
+            note: "User is not logged in — no saved preferences available.",
+          });
+        }
+
+        const profile = await db
+          .select({ preferences: userProfiles.preferences })
+          .from(userProfiles)
+          .where(eq(userProfiles.userId, context.userId))
+          .limit(1);
+
+        const preferences =
+          (profile[0]?.preferences as Record<string, unknown>) ?? {};
+        return JSON.stringify({ preferences });
+      }
+
+      case "save_user_preference": {
+        if (!context?.userId) {
+          return JSON.stringify({
+            error:
+              "User is not logged in — preferences cannot be saved. Let the user know they can sign in to save preferences.",
+          });
+        }
+
+        const key = input.key as string;
+        const value = input.value;
+
+        // Upsert the preference
+        const existing = await db
+          .select()
+          .from(userProfiles)
+          .where(eq(userProfiles.userId, context.userId))
+          .limit(1);
+
+        let merged: Record<string, unknown>;
+
+        if (existing.length > 0) {
+          const current =
+            (existing[0].preferences as Record<string, unknown>) ?? {};
+          merged = { ...current, [key]: value };
+          await db
+            .update(userProfiles)
+            .set({ preferences: merged })
+            .where(eq(userProfiles.userId, context.userId));
+        } else {
+          merged = { [key]: value };
+          await db.insert(userProfiles).values({
+            userId: context.userId,
+            preferences: merged,
+          });
+        }
+
+        return JSON.stringify({
+          saved: { key, value },
+          allPreferences: merged,
+        });
       }
 
       default:

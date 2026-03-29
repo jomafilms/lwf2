@@ -67,9 +67,9 @@ export default async function DashboardPage() {
       icon: ListChecks,
     },
     {
-      href: "/dashboard",
+      href: "/dashboard/preferences",
       label: "Preferences",
-      description: "Notification and display settings",
+      description: "View and manage AI-learned preferences",
       icon: Settings,
     },
   ];

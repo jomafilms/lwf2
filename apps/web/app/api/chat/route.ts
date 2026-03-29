@@ -1,12 +1,20 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { SYSTEM_PROMPT } from "@/lib/agent/system-prompt";
 import { toolDefinitions, executeTool } from "@/lib/agent/tools";
+import type { ToolContext } from "@/lib/agent/tools";
+import { getCurrentUser } from "@/lib/auth";
 
 const client = new Anthropic();
 
 export async function POST(req: Request) {
   const { messages } = (await req.json()) as {
     messages: Anthropic.MessageParam[];
+  };
+
+  // Get current user for preference tools
+  const user = await getCurrentUser();
+  const toolContext: ToolContext = {
+    userId: user?.id,
   };
 
   const encoder = new TextEncoder();
@@ -19,7 +27,7 @@ export async function POST(req: Request) {
       };
 
       try {
-        await runAgentLoop(messages, send);
+        await runAgentLoop(messages, send, toolContext);
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         send({ type: "error", error: message });
@@ -41,7 +49,8 @@ export async function POST(req: Request) {
 
 async function runAgentLoop(
   messages: Anthropic.MessageParam[],
-  send: (data: Record<string, unknown>) => void
+  send: (data: Record<string, unknown>) => void,
+  toolContext: ToolContext
 ) {
   let currentMessages = [...messages];
   let iterations = 0;
@@ -75,7 +84,8 @@ async function runAgentLoop(
 
         const result = await executeTool(
           block.name,
-          block.input as Record<string, unknown>
+          block.input as Record<string, unknown>,
+          toolContext
         );
 
         // Emit plant cards for tools that return plant data
