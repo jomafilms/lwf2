@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Send, Loader2, Flame } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import {
   PlantCardRow,
   type CompactPlant,
@@ -212,15 +213,23 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
                     ? "bg-neutral-900 text-white"
                     : "bg-neutral-100 text-neutral-800"
                 }`}
-                style={{ whiteSpace: "pre-wrap" }}
               >
-                {item.content ||
-                  (isLoading && i === items.length - 1 && (
+                {item.content ? (
+                  item.role === "assistant" ? (
+                    <div className="prose prose-sm prose-neutral max-w-none [&>p]:my-1 [&>ul]:my-1 [&>ol]:my-1 [&>h2]:text-sm [&>h2]:font-bold [&>h2]:mt-3 [&>h2]:mb-1 [&>h3]:text-sm [&>h3]:font-semibold [&>h3]:mt-2 [&>h3]:mb-1 [&>blockquote]:border-l-2 [&>blockquote]:border-neutral-300 [&>blockquote]:pl-3 [&>blockquote]:italic [&>blockquote]:text-neutral-600">
+                      <ReactMarkdown>{item.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    <span style={{ whiteSpace: "pre-wrap" }}>{item.content}</span>
+                  )
+                ) : (
+                  isLoading && i === items.length - 1 && (
                     <span className="flex items-center gap-2 text-neutral-400">
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       Searching plants...
                     </span>
-                  ))}
+                  )
+                )}
               </div>
             </div>
           );
