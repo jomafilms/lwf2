@@ -120,3 +120,18 @@ export async function fetchAllUserAssignments(): Promise<{
 
   return { tags: userTags, assignmentsByTag };
 }
+
+// ─── Fork Lists ──────────────────────────────────────────────────────────────
+
+export async function forkTag(tagId: string): Promise<{
+  success: boolean;
+  newTag: Tag;
+  copiedItems: number;
+}> {
+  const res = await fetch(`/api/tags/${tagId}/fork`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to fork list");
+  return res.json();
+}

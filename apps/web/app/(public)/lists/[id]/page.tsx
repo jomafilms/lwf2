@@ -56,22 +56,24 @@ export default function PublicListPage() {
     if (!tag || saving) return;
     setSaving(true);
     try {
-      // Create a copy of this list for the user
-      const newTag = await createTag({
-        name: `${tag.name} (saved)`,
-        color: tag.color || undefined,
+      // Fork the list using the API
+      const res = await fetch(`/api/tags/${tag.id}/fork`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
 
-      // Copy all plant assignments
-      await Promise.all(
-        plants.map((plant) =>
-          assignTag(newTag.id, "plant", plant.id)
-        )
-      );
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Please sign in to save lists");
+        }
+        throw new Error("Failed to save list");
+      }
 
-      toast("List saved to your account!");
-    } catch {
-      toast("Sign in to save this list");
+      const result = await res.json();
+      toast(`List saved to your library! (${result.copiedItems} plants copied)`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to save list";
+      toast(message);
     } finally {
       setSaving(false);
     }

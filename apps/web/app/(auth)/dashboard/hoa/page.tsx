@@ -12,6 +12,7 @@ import {
   Settings,
   Target,
   BarChart3,
+  List,
 } from "lucide-react";
 import { HOAStats } from "@/components/hoa/HOAStats";
 import { MembersList } from "@/components/hoa/MembersList";
@@ -160,6 +161,46 @@ export default async function HOADashboardPage() {
           </div>
           {/* This will be populated by the HOAStats component */}
         </div>
+
+        {/* Organization Lists */}
+        {selectedOrg.role === 'admin' && (
+          <div className="mb-8 rounded-lg bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <List className="h-5 w-5 text-blue-600" />
+                <h2 className="text-lg font-semibold text-gray-900">Organization Lists</h2>
+              </div>
+              <Link
+                href="/dashboard/lists?visibility=org"
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Manage Lists →
+              </Link>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              Create plant lists visible to your organization members. These appear in public browse for your community.
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-700">Community Preferred Plants</span>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">15 plants</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-700">Restricted Species</span>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">8 plants</span>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <Link
+                href="/dashboard/lists/create?visibility=org"
+                className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
+              >
+                <Plus className="h-4 w-4" />
+                Create New Org List
+              </Link>
+            </div>
+          </div>
+        )}
 
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Members List */}

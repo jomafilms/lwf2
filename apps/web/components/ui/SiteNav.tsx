@@ -20,6 +20,9 @@ export function SiteNav() {
           <Link href="/plants" className="text-gray-600 hover:text-gray-900 transition-colors">
             Plants
           </Link>
+          <Link href="/lists" className="text-gray-600 hover:text-gray-900 transition-colors">
+            Browse Lists
+          </Link>
           <Link href="/map" className="text-gray-600 hover:text-gray-900 transition-colors">
             Map
           </Link>

@@ -99,8 +99,14 @@ export default async function DashboardPage() {
         {
           href: "/my-plants",
           label: "My Plants",
-          description: "Your saved plants and lists",
+          description: "Your saved plants and shopping cart",
           icon: TreePine,
+        },
+        {
+          href: "/dashboard/lists",
+          label: "My Lists",
+          description: "Your saved plant lists and collections",
+          icon: ListChecks,
         },
         {
           href: "/dashboard/preferences",

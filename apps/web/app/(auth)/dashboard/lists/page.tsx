@@ -46,6 +46,7 @@ export default function ListsPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState("");
   const [newColor, setNewColor] = useState<string | null>(null);
+  const [newVisibility, setNewVisibility] = useState("private");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
 
@@ -81,9 +82,11 @@ export default function ListsPage() {
       await createTag({
         name: newName.trim(),
         color: newColor || undefined,
+        visibility: newVisibility,
       });
       setNewName("");
       setNewColor(null);
+      setNewVisibility("private");
       setShowCreate(false);
       toast("List created!");
       loadTags();
@@ -164,23 +167,40 @@ export default function ListsPage() {
                 Create
               </button>
             </div>
-            {/* Color picker */}
-            <div className="flex gap-2 mt-3">
-              <span className="text-xs text-gray-500 self-center">Color:</span>
-              {LIST_COLORS.map((color) => (
-                <button
-                  key={color}
-                  onClick={() =>
-                    setNewColor(newColor === color ? null : color)
-                  }
-                  className={`w-6 h-6 rounded-full border-2 transition-transform ${
-                    newColor === color
-                      ? "border-gray-900 scale-110"
-                      : "border-transparent hover:scale-110"
-                  }`}
-                  style={{ backgroundColor: color }}
-                />
-              ))}
+            {/* Options */}
+            <div className="mt-3 space-y-3">
+              {/* Color picker */}
+              <div className="flex gap-2">
+                <span className="text-xs text-gray-500 self-center">Color:</span>
+                {LIST_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() =>
+                      setNewColor(newColor === color ? null : color)
+                    }
+                    className={`w-6 h-6 rounded-full border-2 transition-transform ${
+                      newColor === color
+                        ? "border-gray-900 scale-110"
+                        : "border-transparent hover:scale-110"
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+              
+              {/* Visibility selector */}
+              <div className="flex gap-2 items-center">
+                <span className="text-xs text-gray-500">Visibility:</span>
+                <select
+                  value={newVisibility}
+                  onChange={(e) => setNewVisibility(e.target.value)}
+                  className="text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  <option value="private">Private (only me)</option>
+                  <option value="public">Public (everyone can see & save)</option>
+                  <option value="org">Organization (my org members only)</option>
+                </select>
+              </div>
             </div>
           </div>
         )}
