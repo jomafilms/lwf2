@@ -205,9 +205,9 @@ export default function FeaturedListPage() {
                 <button
                   key={plant.id}
                   onClick={() => setSelectedPlantId(plant.id)}
-                  className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden text-left"
+                  className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow text-left"
                 >
-                  <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
+                  <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden rounded-t-xl">
                     {plant.primaryImage ? (
                       <img
                         src={plant.primaryImage.url}
