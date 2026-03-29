@@ -43,10 +43,9 @@ async function fetchPlantsWithValues(searchParams: SearchParams) {
     searchParams.water ||
     searchParams.pollinator;
 
-  // When filters are applied, always fetch from the beginning and get more results
-  // to account for filtering reducing the result set
-  const fetchLimit = hasActiveFilters ? PAGE_SIZE * 5 : PAGE_SIZE; // 5x when filtering  
-  const offset = hasActiveFilters ? 0 : (page - 1) * PAGE_SIZE; // Start from beginning when filtering
+  // When filters are applied, fetch all plants to filter across the full dataset
+  const fetchLimit = hasActiveFilters ? 2000 : PAGE_SIZE;
+  const offset = hasActiveFilters ? 0 : (page - 1) * PAGE_SIZE;
 
   const plantsResponse = await getPlants({
     search: searchParams.search || undefined,
@@ -75,18 +74,25 @@ async function fetchPlantsWithValues(searchParams: SearchParams) {
       // The bulk endpoint returns a structure keyed by plantId
       // Parse it into our map
       if (bulkResult && typeof bulkResult === 'object') {
-        const data = (bulkResult as Record<string, unknown>).data || bulkResult;
+        const raw = bulkResult as Record<string, unknown>;
+        // API returns { data: { values: { plantId: { attrId: [...] } } } }
+        const dataObj = raw.data as Record<string, unknown> | undefined;
+        const valuesObj = (dataObj?.values || dataObj || raw) as Record<string, unknown>;
         for (const plantId of plantIds) {
-          const plantEntry = (data as Record<string, unknown>)[plantId];
+          const plantEntry = valuesObj[plantId];
           if (Array.isArray(plantEntry)) {
             // Direct array of values
             valuesMap[plantId] = plantEntry as ResolvedValue[];
           } else if (plantEntry && typeof plantEntry === 'object') {
             // Nested by attributeId: { attrId: [values] }
             const allValues: ResolvedValue[] = [];
-            for (const attrValues of Object.values(plantEntry as Record<string, unknown>)) {
+            for (const [attrId, attrValues] of Object.entries(plantEntry as Record<string, unknown>)) {
               if (Array.isArray(attrValues)) {
-                allValues.push(...(attrValues as ResolvedValue[]));
+                // Ensure each value has attributeId set
+                allValues.push(...(attrValues as ResolvedValue[]).map(v => ({
+                  ...v,
+                  attributeId: v.attributeId || attrId,
+                })));
               }
             }
             if (allValues.length > 0) {
