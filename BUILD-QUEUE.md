@@ -93,7 +93,7 @@
 - [ ] **C4: P3-5 AR property walkthrough** — Camera-based property assessment using device camera. Plant identification via photo.
 - [ ] **C5: P3-6 Landscape plan scanner/reader** — Upload existing landscape plan image, AI extracts plant list and layout.
 - [ ] **C6: Climate adaptation tagging** — Flag plants showing climate stress, integrate climate projection data.
-- [ ] **C7: Shooting Star nursery cart demo** — User builds plant list → "Send to nursery" → populates fake Shooting Star cart with real inventory/pricing (1,733 plants). Full loop demo.
+- [x] **C7: Shooting Star nursery cart demo** — merged 12:30 UTC (feature/shooting-star-demo) — Complete marketplace with real inventory (1,733+ plants), fire safety scores, live availability, full cart-to-order flow with actual Shooting Star data.
 
 NOTE: Skip data admin/conflict resolution tools (Benjamin is building those). Skip revenue/SaaS model. Skip AR walkthrough. Focus on user-facing tools.
 
