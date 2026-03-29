@@ -1,13 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { NurseryAvailability } from './NurseryAvailability';
 import { AddToListButton } from './AddToListButton';
 import { CompareButton } from './CompareButton';
-import { useCart } from '@/lib/cart/store';
-import { toast } from '@/components/ui/Toast';
+import { PlanToggleButton } from './PlanToggleButton';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -50,21 +48,6 @@ interface PlantCardProps {
 }
 
 export function PlantCard({ plant, values = [], onPlantClick, compact = false }: PlantCardProps) {
-  const { addToCart, isInCart } = useCart();
-  const inCart = isInCart(plant.id);
-
-  function handleAddToPlan() {
-    if (inCart) return;
-    addToCart({
-      lwfPlantId: plant.id,
-      commonName: plant.commonName,
-      botanicalName: getBotanicalName(plant),
-      imageUrl: plant.primaryImage?.url || null,
-      nurseryId: null,
-    });
-    toast('Added to plan!');
-  }
-
   const hizValues = getValuesForAttribute(values, ATTR_IDS.HIZ);
   const waterValues = getValuesForAttribute(values, ATTR_IDS.WATER_AMOUNT);
   const nativeValues = getValuesForAttribute(values, ATTR_IDS.OREGON_NATIVE);
@@ -167,16 +150,13 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
       <div className="absolute top-2 right-2 flex items-center gap-1.5">
         <AddToListButton plantId={plant.id} />
         <CompareButton plant={plant} variant="button" />
-        <button
-          onClick={handleAddToPlan}
-          className={`px-2.5 py-1 text-xs font-medium rounded-full shadow-sm transition-colors ${
-            inCart
-              ? 'bg-green-500 text-white'
-              : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white hover:text-orange-600'
-          }`}
-        >
-          {inCart ? '✓ In Plan' : '+ Add to Plan'}
-        </button>
+        <PlanToggleButton
+          plantId={plant.id}
+          commonName={plant.commonName}
+          botanicalName={getBotanicalName(plant)}
+          imageUrl={plant.primaryImage?.url || null}
+          variant="pill"
+        />
       </div>
 
       <div className="p-4">

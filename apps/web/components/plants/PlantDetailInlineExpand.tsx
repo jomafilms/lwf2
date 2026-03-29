@@ -7,8 +7,7 @@ import { cn } from "@/lib/utils";
 import { getPlantClient } from "@/lib/api/lwf";
 import { presentPlant, type PlantPresentation } from "@/lib/plants/present";
 import { AddToListButton } from "./AddToListButton";
-import { useCart } from "@/lib/cart/store";
-import { toast } from "@/components/ui/Toast";
+import { PlanToggleButton } from "./PlanToggleButton";
 import type { Plant, ResolvedValue } from "@lwf/types";
 
 interface PlantDetailInlineExpandProps {
@@ -33,8 +32,6 @@ export function PlantDetailInlineExpand({
   const [plant, setPlant] = useState<Plant | null>(null);
   const [presentation, setPresentation] = useState<PlantPresentation | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const { addToCart, isInCart } = useCart();
 
   // Fetch plant data
   useEffect(() => {
@@ -150,7 +147,6 @@ export function PlantDetailInlineExpand({
 
   if (!selectedId || !panelStyle.left) return null;
 
-  const inCart = plant ? isInCart(plant.id) : false;
   const imageUrl = plant?.primaryImage?.url ||
     (plant as unknown as { images?: { url: string }[] })?.images?.[0]?.url;
 
@@ -252,27 +248,12 @@ export function PlantDetailInlineExpand({
               {/* Actions */}
               <div className="flex gap-2 pt-2 border-t border-gray-100">
                 <AddToListButton plantId={plant.id} />
-                <button
-                  onClick={() => {
-                    if (!isInCart(plant.id)) {
-                      addToCart({
-                        lwfPlantId: plant.id,
-                        commonName: plant.commonName,
-                        botanicalName: `${plant.genus} ${plant.species}`,
-                        imageUrl: imageUrl || null,
-                        nurseryId: null,
-                      });
-                      toast("Added to plan!");
-                    }
-                  }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                    inCart
-                      ? "bg-green-500 text-white"
-                      : "bg-orange-500 text-white hover:bg-orange-600"
-                  }`}
-                >
-                  {inCart ? "In Plan" : "+ Add to Plan"}
-                </button>
+                <PlanToggleButton
+                  plantId={plant.id}
+                  commonName={plant.commonName}
+                  botanicalName={`${plant.genus} ${plant.species}`}
+                  imageUrl={imageUrl || null}
+                />
               </div>
 
               <Link

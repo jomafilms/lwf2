@@ -7,8 +7,7 @@ import { SlideOutPanel } from '@/components/ui/SlideOutPanel';
 import { presentPlant, type PlantPresentation } from '@/lib/plants/present';
 import { AddToListButton } from './AddToListButton';
 import { NurseryAvailability } from './NurseryAvailability';
-import { useCart } from '@/lib/cart/store';
-import { toast } from '@/components/ui/Toast';
+import { PlanToggleButton } from './PlanToggleButton';
 import { getPlantClient } from '@/lib/api/lwf';
 
 interface PlantSlideOutProps {
@@ -21,8 +20,6 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
   const [presentation, setPresentation] = useState<PlantPresentation | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const { addToCart, isInCart } = useCart();
 
   useEffect(() => {
     if (!plantId) {
@@ -57,20 +54,6 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
     return [p.genus, p.species].filter(Boolean).join(' ');
   }
 
-  function handleAddToPlan() {
-    if (!plant) return;
-    if (isInCart(plant.id)) return;
-
-    addToCart({
-      lwfPlantId: plant.id,
-      commonName: plant.commonName,
-      botanicalName: getBotanicalName(plant),
-      imageUrl: plant.primaryImage?.url || null,
-      nurseryId: null,
-    });
-    toast('Added to plan!');
-  }
-
   function getZoneColor(zone: string) {
     const zoneColors: Record<string, string> = {
       '0-5': 'bg-red-100 text-red-800 border-red-200',
@@ -92,8 +75,6 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
   }
 
   const isOpen = !!plantId;
-  const inCart = plant ? isInCart(plant.id) : false;
-
   return (
     <SlideOutPanel open={isOpen} onClose={onClose}>
       {loading && (
@@ -204,16 +185,13 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
           <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
             <div className="flex gap-3">
               <AddToListButton plantId={plant.id} />
-              <button
-                onClick={handleAddToPlan}
-                className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
-                  inCart
-                    ? 'bg-green-500 text-white'
-                    : 'bg-orange-500 text-white hover:bg-orange-600'
-                }`}
-              >
-                {inCart ? 'In Plan' : 'Add to Plan'}
-              </button>
+              <PlanToggleButton
+                plantId={plant.id}
+                commonName={plant.commonName}
+                botanicalName={getBotanicalName(plant)}
+                imageUrl={plant.primaryImage?.url || null}
+                className="!px-4 !py-2.5 !text-sm"
+              />
             </div>
             <Link
               href={`/plants/${plant.id}`}
