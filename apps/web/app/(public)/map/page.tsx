@@ -18,9 +18,12 @@ import {
   Check,
   Loader2,
   FileText,
+  BarChart3,
 } from "lucide-react";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
 import type { FireZones } from "@/lib/geo/fire-zones";
+import { ScoresPanel } from "@/components/scoring/ScoresPanel";
+import type { PlanPlant } from "@/lib/scoring";
 
 type Step = "view" | "draw" | "zones";
 
@@ -43,6 +46,8 @@ export default function MapPage() {
   >("idle");
   const [savedData, setSavedData] = useState<SavedPropertyData | null>(null);
   const [planId, setPlanId] = useState<string | null>(null);
+  const [scoresOpen, setScoresOpen] = useState(false);
+  const [planPlants, setPlanPlants] = useState<PlanPlant[]>([]);
 
   // Load saved property from URL param
   useEffect(() => {
@@ -279,6 +284,23 @@ export default function MapPage() {
           </a>
         )}
 
+        {/* Scores toggle */}
+        {step === "zones" && planPlants.length > 0 && (
+          <button
+            onClick={() => setScoresOpen(!scoresOpen)}
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
+              scoresOpen
+                ? "bg-emerald-100 text-emerald-900"
+                : "bg-emerald-600 text-white hover:bg-emerald-700"
+            }`}
+          >
+            <BarChart3 className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">
+              {scoresOpen ? "Hide scores" : "Scores"}
+            </span>
+          </button>
+        )}
+
         {/* Chat toggle */}
         {step === "zones" && (
           <button
@@ -318,6 +340,13 @@ export default function MapPage() {
                 Find your property, then draw your building
               </p>
             </div>
+          </div>
+        )}
+
+        {/* Scores panel — bottom-left overlay */}
+        {scoresOpen && planPlants.length > 0 && (
+          <div className="absolute bottom-4 left-4 z-10 w-[340px] max-h-[70dvh] overflow-y-auto rounded-2xl border bg-white/95 p-4 shadow-xl backdrop-blur-sm sm:w-[400px]">
+            <ScoresPanel plants={planPlants} />
           </div>
         )}
 
