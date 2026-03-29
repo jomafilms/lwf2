@@ -58,8 +58,8 @@ export interface DisplayValue {
 
 /** Fields to HIDE from public display (backend-only) */
 const HIDDEN_ATTRIBUTES = new Set([
-  // Numeric column headers
-  "7", "9", "13", "20",
+  // Numeric column headers (backend-only)
+  "2", "3", "4", "7", "9", "11", "13", "18", "20",
   // Boolean "Has X" flags (backend calculation)
   "Has Availability", "Has Climate Rating", "Has Deer Resistance",
   "Has Drought Tolerant", "Has Easy to Grow", "Has Edible Plant",
@@ -68,6 +68,9 @@ const HIDDEN_ATTRIBUTES = new Set([
   // Calculation intermediaries
   "Value Sum Total", "Wildlife Sum", "Wildlife Sum (Calculated)",
   "Wildlife Sum Component", "Invasive Component",
+  // Already shown in main sections (don't duplicate in "Show all data")
+  "Flammability Notes", "Risk Reduction Notes - Best Practices",
+  "Flammability",
   // Internal
   "Shrub", "<2 ft tall",
 ]);
@@ -208,7 +211,12 @@ export function presentPlant(values: ResolvedValue[]): PlantPresentation {
     flowerColor: findValue(values, "Flower Color"),
 
     benefits: parseBenefits(values),
-    invasive: findValue(values, "Invasive Component"),
+    invasive: (() => {
+      const v = findValue(values, "Invasive Component");
+      // Filter out meaningless values like "0", "false", "none"
+      if (!v || v === "0" || v === "false" || v === "none" || v === "None") return null;
+      return v;
+    })(),
     restrictions: null, // add when restriction data available
 
     allDisplayValues: displayableValues,
