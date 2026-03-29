@@ -36,7 +36,7 @@ export const toolDefinitions: Anthropic.Tool[] = [
   {
     name: "get_plant_details",
     description:
-      "Get full details for a specific plant including all attribute values and fire risk info.",
+      "Get full details for a specific plant including all attribute values, fire risk data, and source provenance. Use this to give nuanced, property-specific advice — character scores, placement codes, triggered rules, water needs, native status, deer resistance, and more. Always cite what the data shows.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -67,7 +67,7 @@ export const toolDefinitions: Anthropic.Tool[] = [
   {
     name: "get_plant_risk_reduction",
     description:
-      "Get fire risk reduction details for a specific plant — what makes it fire-reluctant or not.",
+      "Get fire risk reduction analysis for a specific plant — character score, placement code, triggered rules, and risk reduction text. This tells you WHY a plant is safe or risky, not just whether it is. Use this to explain tradeoffs to homeowners.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -142,9 +142,10 @@ export async function executeTool(
       }
 
       case "get_plant_details": {
-        const [plant, values] = await Promise.all([
+        const [plant, values, riskReduction] = await Promise.all([
           getPlant(input.plantId as string),
           getPlantValues(input.plantId as string),
+          getPlantRiskReduction(input.plantId as string).catch(() => null),
         ]);
         return JSON.stringify({
           plant: {
@@ -152,11 +153,24 @@ export async function executeTool(
             commonName: plant.commonName,
             genus: plant.genus,
             species: plant.species,
+            notes: plant.notes,
           },
-          values: values.map((v) => ({
-            attribute: v.attributePath || v.attributeId,
-            value: v.resolved?.value || v.value,
+          attributes: values.map((v) => ({
+            attribute: v.attributeName || v.attributeId,
+            value: v.resolved?.value || v.rawValue,
+            description: v.resolved?.description,
+            source: v.sourceId || undefined,
+            sourceNotes: v.sourceValue || undefined,
+            notes: v.notes || undefined,
           })),
+          riskReduction: riskReduction
+            ? {
+                characterScore: riskReduction.characterScore,
+                placement: riskReduction.placement,
+                riskReductionText: riskReduction.riskReductionText,
+                triggeredRules: riskReduction.triggeredRules,
+              }
+            : null,
         });
       }
 
