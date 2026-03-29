@@ -11,6 +11,7 @@ import type { PlantImage, Source } from '@lwf/types';
 import { presentPlant } from '@/lib/plants/present';
 import { NurseryAvailability } from '@/components/plants/NurseryAvailability';
 import { ImageGallery } from '@/components/plants/ImageGallery';
+import { BadgeWithTooltip } from '@/components/plants/BadgeWithTooltip';
 
 // ─── Zone badge colors ──────────────────────────────────────────────────────
 
@@ -289,24 +290,36 @@ export default async function PlantDetailPage({
           <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Facts</h2>
           <div className="flex flex-wrap gap-2">
             {presented.nativeStatus && (
-              <span className="inline-flex items-center gap-1 text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full border border-green-200">
+              <BadgeWithTooltip
+                className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full border border-green-200"
+                tooltip="This plant is native to the region, supporting local ecosystems and requiring less water once established."
+              >
                 🌿 {presented.nativeStatus}
-              </span>
+              </BadgeWithTooltip>
             )}
             {presented.waterNeeds && (
-              <span className="inline-flex items-center gap-1 text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full border border-blue-200">
+              <BadgeWithTooltip
+                className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full border border-blue-200"
+                tooltip="Water requirements: Low = drought-tolerant after establishment, Moderate = regular summer water, High = consistent moisture needed."
+              >
                 💧 Water: {presented.waterNeeds}
-              </span>
+              </BadgeWithTooltip>
             )}
             {presented.deerResistance && (
-              <span className="inline-flex items-center gap-1 text-sm bg-amber-100 text-amber-700 px-3 py-1 rounded-full border border-amber-200">
+              <BadgeWithTooltip
+                className="text-sm bg-amber-100 text-amber-700 px-3 py-1 rounded-full border border-amber-200"
+                tooltip="This plant has documented deer resistance based on regional studies and field observations. Individual results may vary."
+              >
                 🦌 Deer resistance
-              </span>
+              </BadgeWithTooltip>
             )}
             {presented.lightNeeds && (
-              <span className="inline-flex items-center gap-1 text-sm bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full border border-yellow-200">
+              <BadgeWithTooltip
+                className="text-sm bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full border border-yellow-200"
+                tooltip="Light requirements for optimal growth: Full sun = 6+ hours direct sunlight, Partial shade = 3-6 hours, Full shade = less than 3 hours."
+              >
                 ☀️ {presented.lightNeeds}
-              </span>
+              </BadgeWithTooltip>
             )}
             {presented.height && (
               <span className="inline-flex items-center gap-1 text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full border border-gray-200">
@@ -319,19 +332,28 @@ export default async function PlantDetailPage({
               </span>
             )}
             {presented.plantStructure && (
-              <span className="inline-flex items-center gap-1 text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full border border-purple-200">
+              <BadgeWithTooltip
+                className="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full border border-purple-200"
+                tooltip="Plant growth form determines spacing requirements and fire-safe placement in your landscape design."
+              >
                 🏡 {presented.plantStructure}
-              </span>
+              </BadgeWithTooltip>
             )}
             {presented.droughtTolerant && (
-              <span className="inline-flex items-center gap-1 text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded-full border border-orange-200">
+              <BadgeWithTooltip
+                className="text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded-full border border-orange-200"
+                tooltip="Drought tolerance reduces water needs and maintenance while supporting fire-safe landscapes with lower fuel moisture."
+              >
                 🏜️ Drought tolerant
-              </span>
+              </BadgeWithTooltip>
             )}
             {presented.evergreen && (
-              <span className="inline-flex items-center gap-1 text-sm bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200">
+              <BadgeWithTooltip
+                className="text-sm bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200"
+                tooltip="Evergreen plants provide year-round structure and habitat, but require more careful placement in high-risk fire zones."
+              >
                 🌲 Evergreen
-              </span>
+              </BadgeWithTooltip>
             )}
           </div>
         </div>
