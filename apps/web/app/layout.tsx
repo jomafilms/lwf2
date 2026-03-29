@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ClientProviders } from "@/components/ui/ClientProviders";
+import { FloatingChatButton } from "@/components/agent/FloatingChatButton";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen antialiased">
-        <ClientProviders>{children}</ClientProviders>
+        <ClientProviders>
+          {children}
+          <FloatingChatButton />
+        </ClientProviders>
       </body>
     </html>
   );

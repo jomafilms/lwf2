@@ -8,7 +8,7 @@ import {
   type SavedPropertyData,
   type ParcelBoundary,
 } from "@/components/map/PropertyMap";
-import { ChatPanel } from "@/components/agent/ChatPanel";
+import { ChatPanelWithHistory } from "@/components/agent/ChatPanelWithHistory";
 import { AssessmentWizard, AssessmentSummary, type AssessmentData } from "@/components/assessment";
 import { useSession } from "@/lib/auth-client";
 import {
@@ -403,7 +403,11 @@ export default function MapPage() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <ChatPanel className="flex-1" />
+            <ChatPanelWithHistory 
+              className="flex-1" 
+              propertyId={savedPropertyId || undefined}
+              showHistory={false}
+            />
           </div>
         )}
 
@@ -421,7 +425,11 @@ export default function MapPage() {
                 <ChevronDown className="h-5 w-5" />
               </button>
             </div>
-            <ChatPanel className="flex-1 overflow-hidden" />
+            <ChatPanelWithHistory 
+              className="flex-1 overflow-hidden" 
+              propertyId={savedPropertyId || undefined}
+              showHistory={false}
+            />
           </div>
         )}
       </div>
