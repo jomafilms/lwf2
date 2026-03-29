@@ -37,7 +37,7 @@
 
 ## 🔄 IN PROGRESS
 
-(B9 assessment + B10 community running — B11+B12 spawning next)
+(B11 insurance + B12 cost running — final batch!)
 
 ## 📋 PENDING (in priority order)
 
@@ -78,18 +78,8 @@
 
 - [x] **B8: Maintenance calendar/reminders** — merged 05:21 UTC (Sonnet)
 
-- [ ] **B9: Property assessment walkthrough**
-  - Guided UX: step-by-step property assessment
-  - "What's in your zone 0 right now?" → photo upload or plant identification
-  - "Where are your windows? Fences? Deck?"
-  - Produces a baseline assessment before recommending changes
-  - This is what makes each property's plan DIFFERENT from any other
-
-- [ ] **B10: Community progress features**
-  - Neighborhood groups (Lori's ask)
-  - Aggregate view: "Your neighborhood is X% assessed"
-  - Social visibility without shaming
-  - Firewise community certification pathway tracking
+- [x] **B9: Property assessment walkthrough** — merged 05:27 UTC (Sonnet)
+- [~] **B10: Community progress** — partial (tangled branch, core concepts in B2 HOA dashboard)
 
 - [ ] **B11: Insurance/certification tracker**
   - Track progress toward Wildfire Prepared Home certification (IBHS)
