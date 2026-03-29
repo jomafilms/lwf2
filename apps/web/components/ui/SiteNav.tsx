@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useCart } from '@/lib/cart/store';
 import { TreePine, Flame } from 'lucide-react';
+import { UserMenu } from './UserMenu';
 
 export function SiteNav() {
   const { count } = useCart();
@@ -34,6 +35,7 @@ export function SiteNav() {
               </span>
             )}
           </Link>
+          <UserMenu />
         </div>
       </div>
     </nav>
