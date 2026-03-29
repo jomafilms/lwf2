@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { Leaf } from "lucide-react";
 import { ListDetailInlineExpand } from "./ListDetailInlineExpand";
 import { SaveCollectionButton } from "./SaveCollectionButton";
 
@@ -44,6 +45,14 @@ function useIsDesktop() {
   return isDesktop;
 }
 
+/** First plant image in the collection, or null */
+function getCollectionThumb(plants: CollectionPlant[]): string | null {
+  for (const p of plants) {
+    if (p.imageUrl) return p.imageUrl;
+  }
+  return null;
+}
+
 interface CollectionGridWithExpandProps {
   collections: Collection[];
 }
@@ -78,6 +87,7 @@ export function CollectionGridWithExpand({
           const cardProps = isDesktop
             ? { onClick: () => handleCardClick(index), type: "button" as const }
             : { href: `/lists/featured/${index}` };
+          const thumbUrl = getCollectionThumb(collection.plants);
 
           return (
             <CardWrapper
@@ -94,49 +104,65 @@ export function CollectionGridWithExpand({
                   : "opacity-100"
               } transition-opacity duration-200`}
             >
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-semibold text-gray-900 text-lg leading-tight group-hover:text-orange-600 transition-colors">
-                    {collection.name}
-                  </h3>
-                  <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
-                    <SaveCollectionButton
-                      collectionName={collection.name}
-                      plants={collection.plants}
+              <div className="flex">
+                {/* Thumbnail */}
+                <div className="flex-none w-20 min-h-[7rem] bg-gray-100">
+                  {thumbUrl ? (
+                    <img
+                      src={thumbUrl}
+                      alt=""
+                      className="h-full w-full object-cover"
                     />
-                    <span className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <Leaf className="h-6 w-6 text-gray-300" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0 p-4">
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <h3 className="font-semibold text-gray-900 text-sm leading-tight group-hover:text-orange-600 transition-colors line-clamp-2">
+                      {collection.name}
+                    </h3>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <SaveCollectionButton
+                        collectionName={collection.name}
+                        plants={collection.plants}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs text-gray-500 truncate">
+                      {collection.organization.name}
+                    </span>
+                    <span
+                      className={`inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+                        collection.organization.type === "nursery"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : collection.organization.type === "community"
+                            ? "bg-green-100 text-green-700"
+                            : collection.organization.type === "hoa"
+                              ? "bg-blue-100 text-blue-700"
+                              : collection.organization.type === "city"
+                                ? "bg-purple-100 text-purple-700"
+                                : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {ORG_TYPE_LABELS[collection.organization.type] ||
+                        collection.organization.type}
+                    </span>
+                    <span className="text-[10px] text-gray-400 flex-shrink-0">
                       {collection.plants.length} plants
                     </span>
                   </div>
+
+                  <p className="text-xs text-gray-500 line-clamp-2">
+                    {collection.description}
+                  </p>
                 </div>
-
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-sm text-gray-600">
-                    {collection.organization.name}
-                  </span>
-                  <span
-                    className={`inline-flex items-center text-xs px-2 py-0.5 rounded-full ${
-                      collection.organization.type === "community"
-                        ? "bg-green-100 text-green-700"
-                        : collection.organization.type === "hoa"
-                          ? "bg-blue-100 text-blue-700"
-                          : collection.organization.type === "city"
-                            ? "bg-purple-100 text-purple-700"
-                            : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    {ORG_TYPE_LABELS[collection.organization.type] ||
-                      collection.organization.type}
-                  </span>
-                </div>
-
-                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                  {collection.description}
-                </p>
-
-                <span className="inline-flex items-center gap-1 text-sm text-orange-500 group-hover:text-orange-600 font-medium">
-                  {isDesktop ? "View Plants" : "View Collection"} →
-                </span>
               </div>
             </CardWrapper>
           );

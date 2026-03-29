@@ -300,7 +300,7 @@ export default async function PlantsPage({
             <section className="mb-12">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Plant Collections</h2>
               <p className="text-sm text-gray-600 mb-6">
-                Curated plant lists from local experts and organizations
+                Lists shared by nurseries, HOAs, and community organizations
               </p>
               <Suspense fallback={<CollectionsSkeleton />}>
                 <CollectionsGrid />

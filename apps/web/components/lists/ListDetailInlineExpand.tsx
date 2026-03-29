@@ -97,9 +97,12 @@ export function ListDetailInlineExpand({
     );
   }, [collection]);
 
-  // Find hero image — first plant with an image
+  // Find hero image — prefer static imageUrl from collection data, fall back to fetched
   const heroImageUrl = (() => {
     if (!collection) return null;
+    for (const cp of collection.plants.slice(0, 8)) {
+      if (cp.imageUrl) return cp.imageUrl;
+    }
     for (const cp of collection.plants.slice(0, 8)) {
       const fetched = plantData.get(cp.plantId);
       if (fetched?.imageUrl) return fetched.imageUrl;
@@ -119,18 +122,21 @@ export function ListDetailInlineExpand({
 
     const gridRect = gridRef.current.getBoundingClientRect();
     const cardRect = card.getBoundingClientRect();
-    const GAP = 16;
+    const GAP = 12;
 
-    const panelWidth = cardRect.width * 2 + GAP;
-    const spaceRight = gridRect.right - cardRect.right;
+    // Cap panel width: use remaining grid space but never exceed card width
+    const spaceRight = gridRect.right - cardRect.right - GAP;
+    const spaceLeft = cardRect.left - gridRect.left - GAP;
+    const maxPanelWidth = Math.min(cardRect.width, 380);
     const cardTop = cardRect.top - gridRect.top + gridRef.current.scrollTop;
     const cardLeft = cardRect.left - gridRect.left;
 
-    if (spaceRight >= panelWidth) {
+    if (spaceRight >= maxPanelWidth) {
+      const panelWidth = Math.min(spaceRight, maxPanelWidth);
       setDirection("right");
       setPanelStyle({
         position: "absolute",
-        left: `${cardLeft + cardRect.width}px`,
+        left: `${cardLeft + cardRect.width + GAP}px`,
         top: `${cardTop}px`,
         width: `${panelWidth}px`,
         zIndex: 20,
@@ -139,24 +145,44 @@ export function ListDetailInlineExpand({
         position: "absolute",
         left: `${cardLeft - 2}px`,
         top: `${cardTop - 2}px`,
-        width: `${cardRect.width + panelWidth + 4}px`,
+        width: `${cardRect.width + GAP + panelWidth + 4}px`,
         zIndex: 19,
         pointerEvents: "none" as const,
       });
-    } else {
+    } else if (spaceLeft >= maxPanelWidth) {
+      const panelWidth = Math.min(spaceLeft, maxPanelWidth);
       setDirection("left");
       setPanelStyle({
         position: "absolute",
-        left: `${cardLeft - panelWidth}px`,
+        left: `${cardLeft - panelWidth - GAP}px`,
         top: `${cardTop}px`,
         width: `${panelWidth}px`,
         zIndex: 20,
       });
       setFrameStyle({
         position: "absolute",
-        left: `${cardLeft - panelWidth - 2}px`,
+        left: `${cardLeft - panelWidth - GAP - 2}px`,
         top: `${cardTop - 2}px`,
-        width: `${panelWidth + cardRect.width + 4}px`,
+        width: `${panelWidth + GAP + cardRect.width + 4}px`,
+        zIndex: 19,
+        pointerEvents: "none" as const,
+      });
+    } else {
+      // Not enough space either side — place below the card row
+      const panelWidth = Math.min(gridRect.width, 420);
+      setDirection("right");
+      setPanelStyle({
+        position: "absolute",
+        left: `${cardLeft}px`,
+        top: `${cardTop + cardRect.height + GAP}px`,
+        width: `${panelWidth}px`,
+        zIndex: 20,
+      });
+      setFrameStyle({
+        position: "absolute",
+        left: `${cardLeft - 2}px`,
+        top: `${cardTop - 2}px`,
+        width: `${cardRect.width + 4}px`,
         zIndex: 19,
         pointerEvents: "none" as const,
       });
@@ -299,7 +325,7 @@ export function ListDetailInlineExpand({
                   ))
                 : collection.plants.slice(0, 8).map((cp) => {
                     const fetched = plantData.get(cp.plantId);
-                    const imgUrl = fetched?.imageUrl;
+                    const imgUrl = cp.imageUrl || fetched?.imageUrl;
                     return (
                       <Link
                         key={cp.plantId}
