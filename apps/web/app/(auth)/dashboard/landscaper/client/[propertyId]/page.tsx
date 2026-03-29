@@ -331,7 +331,7 @@ export default async function ClientPropertyPage({ params }: Props) {
                                 <span>${plan.estimatedCost.toLocaleString()}</span>
                               )}
                               <span>
-                                Created {new Date(plan.createdAt).toLocaleDateString()}
+                                Created {plan.createdAt ? new Date(plan.createdAt).toLocaleDateString() : "—"}
                               </span>
                             </div>
 

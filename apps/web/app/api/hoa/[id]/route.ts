@@ -5,7 +5,7 @@ import { eq, avg, count, and, isNotNull } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -13,7 +13,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const orgId = params.id;
+    const { id: orgId } = await params;
 
     // Check if user is a member
     const membership = await db

@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
         name: name.trim(),
         type: "nursery",
         website: website?.trim() || null,
+        createdBy: user.id,
       })
       .returning();
 

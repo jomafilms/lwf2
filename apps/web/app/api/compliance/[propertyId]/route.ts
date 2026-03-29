@@ -12,10 +12,10 @@ import type { PlanPlant } from "@/lib/scoring/types";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { propertyId: string } }
+  { params }: { params: Promise<{ propertyId: string }> }
 ) {
   try {
-    const { propertyId } = params;
+    const { propertyId } = await params;
 
     if (!propertyId) {
       return NextResponse.json(
