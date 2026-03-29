@@ -6,6 +6,8 @@ import { PlantFilters } from '@/components/plants/PlantFilters';
 import { PlantSearch } from '@/components/plants/PlantSearch';
 import { Pagination } from '@/components/plants/Pagination';
 import { CompareFloatingButton } from '@/components/plants/CompareFloatingButton';
+import { PlantCard } from '@/components/plants/PlantCard';
+import Link from 'next/link';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -29,6 +31,7 @@ interface SearchParams {
   deer?: string;
   water?: string;
   pollinator?: string;
+  showAll?: string;
   [key: string]: string | undefined;
 }
 
@@ -59,6 +62,77 @@ function parseBulkValues(bulkResult: Record<string, unknown>): Record<string, Re
     }
   }
   return map;
+}
+
+async function fetchFeaturedPlants() {
+  try {
+    // Fetch plants that are Zone 0-5 rated AND have images AND have interesting attributes
+    const plantsResponse = await getPlants({
+      limit: 20,
+      includeImages: true,
+    });
+    
+    const plantsWithImages = plantsResponse.data.filter(plant => plant.primaryImage?.url);
+    
+    if (plantsWithImages.length === 0) {
+      return { plants: [], valuesMap: {} };
+    }
+
+    // Fetch attribute values for these plants
+    let valuesMap: Record<string, ResolvedValue[]> = {};
+    try {
+      const bulkResult = await getValuesBulk({
+        plantIds: plantsWithImages.map(p => p.id),
+        attributeIds: Object.values(ATTR_IDS),
+        resolve: true,
+      });
+      valuesMap = parseBulkValues(bulkResult as Record<string, unknown>);
+    } catch {
+      console.warn('Failed to fetch bulk values for featured plants');
+    }
+
+    // Filter for plants with Zone 0-5 rating AND interesting attributes
+    const featuredPlants = plantsWithImages.filter(plant => {
+      const values = valuesMap[plant.id] || [];
+      
+      // Check for Zone 0-5 rating
+      const hizValues = values.filter(v => v.attributeId === ATTR_IDS.HIZ);
+      const hasZone0to5 = hizValues.some(v => 
+        v.resolved?.value === '0-5' || v.resolved?.value === '5-10'
+      );
+      
+      // Check for interesting attributes
+      const isNative = values.some(v => 
+        v.attributeId === ATTR_IDS.OREGON_NATIVE && v.resolved?.value === 'Yes'
+      );
+      const isDeerResistant = values.some(v => 
+        v.attributeId === ATTR_IDS.DEER_RESISTANCE && 
+        (v.resolved?.value === 'High (Usually)' || v.resolved?.value === 'Some')
+      );
+      const isPollinator = values.some(v => 
+        v.attributeId === ATTR_IDS.BENEFITS && 
+        v.resolved?.value?.toLowerCase().includes('pollinator')
+      );
+      
+      return hasZone0to5 && (isNative || isDeerResistant || isPollinator);
+    });
+
+    return { plants: featuredPlants.slice(0, 10), valuesMap };
+  } catch (error) {
+    console.error('Error fetching featured plants:', error);
+    return { plants: [], valuesMap: {} };
+  }
+}
+
+async function fetchCollections() {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/lists/featured`);
+    if (!response.ok) throw new Error('Failed to fetch collections');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching collections:', error);
+    return [];
+  }
 }
 
 async function fetchPlantsWithValues(searchParams: SearchParams) {
@@ -182,8 +256,6 @@ function matchesFilters(values: ResolvedValue[], params: SearchParams): boolean 
   return true;
 }
 
-// filterPlants is now handled inside fetchPlantsWithValues via matchesFilters
-
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 // ISR: cache for 5 minutes, rebuild in background
@@ -201,6 +273,7 @@ export default async function PlantsPage({
   searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
+  const showAllPlants = params.showAll === 'true';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -216,7 +289,6 @@ export default async function PlantsPage({
                 Find fire-reluctant plants for your landscape
               </p>
             </div>
-            {/* Navigation handled by layout */}
           </div>
 
           {/* Search */}
@@ -227,25 +299,83 @@ export default async function PlantsPage({
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-8">
-          {/* Filters sidebar */}
-          <aside className="mb-6 lg:mb-0">
-            <PlantFilters
-              currentZone={params.zone}
-              currentNative={params.native}
-              currentDeer={params.deer}
-              currentWater={params.water}
-              currentPollinator={params.pollinator}
-            />
-          </aside>
+        {!showAllPlants ? (
+          <>
+            {/* Section 1: Featured Plants */}
+            <section className="mb-12">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Featured Plants</h2>
+              <p className="text-sm text-gray-600 mb-6">
+                Zone 0-5 rated plants with special characteristics — perfect for close-to-home landscaping
+              </p>
+              <Suspense fallback={<FeaturedPlantsSkeleton />}>
+                <FeaturedPlantsRow />
+              </Suspense>
+            </section>
 
-          {/* Plant grid */}
-          <main>
-            <Suspense fallback={<PlantGridSkeleton />}>
-              <PlantGrid searchParams={params} />
-            </Suspense>
-          </main>
-        </div>
+            {/* Section 2: Plant Collections */}
+            <section className="mb-12">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Plant Collections</h2>
+              <p className="text-sm text-gray-600 mb-6">
+                Curated plant lists from local experts and organizations
+              </p>
+              <Suspense fallback={<CollectionsSkeleton />}>
+                <CollectionsGrid />
+              </Suspense>
+            </section>
+
+            {/* Section 3: Browse All Plants (collapsible) */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Browse All Plants</h2>
+                  <p className="text-sm text-gray-500">Explore our complete database of fire-reluctant plants</p>
+                </div>
+                <Link
+                  href="/plants?showAll=true"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                >
+                  Show All Plants
+                </Link>
+              </div>
+            </section>
+          </>
+        ) : (
+          <>
+            {/* Full browse mode */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">All Plants</h2>
+                <p className="text-sm text-gray-500">Complete database of fire-reluctant plants</p>
+              </div>
+              <Link
+                href="/plants"
+                className="text-sm text-orange-500 hover:text-orange-600"
+              >
+                ← Back to Collections
+              </Link>
+            </div>
+
+            <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-8">
+              {/* Filters sidebar */}
+              <aside className="mb-6 lg:mb-0">
+                <PlantFilters
+                  currentZone={params.zone}
+                  currentNative={params.native}
+                  currentDeer={params.deer}
+                  currentWater={params.water}
+                  currentPollinator={params.pollinator}
+                />
+              </aside>
+
+              {/* Plant grid */}
+              <main>
+                <Suspense fallback={<PlantGridSkeleton />}>
+                  <PlantGrid searchParams={params} />
+                </Suspense>
+              </main>
+            </div>
+          </>
+        )}
       </div>
       
       {/* Floating compare button */}
@@ -254,7 +384,146 @@ export default async function PlantsPage({
   );
 }
 
-// ─── Server component for the grid ──────────────────────────────────────────
+// ─── Featured Plants Row ──────────────────────────────────────────────────
+
+async function FeaturedPlantsRow() {
+  const { plants, valuesMap } = await fetchFeaturedPlants();
+
+  if (plants.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">No featured plants available</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <div className="flex gap-4 pb-4" style={{ scrollSnapType: 'x mandatory' }}>
+        {plants.map((plant) => (
+          <div key={plant.id} className="flex-none w-80" style={{ scrollSnapAlign: 'start' }}>
+            <FeaturedPlantCard 
+              plant={plant} 
+              values={valuesMap[plant.id] || []} 
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FeaturedPlantCard({ plant, values }: { plant: Plant; values: ResolvedValue[] }) {
+  const hizValues = values.filter(v => v.attributeId === ATTR_IDS.HIZ);
+  const nativeValues = values.filter(v => v.attributeId === ATTR_IDS.OREGON_NATIVE);
+  const deerValues = values.filter(v => v.attributeId === ATTR_IDS.DEER_RESISTANCE);
+  const benefitsValues = values.filter(v => v.attributeId === ATTR_IDS.BENEFITS);
+
+  const isNative = nativeValues.some(v => v.resolved?.value === 'Yes');
+  const isDeerResistant = deerValues.some(v => 
+    v.resolved?.value === 'High (Usually)' || v.resolved?.value === 'Some'
+  );
+  const isPollinator = benefitsValues.some(v => 
+    v.resolved?.value?.toLowerCase().includes('pollinator')
+  );
+
+  const zone = hizValues[0]?.resolved?.value;
+  let zoneBadge = '';
+  let zoneColor = '';
+  if (zone) {
+    zoneBadge = `${zone} ft`;
+    if (zone === '0-5') {
+      zoneColor = 'bg-red-100 text-red-800 border-red-200';
+    } else if (zone === '5-10') {
+      zoneColor = 'bg-orange-100 text-orange-800 border-orange-200';
+    } else {
+      zoneColor = 'bg-gray-100 text-gray-700 border-gray-200';
+    }
+  }
+
+  let highlightBadge = '';
+  let highlightIcon = '';
+  if (isDeerResistant) {
+    highlightBadge = 'Deer Resistant';
+    highlightIcon = '🦌';
+  } else if (isNative) {
+    highlightBadge = 'Native';
+    highlightIcon = '🌿';
+  } else if (isPollinator) {
+    highlightBadge = 'Pollinator';
+    highlightIcon = '🦋';
+  }
+
+  return (
+    <PlantCard plant={plant} values={values} />
+  );
+}
+
+// ─── Collections Grid ─────────────────────────────────────────────────────
+
+async function CollectionsGrid() {
+  const collections = await fetchCollections();
+
+  if (collections.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">No collections available</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {collections.map((collection: any, index: number) => (
+        <div
+          key={index}
+          className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+        >
+          <div className="p-6">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="font-semibold text-gray-900 text-lg leading-tight">
+                {collection.name}
+              </h3>
+              <span className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                {collection.plants.length} plants
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-sm text-gray-600">
+                {collection.organization.name}
+              </span>
+              <span className={`inline-flex items-center text-xs px-2 py-0.5 rounded-full ${
+                collection.organization.type === 'community' 
+                  ? 'bg-green-100 text-green-700' 
+                  : collection.organization.type === 'hoa'
+                  ? 'bg-blue-100 text-blue-700'
+                  : collection.organization.type === 'city'
+                  ? 'bg-purple-100 text-purple-700'
+                  : 'bg-gray-100 text-gray-700'
+              }`}>
+                {collection.organization.type}
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+              {collection.description}
+            </p>
+
+            <Link
+              href={`/lists/featured/${index}`}
+              className="inline-flex items-center gap-1 text-sm text-orange-500 hover:text-orange-600 font-medium"
+            >
+              View Collection →
+            </Link>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Browse All Plants (existing grid) ──────────────────────────────────────
 
 async function PlantGrid({ searchParams }: { searchParams: SearchParams }) {
   const { plants, total, page, valuesMap } =
@@ -340,7 +609,45 @@ async function PlantGrid({ searchParams }: { searchParams: SearchParams }) {
   );
 }
 
-// ─── Loading skeleton ────────────────────────────────────────────────────────
+// ─── Loading skeletons ────────────────────────────────────────────────────────
+
+function FeaturedPlantsSkeleton() {
+  return (
+    <div className="overflow-x-auto">
+      <div className="flex gap-4 pb-4">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="flex-none w-80 bg-white rounded-xl border border-gray-200 overflow-hidden animate-pulse">
+            <div className="aspect-[4/3] bg-gray-200" />
+            <div className="p-4 space-y-2">
+              <div className="h-5 bg-gray-200 rounded w-3/4" />
+              <div className="h-4 bg-gray-100 rounded w-1/2" />
+              <div className="flex gap-1 mt-2">
+                <div className="h-5 bg-gray-100 rounded-full w-16" />
+                <div className="h-5 bg-gray-100 rounded-full w-16" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CollectionsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
+          <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
+          <div className="h-4 bg-gray-100 rounded w-1/2 mb-3" />
+          <div className="h-4 bg-gray-100 rounded w-full mb-2" />
+          <div className="h-4 bg-gray-100 rounded w-2/3 mb-4" />
+          <div className="h-4 bg-gray-200 rounded w-24" />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function PlantGridSkeleton() {
   return (

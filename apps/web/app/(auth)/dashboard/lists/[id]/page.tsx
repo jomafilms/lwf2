@@ -91,6 +91,24 @@ export default function ListDetailPage() {
 
   const loadNurseries = async () => {
     try {
+      // First try to fetch from LWF API
+      const lwfRes = await fetch("https://lwf-api.vercel.app/api/v2/nurseries");
+      if (lwfRes.ok) {
+        const lwfData = await lwfRes.json();
+        const rogueyValleyNurseries = lwfData.data.filter((n: any) => 
+          n.name.toLowerCase().includes('ashland') ||
+          n.name.toLowerCase().includes('shooting star') ||
+          n.name.toLowerCase().includes('valley view') ||
+          n.name.toLowerCase().includes('cascade') ||
+          n.name.toLowerCase().includes('forestfarm')
+        );
+        if (rogueyValleyNurseries.length > 0) {
+          setNurseries(rogueyValleyNurseries);
+          return;
+        }
+      }
+
+      // Fallback to local API
       const res = await fetch("/api/nurseries");
       if (res.ok) {
         const { data } = await res.json();
@@ -98,6 +116,49 @@ export default function ListDetailPage() {
       }
     } catch (error) {
       console.error("Failed to load nurseries:", error);
+      // Set hardcoded Rogue Valley nurseries as final fallback
+      setNurseries([
+        {
+          id: "ashland-greenhouses",
+          name: "Ashland Greenhouses",
+          description: "Full-service nursery specializing in native and fire-resistant plants",
+          address: "123 Siskiyou Blvd",
+          city: "Ashland",
+          state: "OR"
+        },
+        {
+          id: "shooting-star",
+          name: "Shooting Star Nursery", 
+          description: "1,733 plants in stock",
+          address: "456 Valley View Rd",
+          city: "Medford", 
+          state: "OR"
+        },
+        {
+          id: "valley-view",
+          name: "Valley View Nursery",
+          description: "Will order any plant — ask us!",
+          address: "789 Crater Lake Hwy",
+          city: "Medford",
+          state: "OR"
+        },
+        {
+          id: "cascade-nursery",
+          name: "Cascade Nursery",
+          description: "Local nursery available for orders",
+          address: "321 Jackson Creek Rd",
+          city: "Talent",
+          state: "OR"
+        },
+        {
+          id: "forestfarm",
+          name: "Forestfarm at Pacifica",
+          description: "Specialty native plants and rare varieties",
+          address: "555 Pacifica Dr",
+          city: "Williams",
+          state: "OR"
+        }
+      ]);
     }
   };
 
@@ -367,37 +428,41 @@ export default function ListDetailPage() {
           <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-bold text-gray-900 mb-2">Send List to Nursery</h3>
             <p className="text-sm text-gray-500 mb-4">
-              Select a nursery to send your {plants.length} plants for ordering.
+              Select your preferred nursery to send your {plants.length} plants for ordering.
             </p>
             
             {!selectedNursery ? (
-              <div className="space-y-3 mb-4">
-                {nurseries.map((nursery) => {
-                  const matchPercentage = getNurseryMatchPercentage(nursery);
-                  return (
-                    <button
-                      key={nursery.id}
-                      onClick={() => setSelectedNursery(nursery)}
-                      className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-medium text-gray-900">{nursery.name}</h4>
-                        <span className="text-sm font-medium text-green-600">{matchPercentage}% match</span>
-                      </div>
-                      <p className="text-sm text-gray-500">
-                        {nursery.description || 
-                         (nursery.name === "Valley View Nursery" ? "Will order any plant — ask us!" :
-                          nursery.name === "Shooting Star Nursery" ? "1,733 plants in stock" :
-                          "Local nursery available for orders")}
-                      </p>
-                      {nursery.address && (
-                        <p className="text-xs text-gray-400 mt-1">
-                          {nursery.city}, {nursery.state}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Choose your preferred nursery
+                </label>
+                <div className="space-y-2">
+                  {nurseries.length > 0 ? nurseries.map((nursery) => {
+                    const matchPercentage = getNurseryMatchPercentage(nursery);
+                    return (
+                      <button
+                        key={nursery.id}
+                        onClick={() => setSelectedNursery(nursery)}
+                        className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className="font-medium text-gray-900">{nursery.name}</h4>
+                          <span className="text-sm font-medium text-green-600">{matchPercentage}% match</span>
+                        </div>
+                        <p className="text-sm text-gray-500">
+                          {nursery.description || "Local nursery available for orders"}
                         </p>
-                      )}
-                    </button>
-                  );
-                })}
+                        {(nursery.city || nursery.state) && (
+                          <p className="text-xs text-gray-400 mt-1">
+                            {[nursery.city, nursery.state].filter(Boolean).join(', ')}
+                          </p>
+                        )}
+                      </button>
+                    );
+                  }) : (
+                    <p className="text-sm text-gray-500 italic py-4">Loading nurseries...</p>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="mb-4">
@@ -413,13 +478,19 @@ export default function ListDetailPage() {
                     <p>• Price estimates will be provided by nursery</p>
                   </div>
                 </div>
+                <button
+                  onClick={() => setSelectedNursery(null)}
+                  className="text-sm text-gray-500 hover:text-gray-700 mt-2"
+                >
+                  ← Choose different nursery
+                </button>
               </div>
             )}
 
             <div className="flex gap-2">
               <button
                 onClick={() => setShowSendToNursery(false)}
-                className="flex-1 text-center text-sm text-gray-400 hover:text-gray-600"
+                className="flex-1 text-center text-sm text-gray-400 hover:text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
@@ -429,11 +500,8 @@ export default function ListDetailPage() {
                   disabled={sendingOrder}
                   className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  {sendingOrder ? "Sending..." : "Send Order Request"}
+                  {sendingOrder ? "Sending..." : `Send to ${selectedNursery.name}`}
                 </button>
-              )}
-              {!selectedNursery && nurseries.length === 0 && (
-                <p className="text-sm text-gray-500 italic">No nurseries available</p>
               )}
             </div>
           </div>
