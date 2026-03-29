@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { NurseryAvailability } from './NurseryAvailability';
+import { AddToListButton } from './AddToListButton';
 import { useCart } from '@/lib/cart/store';
 import { toast } from '@/components/ui/Toast';
 
@@ -117,18 +118,21 @@ export function PlantCard({ plant, values = [] }: PlantCardProps) {
         </div>
       </Link>
 
-      {/* Add to Plan button */}
-      <button
-        onClick={handleAddToPlan}
-        className={`absolute top-2 right-2 px-2.5 py-1 text-xs font-medium rounded-full shadow-sm transition-colors ${
-          inCart
-            ? 'bg-green-500 text-white'
-            : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white hover:text-orange-600'
-        }`}
-        aria-label={inCart ? 'Already in your plan' : 'Add to plan'}
-      >
-        {inCart ? '✓ In Plan' : '+ Add to Plan'}
-      </button>
+      {/* Action buttons */}
+      <div className="absolute top-2 right-2 flex items-center gap-1.5">
+        <AddToListButton plantId={plant.id} />
+        <button
+          onClick={handleAddToPlan}
+          className={`px-2.5 py-1 text-xs font-medium rounded-full shadow-sm transition-colors ${
+            inCart
+              ? 'bg-green-500 text-white'
+              : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white hover:text-orange-600'
+          }`}
+          aria-label={inCart ? 'Already in your plan' : 'Add to plan'}
+        >
+          {inCart ? '✓ In Plan' : '+ Add to Plan'}
+        </button>
+      </div>
 
       {/* Content */}
       <div className="p-4">
