@@ -46,9 +46,10 @@ interface PlantCardProps {
   plant: Plant;
   values?: ResolvedValue[];
   onPlantClick?: (plantId: string) => void;
+  compact?: boolean;
 }
 
-export function PlantCard({ plant, values = [], onPlantClick }: PlantCardProps) {
+export function PlantCard({ plant, values = [], onPlantClick, compact = false }: PlantCardProps) {
   const { addToCart, isInCart } = useCart();
   const inCart = isInCart(plant.id);
 
@@ -92,32 +93,70 @@ export function PlantCard({ plant, values = [], onPlantClick }: PlantCardProps) 
     onPlantClick?.(plant.id);
   }
 
+  // Use primaryImage, or first image from images array
+  const imageUrl = plant.primaryImage?.url ||
+    (plant as unknown as { images?: { url: string }[] })?.images?.[0]?.url;
+
+  if (compact) {
+    return (
+      <button
+        onClick={handleCardClick}
+        className="group relative bg-white rounded-lg border border-gray-200 hover:border-orange-200 hover:shadow-md transition-all text-left w-full"
+        data-plant-card
+      >
+        <div className="aspect-square bg-gray-100 relative overflow-hidden rounded-t-lg">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={plant.commonName}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
+              <svg className="w-8 h-8 text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+              </svg>
+            </div>
+          )}
+        </div>
+        <div className="p-2.5">
+          <h3 className="text-xs font-semibold text-gray-900 group-hover:text-orange-600 transition-colors leading-tight line-clamp-1">
+            {plant.commonName}
+          </h3>
+          <p className="text-[10px] text-gray-400 italic mt-0.5 line-clamp-1">
+            {getBotanicalName(plant)}
+          </p>
+          {zones.length > 0 && (
+            <div className="flex flex-wrap gap-0.5 mt-1.5">
+              {zones.slice(0, 2).map((zone) => (
+                <span key={zone} className={`text-[9px] font-medium px-1.5 py-0 rounded-full border ${ZONE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+                  {zone}ft
+                </span>
+              ))}
+              {zones.length > 2 && <span className="text-[9px] text-gray-400">+{zones.length - 2}</span>}
+            </div>
+          )}
+        </div>
+      </button>
+    );
+  }
+
   return (
     <div className="group relative bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-      {/* Image */}
       <button onClick={handleCardClick} className="block w-full text-left">
         <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden rounded-t-xl">
-          {plant.primaryImage ? (
+          {imageUrl ? (
             <img
-              src={plant.primaryImage.url}
+              src={imageUrl}
               alt={plant.commonName}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100">
-              <svg
-                className="w-12 h-12 text-green-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                />
+              <svg className="w-12 h-12 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
               </svg>
             </div>
           )}
@@ -135,64 +174,36 @@ export function PlantCard({ plant, values = [], onPlantClick }: PlantCardProps) 
               ? 'bg-green-500 text-white'
               : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white hover:text-orange-600'
           }`}
-          aria-label={inCart ? 'Already in your plan' : 'Add to plan'}
         >
           {inCart ? '✓ In Plan' : '+ Add to Plan'}
         </button>
       </div>
 
-      {/* Content */}
       <div className="p-4">
         <button onClick={handleCardClick} className="block w-full text-left">
           <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
             {plant.commonName}
           </h3>
-          <p className="text-sm text-gray-500 italic mt-0.5">
-            {getBotanicalName(plant)}
-          </p>
+          <p className="text-sm text-gray-500 italic mt-0.5">{getBotanicalName(plant)}</p>
         </button>
 
-        {/* Zone badges */}
         {zones.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {zones.map((zone) => (
-              <span
-                key={zone}
-                className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${
-                  ZONE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'
-                }`}
-              >
+              <span key={zone} className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${ZONE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
                 {zone} ft
               </span>
             ))}
           </div>
         )}
 
-        {/* Attribute pills */}
         <div className="flex flex-wrap gap-1.5 mt-2">
-          {waterLevel && (
-            <span className="inline-flex items-center text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">
-              💧 {waterLevel}
-            </span>
-          )}
-          {isNative && (
-            <span className="inline-flex items-center text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">
-              🌿 Native
-            </span>
-          )}
-          {isDeerResistant && (
-            <span className="inline-flex items-center text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">
-              🦌 Deer Resistant
-            </span>
-          )}
-          {isPollinatorFriendly && (
-            <span className="inline-flex items-center text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full">
-              🐝 Pollinator
-            </span>
-          )}
+          {waterLevel && <span className="inline-flex items-center text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">💧 {waterLevel}</span>}
+          {isNative && <span className="inline-flex items-center text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">🌿 Native</span>}
+          {isDeerResistant && <span className="inline-flex items-center text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">🦌 Deer Resistant</span>}
+          {isPollinatorFriendly && <span className="inline-flex items-center text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full">🐝 Pollinator</span>}
         </div>
 
-        {/* Nursery Availability */}
         <NurseryAvailability lwfPlantId={plant.id} variant="summary" />
       </div>
     </div>
