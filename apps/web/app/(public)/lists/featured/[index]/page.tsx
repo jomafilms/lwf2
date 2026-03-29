@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Star, BookmarkPlus, Building2 } from "lucide-react";
 import { createTag, assignTag } from "@/lib/tags/api";
-import { getPlantClient } from "@/lib/api/lwf";
+import { getPlantClient, getPlants, getValuesBulk } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
 import { PlantGridWithSlideOut } from "@/components/plants/PlantGridWithSlideOut";
 import type { Plant } from "@lwf/types";
@@ -17,6 +17,7 @@ interface FeaturedList {
     name: string;
   };
   description: string;
+  apiAttributeId?: string;
   plants: Array<{
     plantId: string;
     commonName: string;
@@ -42,18 +43,19 @@ export default function FeaturedListPage() {
 
   const [featuredList, setFeaturedList] = useState<FeaturedList | null>(null);
   const [plants, setPlants] = useState<Plant[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
-      // Load featured lists
       const res = await fetch("/api/lists/featured");
       if (!res.ok) throw new Error("Failed to load featured lists");
-      
+
       const lists: FeaturedList[] = await res.json();
-      
+
       if (index < 0 || index >= lists.length) {
         setError("Featured list not found");
         return;
@@ -62,30 +64,35 @@ export default function FeaturedListPage() {
       const list = lists[index];
       setFeaturedList(list);
 
-      // Use seed data directly for names/reasons (already in the list)
-      // Fetch full plant data in background for images/details
-      const plantResults = await Promise.all(
-        list.plants.map(async (item) => {
-          try {
-            const plant = await getPlantClient(item.plantId);
-            return plant as unknown as Plant;
-          } catch {
-            return {
-              id: item.plantId,
-              commonName: item.commonName,
-              genus: item.botanicalName?.split(" ")[0] || "",
-              species: item.botanicalName?.split(" ").slice(1).join(" ") || "",
-              subspeciesVarieties: null,
-              urls: null,
-              notes: null,
-              lastUpdated: "",
-              primaryImage: null,
-            } as unknown as Plant;
-          }
-        })
-      );
-
-      setPlants(plantResults);
+      if (list.apiAttributeId) {
+        // Fetch from LWF API — this is a system list backed by real data
+        const bulkRes = await fetch(`/api/plants/by-attribute?attributeId=${list.apiAttributeId}`);
+        if (bulkRes.ok) {
+          const data = await bulkRes.json();
+          setTotalCount(data.total);
+          setPlants(data.plants);
+        }
+      } else {
+        // Static seed data — fetch plant details
+        const plantResults = await Promise.all(
+          list.plants.map(async (item) => {
+            try {
+              return await getPlantClient(item.plantId) as unknown as Plant;
+            } catch {
+              return {
+                id: item.plantId,
+                commonName: item.commonName,
+                genus: item.botanicalName?.split(" ")[0] || "",
+                species: item.botanicalName?.split(" ").slice(1).join(" ") || "",
+                subspeciesVarieties: null, urls: null, notes: null,
+                lastUpdated: "", primaryImage: null,
+              } as unknown as Plant;
+            }
+          })
+        );
+        setPlants(plantResults);
+        setTotalCount(plantResults.length);
+      }
     } catch {
       setError("Failed to load featured list");
     } finally {
@@ -165,7 +172,9 @@ export default function FeaturedListPage() {
                 </span>
               </div>
               <span className="text-gray-500">
-                {plants.length} plant{plants.length !== 1 ? "s" : ""}
+                {totalCount > plants.length
+                  ? `Showing ${plants.length} of ${totalCount} plants`
+                  : `${plants.length} plant${plants.length !== 1 ? "s" : ""}`}
               </span>
             </div>
           </div>

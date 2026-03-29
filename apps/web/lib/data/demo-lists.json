@@ -19,10 +19,7 @@
 {"plantId":"249ccc2f-6c27-45e5-bcc7-c5fd5439f8a5","commonName":"Wild strawberry","botanicalName":"Fragaria chiloensis","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
 {"plantId":"80c3a509-9978-49f2-888b-d3d0e274d3f4","commonName":"Woodland strawberry","botanicalName":"Fragaria vesca","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null},
 {"plantId":"5ce4ac1c-dd06-41b6-8af1-5ce641619149","commonName":"Bitterroot lewisia","botanicalName":"Lewisia rediviva","reason":"Oregon native, deer resistant, Zone 0","imageUrl":null}]},
-{"name":"City of Ashland — Restricted Plants","organization":{"type":"city","name":"City of Ashland"},"description":"Plants restricted within city limits due to high fire risk. Avoid planting these near structures.","plants":[
-{"plantId":"c0e2bf4f-e3e4-49d2-8726-c27854ed9229","commonName":"Juniper Grevillea","botanicalName":"Grevillea junipera","reason":"High flammability — restricted near structures","imageUrl":null},
-{"plantId":"d3ba0237-7a90-4edd-82bf-9da0f1b3e474","commonName":"Creeping junipers","botanicalName":"Juniperus groundcover spp.","reason":"High flammability — restricted near structures","imageUrl":null},
-{"plantId":"d0c5d202-5bce-42fc-89e6-c655049d77ba","commonName":"Junipers","botanicalName":"Juniperus shrub & tree spp.","reason":"High flammability — restricted near structures","imageUrl":null}]},
+{"name":"City of Ashland — Restricted Plants","organization":{"type":"city","name":"City of Ashland"},"description":"350 plants with spatial restrictions in Ashland city limits. These require special consideration due to fire risk characteristics.","apiAttributeId":"1ddbe951-69ef-4b4b-aa20-75b97cb0207c","plants":[]},
 {"name":"Native Pollinator Plants — Fire-Reluctant","organization":{"type":"community","name":"Ashland Pollinator Alliance"},"description":"Oregon native plants that support pollinators while maintaining fire-reluctant characteristics.","plants":[
 {"plantId":"d3340605-efbb-4da9-87e5-b310d7792cd6","commonName":"Common yarrow","botanicalName":"Achillea millefolium","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
 {"plantId":"b9568b79-a7a8-4ce2-acf1-1ebe6d0153b8","commonName":"Oregon vine maple","botanicalName":"Acer circinatum","reason":"Oregon native, pollinator, fire-reluctant","imageUrl":null},
