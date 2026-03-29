@@ -12,14 +12,14 @@ interface Member {
   properties: Property[];
   totalProperties: number;
   assessedProperties: number;
-  avgComplianceScore: number;
-  complianceStatus: 'compliant' | 'partial' | 'non-compliant' | 'unassessed' | 'no-property';
+  avgReadinessScore: number;
+  readinessStatus: 'fire-ready' | 'partial' | 'needs-attention' | 'unassessed' | 'no-property';
 }
 
 interface Property {
   id: string;
   address: string;
-  complianceScore: number | null;
+  readinessScore: number | null;
   planStatus: string | null;
 }
 
@@ -28,9 +28,9 @@ interface MembersListProps {
 }
 
 const statusConfig = {
-  compliant: { label: "Compliant", color: "bg-green-100 text-green-800", icon: "✓" },
+  "fire-ready": { label: "Fire-Ready", color: "bg-green-100 text-green-800", icon: "✓" },
   partial: { label: "Partial", color: "bg-yellow-100 text-yellow-800", icon: "⚠" },
-  "non-compliant": { label: "Needs Work", color: "bg-red-100 text-red-800", icon: "✗" },
+  "needs-attention": { label: "Needs Attention", color: "bg-red-100 text-red-800", icon: "✗" },
   unassessed: { label: "Unassessed", color: "bg-gray-100 text-gray-800", icon: "?" },
   "no-property": { label: "No Property", color: "bg-blue-100 text-blue-800", icon: "—" },
 };
@@ -86,9 +86,9 @@ export function MembersList({ orgId }: MembersListProps) {
     if (a.role === 'admin' && b.role !== 'admin') return -1;
     if (b.role === 'admin' && a.role !== 'admin') return 1;
     
-    const statusOrder = ['compliant', 'partial', 'unassessed', 'non-compliant', 'no-property'];
-    const aOrder = statusOrder.indexOf(a.complianceStatus);
-    const bOrder = statusOrder.indexOf(b.complianceStatus);
+    const statusOrder = ['fire-ready', 'partial', 'unassessed', 'needs-attention', 'no-property'];
+    const aOrder = statusOrder.indexOf(a.readinessStatus);
+    const bOrder = statusOrder.indexOf(b.readinessStatus);
     
     if (aOrder !== bOrder) return aOrder - bOrder;
     
@@ -102,13 +102,13 @@ export function MembersList({ orgId }: MembersListProps) {
           Community Members ({members.length})
         </h2>
         <p className="mt-1 text-sm text-gray-600">
-          Track member compliance and property assessments
+          Track member readiness and property assessments
         </p>
       </div>
 
       <div className="divide-y divide-gray-100">
         {sortedMembers.map((member) => {
-          const status = statusConfig[member.complianceStatus];
+          const status = statusConfig[member.readinessStatus];
           
           return (
             <div key={member.userId} className="p-6">
@@ -149,11 +149,11 @@ export function MembersList({ orgId }: MembersListProps) {
                             <span className="truncate">{property.address}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            {property.complianceScore !== null ? (
+                            {property.readinessScore !== null ? (
                               <>
                                 <Shield className="h-4 w-4 text-green-600" />
                                 <span className="text-sm font-medium text-green-600">
-                                  {property.complianceScore}%
+                                  {property.readinessScore}%
                                 </span>
                               </>
                             ) : (
@@ -174,8 +174,8 @@ export function MembersList({ orgId }: MembersListProps) {
                   {member.totalProperties > 0 && (
                     <div className="mt-3 text-xs text-gray-500">
                       {member.assessedProperties}/{member.totalProperties} properties assessed
-                      {member.avgComplianceScore > 0 && (
-                        <> • {member.avgComplianceScore}% avg score</>
+                      {member.avgReadinessScore > 0 && (
+                        <> • {member.avgReadinessScore}% avg score</>
                       )}
                       {" • "}Joined {new Date(member.joinedAt).toLocaleDateString()}
                     </div>

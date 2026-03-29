@@ -45,9 +45,10 @@ function getBotanicalName(plant: Plant): string {
 interface PlantCardProps {
   plant: Plant;
   values?: ResolvedValue[];
+  onPlantClick?: (plantId: string) => void;
 }
 
-export function PlantCard({ plant, values = [] }: PlantCardProps) {
+export function PlantCard({ plant, values = [], onPlantClick }: PlantCardProps) {
   const { addToCart, isInCart } = useCart();
   const inCart = isInCart(plant.id);
 
@@ -87,10 +88,14 @@ export function PlantCard({ plant, values = [] }: PlantCardProps) {
     .map((v) => v.resolved?.value)
     .filter(Boolean) as string[];
 
+  function handleCardClick() {
+    onPlantClick?.(plant.id);
+  }
+
   return (
     <div className="group relative bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
       {/* Image */}
-      <Link href={`/plants/${plant.id}`} className="block">
+      <button onClick={handleCardClick} className="block w-full text-left">
         <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
           {plant.primaryImage ? (
             <img
@@ -117,7 +122,7 @@ export function PlantCard({ plant, values = [] }: PlantCardProps) {
             </div>
           )}
         </div>
-      </Link>
+      </button>
 
       {/* Action buttons */}
       <div className="absolute top-2 right-2 flex items-center gap-1.5">
@@ -138,14 +143,14 @@ export function PlantCard({ plant, values = [] }: PlantCardProps) {
 
       {/* Content */}
       <div className="p-4">
-        <Link href={`/plants/${plant.id}`} className="block">
+        <button onClick={handleCardClick} className="block w-full text-left">
           <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
             {plant.commonName}
           </h3>
           <p className="text-sm text-gray-500 italic mt-0.5">
             {getBotanicalName(plant)}
           </p>
-        </Link>
+        </button>
 
         {/* Zone badges */}
         {zones.length > 0 && (

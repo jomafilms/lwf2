@@ -1,68 +1,59 @@
-import { NextResponse } from "next/server";
-import { db, tags, tagAssignments, user, orgMembers, orgs } from "@lwf/database";
-import { eq, desc, count, or, and } from "drizzle-orm";
-import { getCurrentUser } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
+import { db, tags, tagAssignments, user, orgs, orgMembers } from "@lwf/database";
+import { eq, and, count } from "drizzle-orm";
 
-/** GET /api/lists/public — get all public and org-visible lists with plant counts */
-export async function GET() {
+/** GET /api/lists/public — get public lists with metadata */
+export async function GET(req: NextRequest) {
   try {
-    const currentUser = await getCurrentUser();
-    
-    // Get all public lists plus org lists the user can see
-    const listsWithCounts = await db
+    // Get public tags with owner/org info and item counts
+    const publicLists = await db
       .select({
-        id: tags.id,
-        name: tags.name,
-        ownerId: tags.ownerId,
-        visibility: tags.visibility,
-        color: tags.color,
-        createdAt: tags.createdAt,
+        tag: tags,
         ownerName: user.name,
         ownerEmail: user.email,
         orgName: orgs.name,
         orgType: orgs.type,
-        itemCount: count(tagAssignments.id),
       })
       .from(tags)
-      .leftJoin(tagAssignments, eq(tags.id, tagAssignments.tagId))
-      .leftJoin(user, eq(tags.ownerId, user.id))
-      .leftJoin(orgMembers, and(
-        eq(orgMembers.userId, user.id),
-        eq(tags.visibility, "org")
-      ))
-      .leftJoin(orgs, eq(orgMembers.orgId, orgs.id))
-      .where(
-        currentUser
-          ? or(
-              eq(tags.visibility, "public"),
-              and(
-                eq(tags.visibility, "org"),
-                eq(orgMembers.userId, currentUser.id)
-              )
+      .leftJoin(user, eq(user.id, tags.ownerId))
+      .leftJoin(orgMembers, eq(orgMembers.userId, tags.ownerId))
+      .leftJoin(orgs, eq(orgs.id, orgMembers.orgId))
+      .where(eq(tags.visibility, "public"));
+
+    // Get item counts for each tag
+    const withCounts = await Promise.all(
+      publicLists.map(async (item) => {
+        const [countResult] = await db
+          .select({ count: count() })
+          .from(tagAssignments)
+          .where(
+            and(
+              eq(tagAssignments.tagId, item.tag.id),
+              eq(tagAssignments.targetType, "plant")
             )
-          : eq(tags.visibility, "public")
-      )
-      .groupBy(tags.id, user.name, user.email, orgs.name, orgs.type)
-      .orderBy(desc(tags.createdAt));
+          );
 
-    // Transform the result to match our expected format
-    const result = listsWithCounts.map((list) => ({
-      id: list.id,
-      name: list.name,
-      ownerId: list.ownerId,
-      visibility: list.visibility,
-      color: list.color,
-      createdAt: list.createdAt,
-      ownerName: list.ownerName,
-      ownerEmail: list.ownerEmail,
-      orgName: list.orgName,
-      orgType: list.orgType,
-      itemCount: Number(list.itemCount),
-    }));
+        return {
+          ...item.tag,
+          itemCount: countResult.count,
+          ownerName: item.ownerName,
+          ownerEmail: item.ownerEmail,
+          orgName: item.orgName,
+          orgType: item.orgType,
+        };
+      })
+    );
 
-    return NextResponse.json(result);
+    // Sort by creation date (newest first)
+    withCounts.sort((a, b) => {
+      const aDate = new Date(a.createdAt ?? 0).getTime();
+      const bDate = new Date(b.createdAt ?? 0).getTime();
+      return bDate - aDate;
+    });
+
+    return NextResponse.json(withCounts);
   } catch (error) {
-    console.error("Failed to fetch public lists:", error);
+    console.error("Error fetching public lists:", error);
     return NextResponse.json(
       { error: "Failed to fetch public lists" },
       { status: 500 }

@@ -52,7 +52,7 @@ export default async function LandscaperDashboardPage() {
       name: plans.name,
       status: plans.status,
       propertyAddress: properties.address,
-      complianceScore: plans.complianceScore,
+      complianceScore: plans.readinessScore,
       estimatedCost: plans.estimatedCost,
       createdAt: plans.createdAt,
       submittedAt: plans.submittedAt,

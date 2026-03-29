@@ -10,6 +10,8 @@ import {
   Globe,
   Lock,
   Building2,
+  Star,
+  ExternalLink,
 } from "lucide-react";
 import {
   fetchTags,
@@ -42,6 +44,7 @@ interface TagWithCount extends Tag {
 
 export default function ListsPage() {
   const [tagsWithCounts, setTagsWithCounts] = useState<TagWithCount[]>([]);
+  const [starredLists, setStarredLists] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState("");
@@ -52,7 +55,11 @@ export default function ListsPage() {
 
   const loadTags = useCallback(async () => {
     try {
-      const userTags = await fetchTags();
+      const [userTags, starred] = await Promise.all([
+        fetchTags(),
+        fetch("/api/tags/starred").then(res => res.ok ? res.json() : [])
+      ]);
+
       // Fetch counts in parallel
       const withCounts = await Promise.all(
         userTags.map(async (tag) => {
@@ -65,6 +72,7 @@ export default function ListsPage() {
         })
       );
       setTagsWithCounts(withCounts);
+      setStarredLists(starred);
     } catch {
       toast("Failed to load lists");
     } finally {
@@ -205,8 +213,57 @@ export default function ListsPage() {
           </div>
         )}
 
-        {/* Lists */}
-        {tagsWithCounts.length === 0 ? (
+        {/* Starred Lists */}
+        {starredLists.length > 0 && (
+          <section className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Star className="w-5 h-5 text-yellow-500" />
+              <h2 className="text-lg font-semibold text-gray-900">Starred Lists</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {starredLists.slice(0, 6).map((item) => (
+                <Link
+                  key={item.assignment.id}
+                  href={`/lists/${item.tag.id}`}
+                  className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4"
+                >
+                  <div className="flex items-start gap-3">
+                    {item.tag.color && (
+                      <div
+                        className="w-4 h-4 rounded-full flex-shrink-0 mt-0.5"
+                        style={{ backgroundColor: item.tag.color }}
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-gray-900 hover:text-orange-600 transition-colors truncate">
+                        {item.tag.name}
+                      </h3>
+                      <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Public list</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            {starredLists.length > 6 && (
+              <div className="mt-4">
+                <Link
+                  href="/lists?tab=starred"
+                  className="text-sm text-orange-600 hover:text-orange-700"
+                >
+                  View all starred lists →
+                </Link>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* My Lists */}
+        <section>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">My Lists</h2>
+          {tagsWithCounts.length === 0 ? (
           <div className="text-center py-16">
             <List className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500">No lists yet</p>
@@ -312,6 +369,7 @@ export default function ListsPage() {
             })}
           </div>
         )}
+        </section>
       </div>
     </div>
   );
