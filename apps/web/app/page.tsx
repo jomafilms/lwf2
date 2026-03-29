@@ -1,7 +1,24 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { AddressSearch } from "@/components/map/AddressSearch";
+import type { GeocodingResult } from "@/lib/geo/mapbox";
+
 export default function Home() {
+  const router = useRouter();
+
+  const handleSelect = (result: GeocodingResult) => {
+    const params = new URLSearchParams({
+      lat: String(result.lat),
+      lng: String(result.lng),
+      address: result.address,
+    });
+    router.push(`/map?${params.toString()}`);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4">
-      <div className="max-w-2xl text-center">
+      <div className="w-full max-w-xl text-center">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
           FireScape
         </h1>
@@ -10,11 +27,7 @@ export default function Home() {
           your fire zones and get plant recommendations.
         </p>
         <div className="mt-8">
-          <input
-            type="text"
-            placeholder="Enter your address..."
-            className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-lg focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500"
-          />
+          <AddressSearch onSelect={handleSelect} />
         </div>
         <div className="mt-6 flex items-center justify-center gap-6 text-sm text-neutral-500">
           <span className="flex items-center gap-1.5">
