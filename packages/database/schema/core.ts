@@ -20,6 +20,7 @@ export const properties = pgTable("properties", {
   parcelBoundary: jsonb("parcel_boundary"),
   structureFootprints: jsonb("structure_footprints"),
   fireZones: jsonb("fire_zones"),
+  assessment: jsonb("assessment"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
 });

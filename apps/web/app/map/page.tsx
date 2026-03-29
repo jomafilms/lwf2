@@ -198,6 +198,46 @@ export default function MapPage() {
     }
   };
 
+  const handleStartAssessment = () => {
+    if (!savedPropertyId) {
+      // Save property first if not saved
+      handleSave().then(() => {
+        setShowAssessment(true);
+      });
+    } else {
+      setShowAssessment(true);
+    }
+  };
+
+  const handleAssessmentComplete = async (data: AssessmentData) => {
+    if (!savedPropertyId) return;
+
+    try {
+      const res = await fetch(`/api/properties/${savedPropertyId}/assessment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) throw new Error("Failed to save assessment");
+
+      setAssessmentData(data);
+      setShowAssessment(false);
+      setShowAssessmentSummary(true);
+    } catch (error) {
+      console.error("Failed to save assessment:", error);
+      // Still show summary even if save failed
+      setAssessmentData(data);
+      setShowAssessment(false);
+      setShowAssessmentSummary(true);
+    }
+  };
+
+  const handleStartPlan = () => {
+    setShowAssessmentSummary(false);
+    setChatOpen(true);
+  };
+
   if (!location) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center px-4">
@@ -311,6 +351,17 @@ export default function MapPage() {
           </button>
         )}
 
+        {/* Assessment button — appears after zones */}
+        {step === "zones" && (zoneData || savedPropertyId) && !showAssessment && !showAssessmentSummary && (
+          <button
+            onClick={handleStartAssessment}
+            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 transition-colors sm:text-sm"
+          >
+            <ClipboardCheck className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Assess My Property</span>
+          </button>
+        )}
+
         {/* Download Plan button */}
         {planId && (
           <a
@@ -418,6 +469,45 @@ export default function MapPage() {
           </div>
         )}
       </div>
+
+      {/* Assessment Wizard Overlay */}
+      {showAssessment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <AssessmentWizard
+              onComplete={handleAssessmentComplete}
+              onCancel={() => setShowAssessment(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Assessment Summary Overlay */}
+      {showAssessmentSummary && assessmentData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="max-w-6xl w-full max-h-[90vh] overflow-y-auto bg-gray-50 rounded-xl">
+            <div className="sticky top-0 bg-white border-b px-6 py-4 rounded-t-xl">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Property Assessment Results
+                </h2>
+                <button
+                  onClick={() => setShowAssessmentSummary(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <AssessmentSummary
+                assessment={assessmentData}
+                onStartPlan={handleStartPlan}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
