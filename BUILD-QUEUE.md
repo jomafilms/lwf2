@@ -37,7 +37,7 @@
 
 ## 🔄 IN PROGRESS
 
-(B11 insurance + B12 cost running — final batch!)
+(Phase 2 COMPLETE — build testing + quality pass, then Phase 3 overnight)
 
 ## 📋 PENDING (in priority order)
 
@@ -83,11 +83,7 @@
 
 - [x] **B11: Insurance/certification tracker** — merged 05:33 UTC (Sonnet)
 
-- [ ] **B12: Cost estimator**
-  - Based on plan plants + nursery pricing, estimate total cost
-  - Show budget options: "$500 starter" vs "$5K full makeover"
-  - Link to grant programs that might offset costs
-  - Woolsey's input: $2K-$15K per property typical range
+- [x] **B12: Cost estimator** — merged 05:40 UTC (Sonnet)
 
 ### Priority C — Phase 3 (PRD: Scale, Months 2-6)
 
@@ -97,7 +93,9 @@
 - [ ] **C4: P3-5 AR property walkthrough** — Camera-based property assessment using device camera. Plant identification via photo.
 - [ ] **C5: P3-6 Landscape plan scanner/reader** — Upload existing landscape plan image, AI extracts plant list and layout.
 - [ ] **C6: Climate adaptation tagging** — Flag plants showing climate stress, integrate climate projection data.
-- [ ] **C7: Multi-source data conflict resolution UI** — For Charisse: when sources disagree, show conflicts and let her resolve them.
+- [ ] **C7: Shooting Star nursery cart demo** — User builds plant list → "Send to nursery" → populates fake Shooting Star cart with real inventory/pricing (1,733 plants). Full loop demo.
+
+NOTE: Skip data admin/conflict resolution tools (Benjamin is building those). Skip revenue/SaaS model. Skip AR walkthrough. Focus on user-facing tools.
 
 ### Stretch / community ideas
 - [ ] Tower defense game (Garen's idea — accidental education)
