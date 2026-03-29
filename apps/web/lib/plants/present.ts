@@ -213,8 +213,15 @@ export function presentPlant(values: ResolvedValue[]): PlantPresentation {
     benefits: parseBenefits(values),
     invasive: (() => {
       const v = findValue(values, "Invasive Component");
-      // Filter out meaningless values like "0", "false", "none"
-      if (!v || v === "0" || v === "false" || v === "none" || v === "None") return null;
+      if (!v) return null;
+      // Numeric score: -1 = not invasive, 0 = unknown, positive = invasive
+      const num = parseInt(v, 10);
+      if (!isNaN(num)) {
+        if (num <= 0) return null; // Not invasive or unknown
+        return "Yes — check local invasive species lists";
+      }
+      // Text values
+      if (v === "false" || v === "none" || v === "None" || v === "No") return null;
       return v;
     })(),
     restrictions: null, // add when restriction data available
