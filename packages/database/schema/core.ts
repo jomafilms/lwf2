@@ -59,3 +59,13 @@ export const landscaperClients = pgTable("landscaper_clients", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
 });
+
+export const conversations = pgTable("conversations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  title: text("title"), // auto-generated from first message
+  messages: jsonb("messages").notNull(), // ChatItem[]
+  propertyId: uuid("property_id").references(() => properties.id), // optional link to property
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
