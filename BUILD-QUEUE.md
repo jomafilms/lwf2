@@ -1,10 +1,9 @@
 # BUILD QUEUE — Autonomous Build Loop
 
-> **Last updated:** 2026-03-29 04:15 UTC
-> **Session status:** ACTIVE — Annie awake until ~7am UTC (midnight PT)
-> **Token reset:** ~9:01 UTC (2:01am PT) if throttled
-> **Overnight goal:** Get through Phase 2 by 14:00 UTC (7am PT)
-> **Sunday AM plan:** Annie tests, bug fixes, UI refinement, demo prep (demos at 4pm PT / 23:00 UTC)
+> **Last updated:** 2026-03-30 00:30 UTC
+> **Session status:** POST-DEMO — demos completed ~23:30 UTC. Awaiting Annie's feedback.
+> **Phase 0-3 COMPLETE.** All Priority A, B, and most C tasks done.
+> **Remaining:** C4 (AR), C5 (plan scanner), C6 (climate adaptation) + stretch goals
 
 ## 🚨 FIRST: If You Just Woke Up
 
@@ -58,23 +57,11 @@
 
 - [x] **B4: P2-2 Nursery org management** — merged 04:55 UTC (Sonnet)
 
-- [ ] **B5: P2-5 City analytics dashboard**
-  - Community-wide progress: properties assessed, scores over time
-  - Ward/neighborhood breakdown
-  - Adoption rates, risk reduction estimates
-  - Export data for grant applications
-  - Task doc: `docs/tasks/todo/P2-city-analytics.md`
+- [x] **B5: P2-5 City analytics dashboard** — already built (391-line CityAnalyticsDashboard component)
 
-- [ ] **B6: Data provenance display**
-  - Show WHERE each plant data point comes from (source citations)
-  - "Why does the database say this plant has a fire score of X?" → show sources
-  - Use LWF API's source data, display on plant detail pages
-  - This is critical for Charisse's credibility and user trust
+- [x] **B6: Data provenance display** — already built (sources integrated into plant detail page, /sources page exists)
 
-- [ ] **B7: Plant comparison tool**
-  - Side-by-side compare 2-3 plants on all attributes
-  - "Which is better for MY zone 0 near windows?" — show the tradeoffs
-  - Helps informed decision-making, not just "pick this one"
+- [x] **B7: Plant comparison tool** — already built (132-line compare page at /plants/compare)
 
 - [x] **B8: Maintenance calendar/reminders** — merged 05:21 UTC (Sonnet)
 
