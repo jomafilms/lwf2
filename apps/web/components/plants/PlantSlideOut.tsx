@@ -63,6 +63,12 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
     '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
   };
 
+  const FIRE_LEVEL_COLORS: Record<string, string> = {
+    low: 'bg-green-500',
+    moderate: 'bg-amber-500',
+    high: 'bg-red-500',
+  };
+
   const isOpen = !!plantId;
   return (
     <SlideOutPanel open={isOpen} onClose={onClose}>
@@ -119,6 +125,35 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
             <p className="text-lg text-gray-600 italic mt-1">{getBotanicalName(plant)}</p>
           </div>
 
+          {/* Fire info - prominently placed and RED */}
+          {(presentation.characterScore || presentation.flammabilityNotes || presentation.riskMitigationNotes) && (
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg space-y-3">
+              <h3 className="text-red-700 font-bold">🔥 Fire Risk</h3>
+              {presentation.characterScore && (
+                <div className="flex items-center gap-3">
+                  <div className={`w-12 h-12 rounded-full ${FIRE_LEVEL_COLORS[presentation.characterScore.level]} flex items-center justify-center`}>
+                    <span className="text-white text-lg font-bold">
+                      {presentation.characterScore.value}
+                    </span>
+                  </div>
+                  <span className="text-red-700 font-medium">{presentation.characterScore.label}</span>
+                </div>
+              )}
+              {presentation.flammabilityNotes && (
+                <div>
+                  <span className="font-medium text-red-700">Flammability:</span>
+                  <p className="text-sm text-gray-700 mt-1">{presentation.flammabilityNotes}</p>
+                </div>
+              )}
+              {presentation.riskMitigationNotes && (
+                <div>
+                  <span className="font-medium text-amber-700">Risk reduction:</span>
+                  <p className="text-sm text-gray-700 mt-1">{presentation.riskMitigationNotes}</p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Zone badges */}
           {presentation.zones.length > 0 && (
             <div className="flex flex-wrap gap-2">
@@ -135,23 +170,6 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
 
           {/* Flammability badge */}
           <FlammabilityBadge presentation={presentation} size="md" />
-
-          {/* Fire info */}
-          {(presentation.flammabilityNotes || presentation.riskMitigationNotes) && (
-            <div className="space-y-2 text-sm text-gray-600">
-              <h3 className="font-semibold text-gray-900">Fire Information</h3>
-              {presentation.flammabilityNotes && (
-                <p className="line-clamp-3" title={presentation.flammabilityNotes}>
-                  <span className="font-medium text-gray-700">Flammability:</span> {presentation.flammabilityNotes}
-                </p>
-              )}
-              {presentation.riskMitigationNotes && (
-                <p className="line-clamp-3" title={presentation.riskMitigationNotes}>
-                  <span className="font-medium text-gray-700">Risk reduction:</span> {presentation.riskMitigationNotes}
-                </p>
-              )}
-            </div>
-          )}
 
           {/* Actions */}
           <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">

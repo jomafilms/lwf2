@@ -78,16 +78,18 @@ export function FlammabilityBadge({ presentation, size = 'md' }: PlantAttributeB
   if (!presentation.characterScore) return null;
 
   const { level, label } = presentation.characterScore;
-  const s = SIZE_CLASSES[size];
+  
+  // Make FlammabilityBadge larger and more prominent on cards
+  const sizeClass = size === 'sm' ? 'text-xs px-2 py-1 font-bold' : SIZE_CLASSES[size];
 
   const colorMap = {
-    low: 'bg-green-50 text-green-700',
-    moderate: 'bg-amber-50 text-amber-700',
-    high: 'bg-red-50 text-red-700',
+    low: size === 'sm' ? 'bg-green-100 text-green-800' : 'bg-green-50 text-green-700',
+    moderate: size === 'sm' ? 'bg-amber-100 text-amber-800' : 'bg-amber-50 text-amber-700',
+    high: size === 'sm' ? 'bg-red-100 text-red-800' : 'bg-red-50 text-red-700',
   };
 
   return (
-    <span className={`${BADGE_BASE} ${s} ${colorMap[level]}`}>
+    <span className={`${BADGE_BASE} ${sizeClass} ${colorMap[level]}`}>
       🔥 {label}
     </span>
   );

@@ -20,6 +20,12 @@ const ZONE_COLORS: Record<string, string> = {
   '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
 };
 
+const FIRE_LEVEL_COLORS: Record<string, string> = {
+  low: 'bg-green-500',
+  moderate: 'bg-amber-500',
+  high: 'bg-red-500',
+};
+
 function getBotanicalName(plant: Plant): string {
   return [plant.genus, plant.species].filter(Boolean).join(' ');
 }
@@ -52,6 +58,13 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
         className="group relative bg-white rounded-lg border border-gray-200 hover:border-orange-200 hover:shadow-md transition-all text-left w-full"
         data-plant-card
       >
+        {/* Flammability bar - left edge */}
+        {presentation.characterScore && (
+          <div 
+            className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-lg ${FIRE_LEVEL_COLORS[presentation.characterScore.level]}`}
+          />
+        )}
+        
         <div className="aspect-square bg-gray-100 relative overflow-hidden rounded-t-lg">
           {imageUrl ? (
             <img
@@ -63,8 +76,17 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
               <svg className="w-8 h-8 text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18-3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
               </svg>
+            </div>
+          )}
+          
+          {/* Fire score badge - top left overlay */}
+          {presentation.characterScore && (
+            <div className={`absolute top-1.5 left-1.5 w-8 h-8 rounded-full ${FIRE_LEVEL_COLORS[presentation.characterScore.level]} flex items-center justify-center`}>
+              <span className="text-white text-xs font-bold">
+                {presentation.characterScore.value}
+              </span>
             </div>
           )}
         </div>
@@ -105,6 +127,13 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
 
   return (
     <div className="group relative bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+      {/* Flammability bar - left edge */}
+      {presentation.characterScore && (
+        <div 
+          className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-xl ${FIRE_LEVEL_COLORS[presentation.characterScore.level]}`}
+        />
+      )}
+      
       <button onClick={handleCardClick} className="block w-full text-left">
         <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden rounded-t-xl">
           {imageUrl ? (
@@ -119,6 +148,15 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
               <svg className="w-12 h-12 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
               </svg>
+            </div>
+          )}
+          
+          {/* Fire score badge - top left overlay */}
+          {presentation.characterScore && (
+            <div className={`absolute top-2 left-2 w-8 h-8 rounded-full ${FIRE_LEVEL_COLORS[presentation.characterScore.level]} flex items-center justify-center`}>
+              <span className="text-white text-sm font-bold">
+                {presentation.characterScore.value}
+              </span>
             </div>
           )}
         </div>
