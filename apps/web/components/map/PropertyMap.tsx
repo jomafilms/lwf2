@@ -19,6 +19,7 @@ import {
 import { MAP_COLORS, ZONE_COLORS } from "@/lib/design-tokens";
 import { BuildingZoneOverlay } from "./BuildingZoneOverlay";
 import { BuildingZoneLegend } from "./BuildingZoneLegend";
+import { BuildingZoneSummary } from "./BuildingZoneSummary";
 import { Pencil, RotateCcw, Check, Undo2, Building2 } from "lucide-react";
 import type mapboxgl from "mapbox-gl";
 import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
@@ -433,14 +434,20 @@ export function PropertyMap({
         </div>
       )}
 
-      {/* Building zone legend */}
+      {/* Building zone legend and summary */}
       {showBuildingZones && (
-        <div className="absolute bottom-6 left-4">
+        <div className="absolute bottom-6 left-4 space-y-3">
           <BuildingZoneLegend 
             hasZones={hasBuildingZones} 
             isDrawing={isDrawing}
             compact={false}
           />
+          {buildingZoneData && (
+            <BuildingZoneSummary 
+              buildings={buildingZoneData.buildings}
+              zones={buildingZoneData.zones}
+            />
+          )}
         </div>
       )}
     </div>

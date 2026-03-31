@@ -114,7 +114,7 @@ export function BuildingZoneOverlay({
           type: "line",
           source: "buildings",
           paint: {
-            "fill-color": "#ffffff",
+            "line-color": "#ffffff",
             "line-width": 1.5,
             "line-opacity": 0.8,
           },
