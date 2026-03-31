@@ -322,9 +322,17 @@ export async function executeTool(
                 imageUrl: plant.primaryImage?.url || null,
                 characterScore: riskReduction?.characterScore ?? null,
                 placement: riskReduction?.placement ?? null,
-                zones: hizVals
-                  .map((v) => v.resolved?.value)
-                  .filter(Boolean) as string[],
+                zones: (() => {
+                  const allZones = hizVals
+                    .map((v) => v.resolved?.value)
+                    .filter(Boolean) as string[];
+                  if (allZones.length === 0) return [];
+                  const order = ["0-5", "5-10", "10-30", "30-100", "50-100"];
+                  const closest = allZones.reduce((min, z) =>
+                    order.indexOf(z) < order.indexOf(min) ? z : min
+                  );
+                  return [closest];
+                })(),
                 waterNeeds: waterVal?.resolved?.value || null,
                 isNative: nativeVal?.resolved?.value === "Yes",
                 isDeerResistant:

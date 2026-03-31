@@ -2,18 +2,9 @@
   "dock": {
     "items": [
       {
-        "id": "interdimensional-wombat",
+        "id": "sumptuous-squid",
         "type": "terminal",
-        "title": "interdimensional-wombat",
-        "placement": {
-          "width": 794,
-          "height": 672
-        }
-      },
-      {
-        "id": "sublime-gryphon",
-        "type": "terminal",
-        "title": "sublime-gryphon",
+        "title": "sumptuous-squid",
         "placement": {
           "width": 529,
           "height": 496
@@ -29,9 +20,9 @@
         }
       }
     ],
-    "activeItemId": "interdimensional-wombat",
+    "activeItemId": "sumptuous-squid",
     "scroll": {
-      "x": -50
+      "x": -196.75
     },
     "unfocusedScale": 0.5
   },

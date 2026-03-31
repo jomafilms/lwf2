@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { PlanDesignerDemo } from "@/components/canvas/PlanDesignerDemo";
+import { PlanDesignerDemo } from "@/components/_archive_canvas/PlanDesignerDemo";
 
 export default async function PlanDesignerDemoPage() {
   const user = await getCurrentUser();

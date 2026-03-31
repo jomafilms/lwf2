@@ -3,31 +3,21 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { getMapboxToken } from "@/lib/geo/mapbox";
 import {
-  calculateFireZones,
-  fireZonesToGeoJSON,
   computeBuildingZoneRings,
   buildingZonesToGeoJSON,
-  ZONE_OPACITY,
-  type FireZones,
-  type BuildingZoneResult,
 } from "@/lib/geo/fire-zones";
-import { 
+import {
   fetchBuildingFootprints,
   getBufferedBoundingBox,
-  type BuildingFootprintResponse,
+  type BuildingSource,
 } from "@/lib/regional/building-service";
-import { MAP_COLORS, ZONE_COLORS } from "@/lib/design-tokens";
+import { MAP_COLORS } from "@/lib/design-tokens";
 import { BuildingZoneOverlay } from "./BuildingZoneOverlay";
 import { BuildingZoneLegend } from "./BuildingZoneLegend";
 import { BuildingZoneSummary } from "./BuildingZoneSummary";
-import { Pencil, RotateCcw, Check, Undo2, Building2 } from "lucide-react";
+import { Pencil, Loader2 } from "lucide-react";
 import type mapboxgl from "mapbox-gl";
 import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
-
-export interface SavedPropertyData {
-  structureFootprints: [number, number][];
-  fireZones: FireZones;
-}
 
 export interface BuildingZoneData {
   buildings: FeatureCollection<Polygon | MultiPolygon>;
@@ -43,48 +33,28 @@ export interface ParcelBoundary {
 
 interface PropertyMapProps {
   center: { lat: number; lng: number };
-  onDrawStart?: () => void;
-  onStructureDrawn?: (coords: [number, number][]) => void;
-  onZonesCalculated?: (data: {
-    structureCoords: [number, number][];
-    fireZones: FireZones;
-  }) => void;
-  onBuildingZonesCalculated?: (data: BuildingZoneData) => void;
-  savedData?: SavedPropertyData | null;
   parcelBoundary?: ParcelBoundary | null;
+  buildingSource?: BuildingSource;
+  onBuildingZonesCalculated?: (data: BuildingZoneData) => void;
   onEditBoundary?: () => void;
-  showBuildingZones?: boolean;
-  onToggleBuildingZones?: () => void;
+  savedBuildingZones?: BuildingZoneData | null;
 }
-
-type DrawState =
-  | { mode: "idle" }
-  | { mode: "drawing"; points: [number, number][] };
 
 export function PropertyMap({
   center,
-  onDrawStart,
-  onStructureDrawn,
-  onZonesCalculated,
-  onBuildingZonesCalculated,
-  savedData,
   parcelBoundary,
+  buildingSource = "overpass",
+  onBuildingZonesCalculated,
   onEditBoundary,
-  showBuildingZones = false,
-  onToggleBuildingZones,
+  savedBuildingZones,
 }: PropertyMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const [drawState, setDrawState] = useState<DrawState>({ mode: "idle" });
-  const [hasZones, setHasZones] = useState(false);
-  const [buildingZoneData, setBuildingZoneData] = useState<BuildingZoneData | null>(null);
+  const [buildingZoneData, setBuildingZoneData] =
+    useState<BuildingZoneData | null>(null);
   const [hasBuildingZones, setHasBuildingZones] = useState(false);
   const [loadingBuildings, setLoadingBuildings] = useState(false);
-  const drawStateRef = useRef<DrawState>({ mode: "idle" });
-
-  useEffect(() => {
-    drawStateRef.current = drawState;
-  }, [drawState]);
+  const [buildingError, setBuildingError] = useState<string | null>(null);
 
   // Initialize map
   useEffect(() => {
@@ -111,44 +81,16 @@ export function PropertyMap({
         addMapSources(map);
         addMapLayers(map);
 
-        // Load saved property data if available
-        if (savedData) {
-          const coords = savedData.structureFootprints;
-          const closedCoords = [...coords, coords[0]];
-
-          setSourceData(map, "structure", {
-            type: "FeatureCollection",
-            features: [
-              {
-                type: "Feature",
-                geometry: {
-                  type: "Polygon",
-                  coordinates: [closedCoords],
-                },
-                properties: {},
-              },
-            ],
-          });
-
-          const zonesGeoJSON = fireZonesToGeoJSON(savedData.fireZones);
-          setSourceData(map, "fire-zones", zonesGeoJSON);
-          setHasZones(true);
-        }
-
-        // Show parcel boundary if provided
+        // Show parcel boundary if already available
         if (parcelBoundary) {
           showParcelBoundary(map, parcelBoundary);
         }
-      });
 
-      map.on("click", (e: { lngLat: { lng: number; lat: number } }) => {
-        const state = drawStateRef.current;
-        if (state.mode !== "drawing") return;
-
-        const point: [number, number] = [e.lngLat.lng, e.lngLat.lat];
-        const newPoints = [...state.points, point];
-        setDrawState({ mode: "drawing", points: newPoints });
-        updateDrawPreview(map, newPoints);
+        // Show saved building zones if loading a saved property
+        if (savedBuildingZones) {
+          setBuildingZoneData(savedBuildingZones);
+          setHasBuildingZones(true);
+        }
       });
     };
 
@@ -160,38 +102,34 @@ export function PropertyMap({
     };
   }, [center]);
 
-  // Load building footprints when parcel boundary is available and showBuildingZones is true
+  // Auto-load building footprints when parcel boundary arrives
   useEffect(() => {
-    if (!parcelBoundary || !showBuildingZones || !mapRef.current) return;
+    if (!parcelBoundary || !mapRef.current || savedBuildingZones) return;
 
     const loadBuildingZones = async () => {
       setLoadingBuildings(true);
-      
+      setBuildingError(null);
+
       try {
-        // Get parcel boundary coordinates
         const coords = parcelBoundary.coordinates[0];
         if (!coords || coords.length < 3) {
-          throw new Error('Invalid parcel boundary coordinates');
+          throw new Error("Invalid parcel boundary coordinates");
         }
 
-        // Create buffered bounding box to catch nearby buildings
         const bbox = getBufferedBoundingBox(coords, 200);
-        
-        // Fetch building footprints
-        const response = await fetchBuildingFootprints(bbox);
-        
+        const response = await fetchBuildingFootprints(bbox, buildingSource);
+
         if (!response.success || !response.buildings) {
-          throw new Error(response.error || 'Failed to fetch buildings');
+          throw new Error(response.error || "Failed to fetch buildings");
         }
 
         if (response.buildings.features.length === 0) {
-          console.info('No buildings found in area');
           setBuildingZoneData(null);
           setHasBuildingZones(false);
+          setBuildingError("No building footprints found in this area");
           return;
         }
 
-        // Compute zone rings from building footprints
         const zoneRings = computeBuildingZoneRings(response.buildings);
         const zonesGeoJSON = buildingZonesToGeoJSON(zoneRings);
 
@@ -203,18 +141,20 @@ export function PropertyMap({
         setBuildingZoneData(newData);
         setHasBuildingZones(true);
         onBuildingZonesCalculated?.(newData);
-
       } catch (error) {
-        console.error('Failed to load building zones:', error);
+        console.error("Failed to load building zones:", error);
         setBuildingZoneData(null);
         setHasBuildingZones(false);
+        setBuildingError(
+          error instanceof Error ? error.message : "Failed to load buildings",
+        );
       } finally {
         setLoadingBuildings(false);
       }
     };
 
     loadBuildingZones();
-  }, [parcelBoundary, showBuildingZones, onBuildingZonesCalculated]);
+  }, [parcelBoundary, buildingSource, savedBuildingZones, onBuildingZonesCalculated]);
 
   // Update parcel boundary when it changes after map init
   useEffect(() => {
@@ -228,68 +168,12 @@ export function PropertyMap({
     }
   }, [parcelBoundary]);
 
-  const startDrawing = useCallback(() => {
-    setDrawState({ mode: "drawing", points: [] });
-    setHasZones(false);
-    onDrawStart?.();
-    const map = mapRef.current;
-    if (map) {
-      clearSource(map, "fire-zones");
-      clearSource(map, "structure");
-      map.getCanvas().style.cursor = "crosshair";
-    }
-  }, [onDrawStart]);
-
-  const undoPoint = useCallback(() => {
-    if (drawState.mode !== "drawing") return;
-    const newPoints = drawState.points.slice(0, -1);
-    setDrawState({ mode: "drawing", points: newPoints });
-    if (mapRef.current) updateDrawPreview(mapRef.current, newPoints);
-  }, [drawState]);
-
-  const finishDrawing = useCallback(() => {
-    if (drawState.mode !== "drawing" || drawState.points.length < 3) return;
-
-    const map = mapRef.current;
-    if (!map) return;
-
-    const coords = drawState.points;
-    const closedCoords = [...coords, coords[0]];
-
-    setSourceData(map, "structure", {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: { type: "Polygon", coordinates: [closedCoords] },
-          properties: {},
-        },
-      ],
-    });
-
-    const zones = calculateFireZones(coords);
-    const zonesGeoJSON = fireZonesToGeoJSON(zones);
-    setSourceData(map, "fire-zones", zonesGeoJSON);
-
-    clearSource(map, "draw-points");
-    clearSource(map, "draw-line");
-
-    map.getCanvas().style.cursor = "";
-    setDrawState({ mode: "idle" });
-    setHasZones(true);
-    onStructureDrawn?.(coords);
-    onZonesCalculated?.({ structureCoords: coords, fireZones: zones });
-  }, [drawState, onStructureDrawn, onZonesCalculated]);
-
-  const isDrawing = drawState.mode === "drawing";
-  const pointCount = isDrawing ? drawState.points.length : 0;
-
   return (
     <div className="relative h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
-      
+
       {/* Building zone overlay */}
-      {showBuildingZones && buildingZoneData && (
+      {buildingZoneData && (
         <BuildingZoneOverlay
           map={mapRef.current}
           buildings={buildingZoneData.buildings}
@@ -299,15 +183,23 @@ export function PropertyMap({
       )}
 
       {/* Parcel info badge */}
-      {parcelBoundary && !isDrawing && (
+      {parcelBoundary && (
         <div className="absolute left-4 top-4 flex items-center gap-2">
           <div className="rounded-lg bg-emerald-600/90 px-3 py-2 text-white shadow-lg backdrop-blur-sm">
-            <p className="text-xs font-semibold">✓ Property boundary found</p>
+            <p className="text-xs font-semibold">Property boundary found</p>
             <p className="text-[11px] opacity-90">
               {parcelBoundary.address} · {parcelBoundary.acreage} acres
             </p>
             {loadingBuildings && (
-              <p className="text-[10px] opacity-75 mt-1">Loading buildings...</p>
+              <p className="mt-1 flex items-center gap-1 text-[10px] opacity-75">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                Loading building footprints…
+              </p>
+            )}
+            {buildingSource === "overpass" && hasBuildingZones && (
+              <p className="mt-1 text-[10px] opacity-60">
+                Building data: OpenStreetMap
+              </p>
             )}
           </div>
           {onEditBoundary && (
@@ -322,128 +214,38 @@ export function PropertyMap({
         </div>
       )}
 
-      {/* Building zones toggle */}
-      {parcelBoundary && !isDrawing && (
-        <div className="absolute right-4 top-4">
-          <button
-            onClick={onToggleBuildingZones}
-            disabled={loadingBuildings || !onToggleBuildingZones}
-            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium shadow-lg backdrop-blur-sm transition-colors ${
-              showBuildingZones
-                ? "bg-blue-600/90 text-white hover:bg-blue-600"
-                : "bg-white/90 text-gray-700 hover:bg-white"
-            } disabled:opacity-50`}
-            title={showBuildingZones ? "Hide building zones" : "Show fire-reluctant zones from buildings"}
-          >
-            <Building2 className="h-3 w-3" />
-            Building Zones
-          </button>
+      {/* Loading overlay */}
+      {loadingBuildings && (
+        <div className="absolute inset-x-0 bottom-20 flex justify-center sm:bottom-8">
+          <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 shadow-lg">
+            <Loader2 className="h-4 w-4 animate-spin text-neutral-500" />
+            <p className="text-xs font-medium text-neutral-700">
+              Computing fire-reluctant zones…
+            </p>
+          </div>
         </div>
       )}
 
-      {/* Drawing controls */}
-      <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2">
-        {!isDrawing && !hasZones && (
-          <button
-            onClick={startDrawing}
-            className="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg hover:bg-neutral-50 active:bg-neutral-100 sm:py-2.5"
-          >
-            <Pencil className="h-4 w-4" />
-            {parcelBoundary ? "Draw Structure Footprint" : "Draw Structure"}
-          </button>
-        )}
-
-        {!isDrawing && hasZones && (
-          <button
-            onClick={startDrawing}
-            className="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg hover:bg-neutral-50 active:bg-neutral-100 sm:py-2.5"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Redraw
-          </button>
-        )}
-
-        {isDrawing && (
-          <>
-            <div className="rounded-lg bg-white/95 px-3 py-2 text-xs shadow-lg sm:text-sm">
-              {pointCount === 0 && (
-                <span className="text-neutral-600">
-                  Tap corners of your building
-                </span>
-              )}
-              {pointCount === 1 && (
-                <span className="text-neutral-600">Tap the next corner</span>
-              )}
-              {pointCount === 2 && (
-                <span className="text-neutral-600">One more point min</span>
-              )}
-              {pointCount >= 3 && (
-                <span className="font-medium text-green-700">
-                  {pointCount} pts — tap Done
-                </span>
-              )}
-            </div>
-
-            <button
-              onClick={undoPoint}
-              disabled={pointCount === 0}
-              className="rounded-lg bg-white p-3 shadow-lg hover:bg-neutral-50 active:bg-neutral-100 disabled:opacity-30 sm:p-2.5"
-              title="Undo last point"
-            >
-              <Undo2 className="h-4 w-4" />
-            </button>
-
-            <button
-              onClick={finishDrawing}
-              disabled={pointCount < 3}
-              className="flex items-center gap-1.5 rounded-lg bg-neutral-900 px-4 py-3 text-sm font-medium text-white shadow-lg hover:bg-neutral-800 active:bg-neutral-700 disabled:opacity-30 sm:py-2.5"
-            >
-              <Check className="h-4 w-4" />
-              Done
-            </button>
-          </>
-        )}
-      </div>
-
-      {/* Zone legend (manual drawing zones) */}
-      {hasZones && !isDrawing && !showBuildingZones && (
-        <div className="absolute bottom-6 left-4 rounded-lg bg-black/70 px-3 py-2.5 text-white shadow-lg backdrop-blur-sm">
-          <div className="flex items-center gap-4 text-xs">
-            <div className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone0.hex, opacity: 0.8 }}
-              />
-              0-5ft
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone1.hex, opacity: 0.8 }}
-              />
-              5-30ft
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: ZONE_COLORS.zone2.hex, opacity: 0.8 }}
-              />
-              30-100ft
-            </div>
+      {/* No buildings found */}
+      {buildingError && !loadingBuildings && (
+        <div className="absolute inset-x-0 bottom-20 flex justify-center sm:bottom-8">
+          <div className="rounded-xl bg-white px-4 py-2.5 shadow-lg">
+            <p className="text-xs font-medium text-neutral-500">
+              {buildingError}
+            </p>
+            <p className="text-[10px] text-neutral-400">
+              Building data coverage varies by region
+            </p>
           </div>
         </div>
       )}
 
       {/* Building zone legend and summary */}
-      {showBuildingZones && (
+      {hasBuildingZones && (
         <div className="absolute bottom-6 left-4 space-y-3">
-          <BuildingZoneLegend 
-            hasZones={hasBuildingZones} 
-            isDrawing={isDrawing}
-            compact={false}
-          />
+          <BuildingZoneLegend hasZones={hasBuildingZones} compact={false} />
           {buildingZoneData && (
-            <BuildingZoneSummary 
+            <BuildingZoneSummary
               buildings={buildingZoneData.buildings}
               zones={buildingZoneData.zones}
             />
@@ -457,11 +259,10 @@ export function PropertyMap({
 // ─── Helpers ──────────────────────────────────────────────────
 
 function addMapSources(map: mapboxgl.Map) {
-  const empty: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
-  map.addSource("draw-points", { type: "geojson", data: empty });
-  map.addSource("draw-line", { type: "geojson", data: empty });
-  map.addSource("structure", { type: "geojson", data: empty });
-  map.addSource("fire-zones", { type: "geojson", data: empty });
+  const empty: GeoJSON.FeatureCollection = {
+    type: "FeatureCollection",
+    features: [],
+  };
   map.addSource("parcel-boundary", { type: "geojson", data: empty });
 }
 
@@ -489,84 +290,6 @@ function addMapLayers(map: mapboxgl.Map) {
       "line-opacity": 0.9,
     },
   });
-
-  // Fire zone fills
-  map.addLayer({
-    id: "fire-zones-fill",
-    type: "fill",
-    source: "fire-zones",
-    paint: {
-      "fill-color": [
-        "match", ["get", "zone"],
-        "zone0", ZONE_COLORS.zone0.hex,
-        "zone1", ZONE_COLORS.zone1.hex,
-        "zone2", ZONE_COLORS.zone2.hex,
-        "#888",
-      ],
-      "fill-opacity": [
-        "match", ["get", "zone"],
-        "zone0", ZONE_OPACITY.zone0,
-        "zone1", ZONE_OPACITY.zone1,
-        "zone2", ZONE_OPACITY.zone2,
-        0.2,
-      ],
-    },
-  });
-
-  // Fire zone outlines
-  map.addLayer({
-    id: "fire-zones-outline",
-    type: "line",
-    source: "fire-zones",
-    paint: {
-      "line-color": [
-        "match", ["get", "zone"],
-        "zone0", ZONE_COLORS.zone0.hex,
-        "zone1", ZONE_COLORS.zone1.hex,
-        "zone2", ZONE_COLORS.zone2.hex,
-        "#888",
-      ],
-      "line-width": 1.5,
-      "line-opacity": 0.7,
-    },
-  });
-
-  // Structure
-  map.addLayer({
-    id: "structure-fill",
-    type: "fill",
-    source: "structure",
-    paint: { "fill-color": MAP_COLORS.structureFill, "fill-opacity": 0.6 },
-  });
-  map.addLayer({
-    id: "structure-outline",
-    type: "line",
-    source: "structure",
-    paint: { "line-color": MAP_COLORS.structureStroke, "line-width": 2 },
-  });
-
-  // Draw preview
-  map.addLayer({
-    id: "draw-line-layer",
-    type: "line",
-    source: "draw-line",
-    paint: {
-      "line-color": MAP_COLORS.drawLine,
-      "line-width": 2,
-      "line-dasharray": [3, 2],
-    },
-  });
-  map.addLayer({
-    id: "draw-points-layer",
-    type: "circle",
-    source: "draw-points",
-    paint: {
-      "circle-radius": 7,
-      "circle-color": MAP_COLORS.drawPoint,
-      "circle-stroke-color": MAP_COLORS.drawPointStroke,
-      "circle-stroke-width": 2.5,
-    },
-  });
 }
 
 function showParcelBoundary(map: mapboxgl.Map, parcel: ParcelBoundary) {
@@ -591,7 +314,10 @@ function showParcelBoundary(map: mapboxgl.Map, parcel: ParcelBoundary) {
   try {
     const coords = parcel.coordinates[0];
     if (coords && coords.length > 2) {
-      let minLng = Infinity, minLat = Infinity, maxLng = -Infinity, maxLat = -Infinity;
+      let minLng = Infinity,
+        minLat = Infinity,
+        maxLng = -Infinity,
+        maxLat = -Infinity;
       for (const [lng, lat] of coords) {
         if (lng < minLng) minLng = lng;
         if (lat < minLat) minLat = lat;
@@ -599,8 +325,11 @@ function showParcelBoundary(map: mapboxgl.Map, parcel: ParcelBoundary) {
         if (lat > maxLat) maxLat = lat;
       }
       map.fitBounds(
-        [[minLng, minLat], [maxLng, maxLat]],
-        { padding: 80, maxZoom: 19, duration: 1000 }
+        [
+          [minLng, minLat],
+          [maxLng, maxLat],
+        ],
+        { padding: 80, maxZoom: 19, duration: 1000 },
       );
     }
   } catch {
@@ -613,36 +342,11 @@ function clearSource(map: mapboxgl.Map, id: string) {
   src?.setData({ type: "FeatureCollection", features: [] });
 }
 
-function setSourceData(map: mapboxgl.Map, id: string, data: GeoJSON.FeatureCollection) {
+function setSourceData(
+  map: mapboxgl.Map,
+  id: string,
+  data: GeoJSON.FeatureCollection,
+) {
   const src = map.getSource(id) as mapboxgl.GeoJSONSource | undefined;
   src?.setData(data);
-}
-
-function updateDrawPreview(map: mapboxgl.Map, points: [number, number][]) {
-  setSourceData(map, "draw-points", {
-    type: "FeatureCollection",
-    features: points.map((p) => ({
-      type: "Feature" as const,
-      geometry: { type: "Point" as const, coordinates: p },
-      properties: {},
-    })),
-  });
-
-  if (points.length >= 2) {
-    setSourceData(map, "draw-line", {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature" as const,
-          geometry: {
-            type: "LineString" as const,
-            coordinates: [...points, points[0]],
-          },
-          properties: {},
-        },
-      ],
-    });
-  } else {
-    clearSource(map, "draw-line");
-  }
 }

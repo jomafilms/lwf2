@@ -26,7 +26,7 @@ export default function StarredListsPage() {
     try {
       const res = await fetch("/api/tags/starred");
       if (res.ok) {
-        setStarredLists(await res.json());
+        setStarredLists(await res.json() as StarredItem[]);
       }
     } catch {
       toast("Failed to load starred lists");

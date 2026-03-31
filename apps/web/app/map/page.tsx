@@ -6,7 +6,6 @@ import Link from "next/link";
 import { AddressSearch } from "@/components/map/AddressSearch";
 import {
   PropertyMap,
-  type SavedPropertyData,
   type ParcelBoundary,
   type BuildingZoneData,
 } from "@/components/map/PropertyMap";
@@ -14,6 +13,7 @@ import { ChatPanelWithHistory } from "@/components/agent/ChatPanelWithHistory";
 import { ScoresPanel } from "@/components/scoring/ScoresPanel";
 import { AssessmentWizard, AssessmentSummary, type AssessmentData } from "@/components/assessment";
 import { useSession } from "@/lib/auth-client";
+import { detectBuildingSource } from "@/lib/regional/building-service";
 import type { PlanPlant } from "@/lib/scoring";
 import {
   ArrowLeft,
@@ -27,28 +27,17 @@ import {
   ClipboardCheck,
 } from "lucide-react";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
-import type { FireZones } from "@/lib/geo/fire-zones";
-
-type Step = "view" | "draw" | "zones";
-
-interface ZoneData {
-  structureCoords: [number, number][];
-  fireZones: FireZones;
-}
 
 export default function MapPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { data: session } = useSession();
   const [location, setLocation] = useState<GeocodingResult | null>(null);
-  const [step, setStep] = useState<Step>("view");
   const [chatOpen, setChatOpen] = useState(false);
-  const [zoneData, setZoneData] = useState<ZoneData | null>(null);
   const [savedPropertyId, setSavedPropertyId] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<
     "idle" | "saving" | "saved" | "error"
   >("idle");
-  const [savedData, setSavedData] = useState<SavedPropertyData | null>(null);
   const [planId, setPlanId] = useState<string | null>(null);
   const [planPlants, setPlanPlants] = useState<PlanPlant[]>([]);
 
@@ -56,14 +45,19 @@ export default function MapPage() {
   const [parcelBoundary, setParcelBoundary] = useState<ParcelBoundary | null>(null);
   const [parcelLoading, setParcelLoading] = useState(false);
 
+  // Building zones state (replaces manual draw)
+  const [buildingZoneData, setBuildingZoneData] = useState<BuildingZoneData | null>(null);
+  const [savedBuildingZones, setSavedBuildingZones] = useState<BuildingZoneData | null>(null);
+
   // Assessment state
   const [showAssessment, setShowAssessment] = useState(false);
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(null);
   const [showAssessmentSummary, setShowAssessmentSummary] = useState(false);
 
-  // Building zones state  
-  const [showBuildingZones, setShowBuildingZones] = useState(false);
-  const [buildingZoneData, setBuildingZoneData] = useState<BuildingZoneData | null>(null);
+  // Derive building source from location
+  const buildingSource = location
+    ? detectBuildingSource(location.lat, location.lng)
+    : "overpass";
 
   // Load saved property from URL param
   useEffect(() => {
@@ -82,12 +76,9 @@ export default function MapPage() {
             lng: property.lng,
             address: property.address,
           });
-          if (property.structureFootprints && property.fireZones) {
-            setSavedData({
-              structureFootprints: property.structureFootprints,
-              fireZones: property.fireZones,
-            });
-            setStep("zones");
+          // Load saved building zones if available
+          if (property.fireZones?.buildings && property.fireZones?.zones) {
+            setSavedBuildingZones(property.fireZones as BuildingZoneData);
           }
           // Fetch plans for this property
           fetch(`/api/properties/${propertyId}/plans`)
@@ -95,7 +86,6 @@ export default function MapPage() {
             .then((plans: Array<{ id: string }>) => {
               if (plans.length > 0) {
                 setPlanId(plans[0].id);
-                // Fetch plan details to get plant placements
                 fetch(`/api/plans/${plans[0].id}`)
                   .then((r) => r.ok ? r.json() : null)
                   .then((plan) => {
@@ -128,7 +118,6 @@ export default function MapPage() {
         address: address || `${lat}, ${lng}`,
       };
       setLocation(loc);
-      // Auto-detect parcel for lat/lng params too
       fetchParcelBoundary(parseFloat(lat), parseFloat(lng));
     }
   }, [searchParams]);
@@ -150,7 +139,7 @@ export default function MapPage() {
         });
       }
     } catch {
-      // Parcel lookup failed — silently fall back to manual
+      // Parcel lookup failed — silently fall back
     } finally {
       setParcelLoading(false);
     }
@@ -158,12 +147,11 @@ export default function MapPage() {
 
   const handleAddressSelect = (result: GeocodingResult) => {
     setLocation(result);
-    setStep("view");
     setChatOpen(false);
     setSavedPropertyId(null);
     setSaveState("idle");
-    setZoneData(null);
-    setSavedData(null);
+    setBuildingZoneData(null);
+    setSavedBuildingZones(null);
     setPlanId(null);
     setParcelBoundary(null);
 
@@ -171,24 +159,18 @@ export default function MapPage() {
     fetchParcelBoundary(result.lat, result.lng);
   };
 
-  const handleZonesCalculated = useCallback((data: ZoneData) => {
-    setZoneData(data);
-    setSaveState("idle");
-    setSavedPropertyId(null);
-  }, []);
-
   const handleBuildingZonesCalculated = useCallback((data: BuildingZoneData) => {
     setBuildingZoneData(data);
+    setSaveState("idle");
   }, []);
 
   const handleEditBoundary = useCallback(() => {
-    // Clear parcel boundary and let user draw manually
     setParcelBoundary(null);
-    setStep("view");
+    setBuildingZoneData(null);
   }, []);
 
   const handleSave = async () => {
-    if (!location || !zoneData) return;
+    if (!location || !buildingZoneData) return;
 
     if (!session?.user) {
       const returnUrl = `/map?lat=${location.lat}&lng=${location.lng}&address=${encodeURIComponent(location.address)}`;
@@ -206,8 +188,8 @@ export default function MapPage() {
           address: location.address,
           lat: location.lat,
           lng: location.lng,
-          structureFootprints: zoneData.structureCoords,
-          fireZones: zoneData.fireZones,
+          parcelBoundary: parcelBoundary ?? null,
+          fireZones: buildingZoneData,
         }),
       });
 
@@ -229,6 +211,9 @@ export default function MapPage() {
     }
   };
 
+  // Has zones ready (either freshly computed or loaded from saved)
+  const hasZones = !!(buildingZoneData || savedBuildingZones);
+
   if (!location) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center px-4">
@@ -237,7 +222,7 @@ export default function MapPage() {
             Map Your Property
           </h1>
           <p className="mb-6 text-center text-neutral-500">
-            Enter your address to view satellite imagery and calculate fire
+            Enter your address to view satellite imagery and fire-reluctant
             zones.
           </p>
           <AddressSearch onSelect={handleAddressSelect} />
@@ -253,12 +238,11 @@ export default function MapPage() {
         <button
           onClick={() => {
             setLocation(null);
-            setStep("view");
             setChatOpen(false);
-            setZoneData(null);
+            setBuildingZoneData(null);
+            setSavedBuildingZones(null);
             setSavedPropertyId(null);
             setSaveState("idle");
-            setSavedData(null);
             setParcelBoundary(null);
           }}
           className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg p-2 hover:bg-neutral-100"
@@ -279,38 +263,8 @@ export default function MapPage() {
           )}
         </div>
 
-        {/* Step indicator — desktop only */}
-        <div className="hidden items-center gap-1 md:flex">
-          {(["view", "draw", "zones"] as Step[]).map((s, i) => (
-            <div key={s} className="flex items-center">
-              {i > 0 && (
-                <div
-                  className={`mx-1 h-px w-4 ${
-                    stepIndex(step) >= i ? "bg-neutral-400" : "bg-neutral-200"
-                  }`}
-                />
-              )}
-              <div
-                className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  step === s
-                    ? "bg-neutral-900 text-white"
-                    : stepIndex(step) > i
-                      ? "bg-neutral-200 text-neutral-600"
-                      : "bg-neutral-100 text-neutral-400"
-                }`}
-              >
-                {s === "view"
-                  ? "Property"
-                  : s === "draw"
-                    ? "Structure"
-                    : "Zones"}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Save button — appears after zones */}
-        {step === "zones" && (zoneData || savedPropertyId) && (
+        {/* Save button — appears when zones are computed */}
+        {hasZones && (
           <button
             onClick={handleSave}
             disabled={saveState === "saving" || saveState === "saved"}
@@ -334,7 +288,7 @@ export default function MapPage() {
               {saveState === "saving"
                 ? "Saving…"
                 : saveState === "saved"
-                  ? "Saved ✓"
+                  ? "Saved"
                   : saveState === "error"
                     ? "Error — retry"
                     : "Save Property"}
@@ -356,7 +310,7 @@ export default function MapPage() {
         )}
 
         {/* Hardening Checklist button */}
-        {step === "zones" && (
+        {hasZones && (
           <Link
             href="/hardening"
             className="flex items-center gap-1.5 rounded-lg bg-orange-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-orange-700 transition-colors sm:text-sm"
@@ -367,7 +321,7 @@ export default function MapPage() {
         )}
 
         {/* Chat toggle */}
-        {step === "zones" && (
+        {hasZones && (
           <button
             onClick={() => setChatOpen(!chatOpen)}
             className={`flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors sm:text-sm ${
@@ -390,35 +344,20 @@ export default function MapPage() {
         <div className="flex-1">
           <PropertyMap
             center={{ lat: location.lat, lng: location.lng }}
-            onDrawStart={() => setStep("draw")}
-            onStructureDrawn={() => setStep("zones")}
-            onZonesCalculated={handleZonesCalculated}
-            onBuildingZonesCalculated={handleBuildingZonesCalculated}
-            savedData={savedData}
             parcelBoundary={parcelBoundary}
+            buildingSource={buildingSource}
+            onBuildingZonesCalculated={handleBuildingZonesCalculated}
             onEditBoundary={handleEditBoundary}
-            showBuildingZones={showBuildingZones}
-            onToggleBuildingZones={() => setShowBuildingZones(!showBuildingZones)}
+            savedBuildingZones={savedBuildingZones}
           />
         </div>
 
-        {/* Guided prompt — only when no parcel boundary */}
-        {step === "view" && !parcelBoundary && !parcelLoading && (
+        {/* Guided prompt — waiting for parcel */}
+        {!parcelBoundary && !parcelLoading && !hasZones && (
           <div className="absolute bottom-20 left-1/2 -translate-x-1/2 sm:bottom-8">
             <div className="rounded-xl bg-white px-4 py-2.5 shadow-lg sm:px-5 sm:py-3">
               <p className="text-xs font-medium text-neutral-700 sm:text-sm">
-                Find your property, then draw your building
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Guided prompt — parcel found, draw structure */}
-        {step === "view" && parcelBoundary && (
-          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 sm:bottom-8">
-            <div className="rounded-xl bg-white px-4 py-2.5 shadow-lg sm:px-5 sm:py-3">
-              <p className="text-xs font-medium text-neutral-700 sm:text-sm">
-                Property found! Now draw your building footprint
+                Searching for property data…
               </p>
             </div>
           </div>
@@ -448,8 +387,8 @@ export default function MapPage() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <ChatPanelWithHistory 
-              className="flex-1" 
+            <ChatPanelWithHistory
+              className="flex-1"
               propertyId={savedPropertyId || undefined}
               showHistory={false}
             />
@@ -470,8 +409,8 @@ export default function MapPage() {
                 <ChevronDown className="h-5 w-5" />
               </button>
             </div>
-            <ChatPanelWithHistory 
-              className="flex-1 overflow-hidden" 
+            <ChatPanelWithHistory
+              className="flex-1 overflow-hidden"
               propertyId={savedPropertyId || undefined}
               showHistory={false}
             />
@@ -480,8 +419,4 @@ export default function MapPage() {
       </div>
     </div>
   );
-}
-
-function stepIndex(step: Step): number {
-  return step === "view" ? 0 : step === "draw" ? 1 : 2;
 }

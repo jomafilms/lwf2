@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { db, properties, plans } from "@lwf/database";
 import { eq, desc } from "drizzle-orm";
-import { PlanDesignInterface } from "@/components/canvas/PlanDesignInterface";
+import { PlanDesignInterface } from "@/components/_archive_canvas/PlanDesignInterface";
 
 interface PageProps {
   searchParams: Promise<{

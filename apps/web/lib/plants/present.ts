@@ -124,10 +124,10 @@ function parseCharacterScore(
   let label: string;
   let level: "low" | "moderate" | "high";
 
-  if (num <= 3) {
+  if (num <= 4) {
     label = "Low flammability";
     level = "low";
-  } else if (num <= 6) {
+  } else if (num <= 12) {
     label = "Moderate flammability";
     level = "moderate";
   } else {
@@ -167,9 +167,12 @@ const ZONE_LABELS: Record<string, string> = {
   "50-100": "Zone 2 (50-100ft)",
 };
 
+/** Order of zones from closest to farthest from building */
+const ZONE_ORDER = ["0-5", "5-10", "10-30", "30-100", "50-100"];
+
 function parseZones(values: ResolvedValue[]): ZoneBadge[] {
   const hizValues = findAllValues(values, "Home Ignition Zone (HIZ)");
-  return hizValues
+  const allZones = hizValues
     .map((v) => {
       const zone = v.resolved?.value?.toString();
       if (!zone) return null;
@@ -180,6 +183,18 @@ function parseZones(values: ResolvedValue[]): ZoneBadge[] {
       };
     })
     .filter(Boolean) as ZoneBadge[];
+
+  if (allZones.length === 0) return [];
+
+  // Only show the closest zone — the plant is ok from there outward
+  const closest = allZones.reduce((min, z) => {
+    const minIdx = ZONE_ORDER.indexOf(min.zone);
+    const zIdx = ZONE_ORDER.indexOf(z.zone);
+    return zIdx < minIdx ? z : min;
+  });
+
+  closest.label = `Minimum ${closest.zone}ft`;
+  return [closest];
 }
 
 // ─── Main Presenter ──────────────────────────────────────────────────────────

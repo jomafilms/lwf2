@@ -55,6 +55,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       updates.visibility = body.visibility;
     }
   }
+  if (body.removeOwner === true) updates.ownerId = null;
 
   const [updated] = await db
     .update(tags)
