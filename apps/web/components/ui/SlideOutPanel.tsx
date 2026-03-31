@@ -46,10 +46,10 @@ export function SlideOutPanel({ open, onClose, children, title }: SlideOutPanelP
       <div
         className={cn(
           "fixed z-50 bg-white shadow-lg",
-          // Desktop (md and up): slide from right, 480px wide
-          "md:inset-y-0 md:right-0 md:w-[480px] md:animate-slide-right",
+          // Desktop (md and up): slide from right, 480px wide, pinned to right edge
+          "md:top-0 md:bottom-0 md:right-0 md:left-auto md:w-[480px] md:max-h-none md:rounded-none md:animate-slide-right",
           // Mobile: slide from bottom, max 85vh height
-          "inset-x-0 bottom-0 max-h-[85vh] animate-slide-up md:animate-none",
+          "inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl animate-slide-up md:animate-none",
           // Scrollable content
           "flex flex-col overflow-hidden"
         )}

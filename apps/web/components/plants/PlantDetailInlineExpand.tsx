@@ -239,7 +239,7 @@ export function PlantDetailInlineExpand({
                   )}
                   {presentation.riskMitigationNotes && (
                     <p className="text-[11px] text-gray-500 leading-snug line-clamp-2" title={presentation.riskMitigationNotes}>
-                      <span className="font-medium text-gray-600">Risk reduction:</span> {presentation.riskMitigationNotes}
+                      <span className="font-medium text-gray-600">Risk reduction - best practices:</span> {presentation.riskMitigationNotes}
                     </p>
                   )}
                 </div>

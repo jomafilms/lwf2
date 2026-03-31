@@ -146,7 +146,7 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
               )}
               {presentation.riskMitigationNotes && (
                 <div>
-                  <span className="font-medium text-amber-700">Risk reduction:</span>
+                  <span className="font-medium text-amber-700">Risk reduction - best practices:</span>
                   <p className="text-sm text-gray-700 mt-1">{presentation.riskMitigationNotes}</p>
                 </div>
               )}
