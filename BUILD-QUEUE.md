@@ -1,9 +1,16 @@
 # BUILD QUEUE — Autonomous Build Loop
 
-> **Last updated:** 2026-03-30 00:30 UTC
-> **Session status:** POST-DEMO — demos completed ~23:30 UTC. Awaiting Annie's feedback.
-> **Phase 0-3 COMPLETE.** All Priority A, B, and most C tasks done.
-> **Remaining:** C4 (AR), C5 (plan scanner), C6 (climate adaptation) + stretch goals
+> **Last updated:** 2026-03-31 04:30 UTC  
+> **Session status:** POST-CODEATHON IMPLEMENTATION — Engineering Manager executing codeathon debrief action items
+> **Priority Focus:** HOA audience + April 2026 fire season launch prep
+
+## 🚨 CURRENT MISSION: Codeathon Action Items
+
+Based on codeathon debrief specs, implementing:
+1. **Zone map integration** on home page (visitors see fire zones immediately)
+2. **Home hardening checklist** feature (missing from current app)
+3. **HOA-focused UX improvements** (target: 20-30 HOAs in Ashland)
+4. **Mobile property assessment** flow (camera-based evaluation)
 
 ## 🚨 FIRST: If You Just Woke Up
 
@@ -40,7 +47,29 @@
 
 ## 📋 PENDING (in priority order)
 
-### Priority A — Tonight (before Annie sleeps ~7am UTC)
+### Priority S — Spring Launch Prep (April 2026 fire season)
+
+- [ ] **S1: Home Page Zone Map Preview** — Add compelling zone map hero section to home page
+  - Interactive mini-map or embedded PropertyMap preview
+  - Link to full /map page but surface zones immediately for visitors
+  - Target audience: HOAs and homeowners discovering the platform
+  
+- [ ] **S2: Home Hardening Checklist System** — Missing feature from codeathon specs
+  - Checklist interface for property hardening steps beyond plants
+  - Roof materials, gutters, windows, deck materials, defensible space maintenance
+  - Progress tracking, printable checklists for HOA compliance
+  
+- [ ] **S3: HOA-Focused Dashboard Enhancements** — UX improvements for target audience
+  - HOA-specific language and workflows
+  - Bulk property assessment tools
+  - CCR compliance documentation features
+  
+- [ ] **S4: Mobile Property Assessment Camera Flow** — Camera-based walkthrough
+  - Device camera integration for property evaluation
+  - Photo-based plant identification and risk assessment
+  - Mobile-first assessment wizard flow
+
+### Priority A — Previously Completed
 
 - [x] **A1: AI Agent — nuanced, informed decision-making** — merged 04:17 UTC
   - Rewrote system prompt + tools for empowered decision-making, source citations, property-specific nuance
