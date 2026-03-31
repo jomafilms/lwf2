@@ -9,11 +9,20 @@
           "width": 794,
           "height": 672
         }
+      },
+      {
+        "id": "sublime-gryphon",
+        "type": "terminal",
+        "title": "sublime-gryphon",
+        "placement": {
+          "width": 529,
+          "height": 496
+        }
       }
     ],
     "activeItemId": "interdimensional-wombat",
     "scroll": {
-      "x": -55.75
+      "x": -11
     },
     "unfocusedScale": 0.5
   },

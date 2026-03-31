@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Search, Filter, Globe, Lock, Building2, Star } from "lucide-react";
 import { fetchTags, type Tag } from "@/lib/tags/api";
+import { ORG_TYPE_LABELS } from "@/lib/design-tokens";
 import { StarButton } from "@/components/lists/StarButton";
 import { CollectionGridWithExpand } from "@/components/lists/CollectionGridWithExpand";
 
@@ -42,16 +43,6 @@ const VISIBILITY_LABELS = {
   org: "Organization",
 };
 
-const ORG_TYPE_LABELS: Record<string, string> = {
-  hoa: "HOA",
-  city: "City",
-  nursery: "Nursery",
-  community: "Community",
-  neighborhood: "Neighborhood",
-  firewise: "Fire Safe",
-  landscaping_company: "Landscaper",
-  other: "Other",
-};
 
 export default function PublicListsPage() {
   const [publicLists, setPublicLists] = useState<TagWithCount[]>([]);

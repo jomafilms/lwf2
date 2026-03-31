@@ -9,19 +9,10 @@ import {
 } from '@/lib/api/lwf';
 import type { PlantImage, Source } from '@lwf/types';
 import { presentPlant } from '@/lib/plants/present';
+import { HIZ_BADGE_COLORS } from '@/lib/design-tokens';
 import { NurseryAvailability } from '@/components/plants/NurseryAvailability';
 import { ImageGallery } from '@/components/plants/ImageGallery';
 import { BadgeWithTooltip } from '@/components/plants/BadgeWithTooltip';
-
-// ─── Zone badge colors ──────────────────────────────────────────────────────
-
-const ZONE_COLORS: Record<string, string> = {
-  '0-5': 'bg-red-100 text-red-800 border-red-200',
-  '5-10': 'bg-orange-100 text-orange-800 border-orange-200',
-  '10-30': 'bg-amber-100 text-amber-800 border-amber-200',
-  '30-100': 'bg-green-100 text-green-800 border-green-200',
-  '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-};
 
 // ─── Character score badge colors ────────────────────────────────────────────
 
@@ -156,7 +147,7 @@ export default async function PlantDetailPage({
                     <span
                       key={zone.zone}
                       className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full border ${
-                        ZONE_COLORS[zone.zone] ||
+                        HIZ_BADGE_COLORS[zone.zone] ||
                         'bg-gray-100 text-gray-700 border-gray-200'
                       }`}
                       title={zone.description}

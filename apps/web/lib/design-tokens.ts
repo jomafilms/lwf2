@@ -92,6 +92,44 @@ export const TEXT = {
   label: "text-xs font-medium text-gray-500 uppercase tracking-wide",
 } as const;
 
+// ─── HIZ Badge Colors (for plant cards, detail views) ───────────────────────
+
+export const HIZ_BADGE_COLORS: Record<string, string> = {
+  '0-5': 'bg-red-100 text-red-800 border-red-200',
+  '5-10': 'bg-orange-100 text-orange-800 border-orange-200',
+  '10-30': 'bg-amber-100 text-amber-800 border-amber-200',
+  '30-100': 'bg-green-100 text-green-800 border-green-200',
+  '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+};
+
+// ─── Fire Level Colors (character score badge fills) ────────────────────────
+
+export const FIRE_LEVEL_COLORS: Record<string, string> = {
+  low: 'bg-green-500',
+  moderate: 'bg-amber-500',
+  high: 'bg-red-500',
+};
+
+// ─── Org Type Labels & Colors ───────────────────────────────────────────────
+
+export const ORG_TYPE_LABELS: Record<string, string> = {
+  hoa: "HOA",
+  city: "City",
+  nursery: "Nursery",
+  community: "Community",
+  neighborhood: "Neighborhood",
+  firewise: "Fire Safe",
+  landscaping_company: "Landscaper",
+  other: "Other",
+};
+
+export const ORG_TYPE_COLORS: Record<string, string> = {
+  nursery: "bg-emerald-100 text-emerald-700",
+  community: "bg-green-100 text-green-700",
+  hoa: "bg-blue-100 text-blue-700",
+  city: "bg-purple-100 text-purple-700",
+};
+
 // ─── Attribute Icons ─────────────────────────────────────────────────────────
 
 export const ATTRIBUTE_ICONS = {

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { SlideOutPanel } from '@/components/ui/SlideOutPanel';
-import { presentPlant, type PlantPresentation } from '@/lib/plants/present';
+import { presentPlant, getBotanicalName, getPlantImageUrl, type PlantPresentation } from '@/lib/plants/present';
+import { HIZ_BADGE_COLORS, FIRE_LEVEL_COLORS } from '@/lib/design-tokens';
 import { PlantAttributeBadges, FlammabilityBadge } from './PlantAttributeBadges';
 import { AddToListButton } from './AddToListButton';
 import { SavePlantButton } from './SavePlantButton';
@@ -50,28 +51,6 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
     fetchPlantData();
   }, [plantId]);
 
-  function getBotanicalName(p: Plant): string {
-    return [p.genus, p.species].filter(Boolean).join(' ');
-  }
-
-  function getImageUrl(p: Plant): string | undefined {
-    return p.primaryImage?.url ||
-      (p as unknown as { images?: { url: string }[] })?.images?.[0]?.url;
-  }
-
-  const ZONE_COLORS: Record<string, string> = {
-    '0-5': 'bg-red-100 text-red-800 border-red-200',
-    '5-10': 'bg-orange-100 text-orange-800 border-orange-200',
-    '10-30': 'bg-amber-100 text-amber-800 border-amber-200',
-    '30-100': 'bg-green-100 text-green-800 border-green-200',
-    '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  };
-
-  const FIRE_LEVEL_COLORS: Record<string, string> = {
-    low: 'bg-green-500',
-    moderate: 'bg-amber-500',
-    high: 'bg-red-500',
-  };
 
   const isOpen = !!plantId;
   return (
@@ -108,9 +87,9 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
         <div className="p-6 space-y-6">
           {/* Image */}
           <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
-            {getImageUrl(plant) ? (
+            {getPlantImageUrl(plant) ? (
               <img
-                src={getImageUrl(plant)}
+                src={getPlantImageUrl(plant)}
                 alt={plant.commonName}
                 className="w-full h-full object-cover"
               />
@@ -162,7 +141,7 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
           {presentation.zones.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {presentation.zones.map((zoneBadge, index) => (
-                <span key={index} className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full border ${ZONE_COLORS[zoneBadge.zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+                <span key={index} className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full border ${HIZ_BADGE_COLORS[zoneBadge.zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
                   {zoneBadge.label}
                 </span>
               ))}

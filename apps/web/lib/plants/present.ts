@@ -6,7 +6,20 @@
  * Everything else is backend-only.
  */
 
-import type { ResolvedValue } from "@lwf/types";
+import type { Plant, ResolvedValue } from "@lwf/types";
+
+// ─── Shared Helpers ─────────────────────────────────────────────────────────
+
+/** Canonical botanical name from a Plant object. */
+export function getBotanicalName(plant: Pick<Plant, "genus" | "species">): string {
+  return [plant.genus, plant.species].filter(Boolean).join(" ");
+}
+
+/** Plant image URL with fallback to images array (API shape varies). */
+export function getPlantImageUrl(plant: Plant): string | undefined {
+  return plant.primaryImage?.url ||
+    (plant as unknown as { images?: { url: string }[] })?.images?.[0]?.url;
+}
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

@@ -2,30 +2,11 @@
 
 import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
-import { presentPlant } from '@/lib/plants/present';
+import { presentPlant, getBotanicalName, getPlantImageUrl } from '@/lib/plants/present';
+import { HIZ_BADGE_COLORS, FIRE_LEVEL_COLORS } from '@/lib/design-tokens';
 import { PlantAttributeBadges, FlammabilityBadge } from './PlantAttributeBadges';
 import { SavePlantButton } from './SavePlantButton';
 import { AddToListButton } from './AddToListButton';
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const ZONE_COLORS: Record<string, string> = {
-  '0-5': 'bg-red-100 text-red-800 border-red-200',
-  '5-10': 'bg-orange-100 text-orange-800 border-orange-200',
-  '10-30': 'bg-amber-100 text-amber-800 border-amber-200',
-  '30-100': 'bg-green-100 text-green-800 border-green-200',
-  '50-100': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-};
-
-const FIRE_LEVEL_COLORS: Record<string, string> = {
-  low: 'bg-green-500',
-  moderate: 'bg-amber-500',
-  high: 'bg-red-500',
-};
-
-function getBotanicalName(plant: Plant): string {
-  return [plant.genus, plant.species].filter(Boolean).join(' ');
-}
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -45,8 +26,7 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
     onPlantClick?.(plant.id);
   }
 
-  const imageUrl = plant.primaryImage?.url ||
-    (plant as unknown as { images?: { url: string }[] })?.images?.[0]?.url;
+  const imageUrl = getPlantImageUrl(plant);
 
   if (compact) {
     return (
@@ -102,7 +82,7 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
           {zones.length > 0 && (
             <div className="flex flex-wrap gap-0.5 mt-1.5">
               {zones.slice(0, 2).map((zone) => (
-                <span key={zone} className={`text-[9px] font-medium px-1.5 py-0 rounded-full border ${ZONE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+                <span key={zone} className={`text-[9px] font-medium px-1.5 py-0 rounded-full border ${HIZ_BADGE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
                   {zone}ft
                 </span>
               ))}
@@ -168,7 +148,7 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
         {zones.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {zones.map((zone) => (
-              <span key={zone} className={`inline-flex items-center text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${ZONE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+              <span key={zone} className={`inline-flex items-center text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${HIZ_BADGE_COLORS[zone] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
                 {zone} ft
               </span>
             ))}

@@ -3,6 +3,7 @@
 import { Leaf, Droplets, Shield, Bug, ExternalLink } from "lucide-react";
 import { SavePlantButton } from "@/components/plants/SavePlantButton";
 import { AddToListButton } from "@/components/plants/AddToListButton";
+import { HIZ_BADGE_COLORS } from "@/lib/design-tokens";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -28,14 +29,6 @@ const SCORE_COLORS: Record<string, string> = {
   low: "bg-green-100 text-green-800 border-green-200",
   medium: "bg-amber-100 text-amber-800 border-amber-200",
   high: "bg-red-100 text-red-800 border-red-200",
-};
-
-const ZONE_COLORS: Record<string, string> = {
-  "0-5": "bg-red-100 text-red-800",
-  "5-10": "bg-orange-100 text-orange-800",
-  "10-30": "bg-amber-100 text-amber-800",
-  "30-100": "bg-green-100 text-green-800",
-  "50-100": "bg-emerald-100 text-emerald-800",
 };
 
 function scoreCategory(score: number): string {
@@ -110,7 +103,7 @@ export function ChatPlantCard({ plant }: ChatPlantCardProps) {
               <span
                 key={zone}
                 className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
-                  ZONE_COLORS[zone] || "bg-neutral-100 text-neutral-600"
+                  HIZ_BADGE_COLORS[zone] || "bg-neutral-100 text-neutral-600"
                 }`}
               >
                 {zone} ft

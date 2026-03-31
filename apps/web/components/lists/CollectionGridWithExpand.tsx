@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import Link from "next/link";
 import { Leaf, X } from "lucide-react";
 import { SlideOutPanel } from "@/components/ui/SlideOutPanel";
+import { ORG_TYPE_LABELS, ORG_TYPE_COLORS } from "@/lib/design-tokens";
 import { SaveCollectionButton } from "./SaveCollectionButton";
 import { StarButton } from "./StarButton";
 import { SavePlantButton } from "@/components/plants/SavePlantButton";
@@ -24,23 +25,6 @@ interface Collection {
   plants: CollectionPlant[];
 }
 
-const ORG_TYPE_LABELS: Record<string, string> = {
-  hoa: "HOA",
-  city: "City",
-  nursery: "Nursery",
-  community: "Community",
-  neighborhood: "Neighborhood",
-  firewise: "Fire Safe",
-  landscaping_company: "Landscaper",
-  other: "Other",
-};
-
-const ORG_TYPE_COLORS: Record<string, string> = {
-  nursery: "bg-emerald-100 text-emerald-700",
-  community: "bg-green-100 text-green-700",
-  hoa: "bg-blue-100 text-blue-700",
-  city: "bg-purple-100 text-purple-700",
-};
 
 function getCollectionThumb(plants: CollectionPlant[]): string | null {
   for (const p of plants) {

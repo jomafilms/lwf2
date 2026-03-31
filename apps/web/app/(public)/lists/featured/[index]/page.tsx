@@ -8,6 +8,7 @@ import { createTag, assignTag } from "@/lib/tags/api";
 import { getPlantClient, getPlants, getValuesBulk } from "@/lib/api/lwf";
 import { toast } from "@/components/ui/Toast";
 import { PlantGridWithSlideOut } from "@/components/plants/PlantGridWithSlideOut";
+import { ORG_TYPE_LABELS } from "@/lib/design-tokens";
 import type { Plant } from "@lwf/types";
 
 interface FeaturedList {
@@ -26,16 +27,6 @@ interface FeaturedList {
   }>;
 }
 
-const ORG_TYPE_LABELS: Record<string, string> = {
-  hoa: "HOA",
-  city: "City", 
-  nursery: "Nursery",
-  community: "Community",
-  neighborhood: "Neighborhood",
-  firewise: "Fire Safe",
-  landscaping_company: "Landscaper",
-  other: "Other",
-};
 
 export default function FeaturedListPage() {
   const params = useParams();
