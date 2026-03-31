@@ -296,9 +296,9 @@ export default async function PlantsPage({
               </Suspense>
             </section>
 
-            {/* Section 2: Plant Collections */}
+            {/* Section 2: Plant Lists */}
             <section className="mb-12">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Plant Collections</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Plant Lists</h2>
               <p className="text-sm text-gray-600 mb-6">
                 Lists shared by nurseries, HOAs, and community organizations
               </p>

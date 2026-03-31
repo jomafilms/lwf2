@@ -110,7 +110,7 @@ export default function PublicListsPage() {
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Plant Collections
+            Plant Lists
           </h1>
           <p className="text-sm text-gray-500">
             Curated plant lists from local experts, HOAs, and fire-safe communities

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Flame, MessageSquare, Map, X, Maximize2, Search } from 'lucide-react';
+import { Flame, MessageSquare, Map, ListChecks, X, Maximize2, Search } from 'lucide-react';
 import { UserMenu } from './UserMenu';
 import { ChatPanel } from '@/components/agent/ChatPanel';
 
@@ -92,6 +92,10 @@ export function SiteNav() {
         <div className="flex items-center gap-6 text-sm font-medium">
           <Link href="/plants" className="text-gray-600 hover:text-gray-900 transition-colors">
             Plants
+          </Link>
+          <Link href="/lists" className="inline-flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors">
+            <ListChecks className="h-4 w-4" />
+            Lists
           </Link>
           <Link href="/map" className="inline-flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors">
             <Map className="h-4 w-4" />
