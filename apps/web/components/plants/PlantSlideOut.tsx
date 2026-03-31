@@ -54,6 +54,11 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
     return [p.genus, p.species].filter(Boolean).join(' ');
   }
 
+  function getImageUrl(p: Plant): string | undefined {
+    return p.primaryImage?.url ||
+      (p as unknown as { images?: { url: string }[] })?.images?.[0]?.url;
+  }
+
   const ZONE_COLORS: Record<string, string> = {
     '0-5': 'bg-red-100 text-red-800 border-red-200',
     '5-10': 'bg-orange-100 text-orange-800 border-orange-200',
@@ -103,9 +108,9 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
         <div className="p-6 space-y-6">
           {/* Image */}
           <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
-            {plant.primaryImage ? (
+            {getImageUrl(plant) ? (
               <img
-                src={plant.primaryImage.url}
+                src={getImageUrl(plant)}
                 alt={plant.commonName}
                 className="w-full h-full object-cover"
               />
