@@ -269,12 +269,15 @@ export function ChatPanelWithHistory({
           }
         }
 
-        // Auto-save after completion
-        const finalItems = [...newItems, 
-          { type: "message", role: "assistant", content: assistantText } as ChatItem
-        ];
+        // Auto-save after completion — capture actual items from state
+        // which includes plant cards added during streaming
+        let finalItems: ChatItem[] = [];
+        setItems((currentItems) => {
+          finalItems = currentItems;
+          return currentItems;
+        });
         await saveConversation(finalItems, convId);
-        
+
         // Refresh conversation list
         loadConversations();
         
