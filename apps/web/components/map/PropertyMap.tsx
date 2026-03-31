@@ -5,16 +5,32 @@ import { getMapboxToken } from "@/lib/geo/mapbox";
 import {
   calculateFireZones,
   fireZonesToGeoJSON,
+  computeBuildingZoneRings,
+  buildingZonesToGeoJSON,
   ZONE_OPACITY,
   type FireZones,
+  type BuildingZoneResult,
 } from "@/lib/geo/fire-zones";
+import { 
+  fetchBuildingFootprints,
+  getBufferedBoundingBox,
+  type BuildingFootprintResponse,
+} from "@/lib/regional/building-service";
 import { MAP_COLORS, ZONE_COLORS } from "@/lib/design-tokens";
-import { Pencil, RotateCcw, Check, Undo2 } from "lucide-react";
+import { BuildingZoneOverlay } from "./BuildingZoneOverlay";
+import { BuildingZoneLegend } from "./BuildingZoneLegend";
+import { Pencil, RotateCcw, Check, Undo2, Building2 } from "lucide-react";
 import type mapboxgl from "mapbox-gl";
+import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
 
 export interface SavedPropertyData {
   structureFootprints: [number, number][];
   fireZones: FireZones;
+}
+
+export interface BuildingZoneData {
+  buildings: FeatureCollection<Polygon | MultiPolygon>;
+  zones: FeatureCollection<Polygon | MultiPolygon>;
 }
 
 export interface ParcelBoundary {
@@ -32,9 +48,12 @@ interface PropertyMapProps {
     structureCoords: [number, number][];
     fireZones: FireZones;
   }) => void;
+  onBuildingZonesCalculated?: (data: BuildingZoneData) => void;
   savedData?: SavedPropertyData | null;
   parcelBoundary?: ParcelBoundary | null;
   onEditBoundary?: () => void;
+  showBuildingZones?: boolean;
+  onToggleBuildingZones?: () => void;
 }
 
 type DrawState =
@@ -46,14 +65,20 @@ export function PropertyMap({
   onDrawStart,
   onStructureDrawn,
   onZonesCalculated,
+  onBuildingZonesCalculated,
   savedData,
   parcelBoundary,
   onEditBoundary,
+  showBuildingZones = false,
+  onToggleBuildingZones,
 }: PropertyMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [drawState, setDrawState] = useState<DrawState>({ mode: "idle" });
   const [hasZones, setHasZones] = useState(false);
+  const [buildingZoneData, setBuildingZoneData] = useState<BuildingZoneData | null>(null);
+  const [hasBuildingZones, setHasBuildingZones] = useState(false);
+  const [loadingBuildings, setLoadingBuildings] = useState(false);
   const drawStateRef = useRef<DrawState>({ mode: "idle" });
 
   useEffect(() => {
@@ -134,6 +159,62 @@ export function PropertyMap({
     };
   }, [center]);
 
+  // Load building footprints when parcel boundary is available and showBuildingZones is true
+  useEffect(() => {
+    if (!parcelBoundary || !showBuildingZones || !mapRef.current) return;
+
+    const loadBuildingZones = async () => {
+      setLoadingBuildings(true);
+      
+      try {
+        // Get parcel boundary coordinates
+        const coords = parcelBoundary.coordinates[0];
+        if (!coords || coords.length < 3) {
+          throw new Error('Invalid parcel boundary coordinates');
+        }
+
+        // Create buffered bounding box to catch nearby buildings
+        const bbox = getBufferedBoundingBox(coords, 200);
+        
+        // Fetch building footprints
+        const response = await fetchBuildingFootprints(bbox);
+        
+        if (!response.success || !response.buildings) {
+          throw new Error(response.error || 'Failed to fetch buildings');
+        }
+
+        if (response.buildings.features.length === 0) {
+          console.info('No buildings found in area');
+          setBuildingZoneData(null);
+          setHasBuildingZones(false);
+          return;
+        }
+
+        // Compute zone rings from building footprints
+        const zoneRings = computeBuildingZoneRings(response.buildings);
+        const zonesGeoJSON = buildingZonesToGeoJSON(zoneRings);
+
+        const newData: BuildingZoneData = {
+          buildings: response.buildings,
+          zones: zonesGeoJSON,
+        };
+
+        setBuildingZoneData(newData);
+        setHasBuildingZones(true);
+        onBuildingZonesCalculated?.(newData);
+
+      } catch (error) {
+        console.error('Failed to load building zones:', error);
+        setBuildingZoneData(null);
+        setHasBuildingZones(false);
+      } finally {
+        setLoadingBuildings(false);
+      }
+    };
+
+    loadBuildingZones();
+  }, [parcelBoundary, showBuildingZones, onBuildingZonesCalculated]);
+
   // Update parcel boundary when it changes after map init
   useEffect(() => {
     const map = mapRef.current;
@@ -205,6 +286,16 @@ export function PropertyMap({
   return (
     <div className="relative h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
+      
+      {/* Building zone overlay */}
+      {showBuildingZones && buildingZoneData && (
+        <BuildingZoneOverlay
+          map={mapRef.current}
+          buildings={buildingZoneData.buildings}
+          zones={buildingZoneData.zones}
+          onZonesReady={setHasBuildingZones}
+        />
+      )}
 
       {/* Parcel info badge */}
       {parcelBoundary && !isDrawing && (
@@ -214,6 +305,9 @@ export function PropertyMap({
             <p className="text-[11px] opacity-90">
               {parcelBoundary.address} · {parcelBoundary.acreage} acres
             </p>
+            {loadingBuildings && (
+              <p className="text-[10px] opacity-75 mt-1">Loading buildings...</p>
+            )}
           </div>
           {onEditBoundary && (
             <button
@@ -224,6 +318,25 @@ export function PropertyMap({
               Edit
             </button>
           )}
+        </div>
+      )}
+
+      {/* Building zones toggle */}
+      {parcelBoundary && !isDrawing && (
+        <div className="absolute right-4 top-4">
+          <button
+            onClick={onToggleBuildingZones}
+            disabled={loadingBuildings || !onToggleBuildingZones}
+            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium shadow-lg backdrop-blur-sm transition-colors ${
+              showBuildingZones
+                ? "bg-blue-600/90 text-white hover:bg-blue-600"
+                : "bg-white/90 text-gray-700 hover:bg-white"
+            } disabled:opacity-50`}
+            title={showBuildingZones ? "Hide building zones" : "Show fire-reluctant zones from buildings"}
+          >
+            <Building2 className="h-3 w-3" />
+            Building Zones
+          </button>
         </div>
       )}
 
@@ -291,8 +404,8 @@ export function PropertyMap({
         )}
       </div>
 
-      {/* Zone legend */}
-      {hasZones && !isDrawing && (
+      {/* Zone legend (manual drawing zones) */}
+      {hasZones && !isDrawing && !showBuildingZones && (
         <div className="absolute bottom-6 left-4 rounded-lg bg-black/70 px-3 py-2.5 text-white shadow-lg backdrop-blur-sm">
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
@@ -317,6 +430,17 @@ export function PropertyMap({
               30-100ft
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Building zone legend */}
+      {showBuildingZones && (
+        <div className="absolute bottom-6 left-4">
+          <BuildingZoneLegend 
+            hasZones={hasBuildingZones} 
+            isDrawing={isDrawing}
+            compact={false}
+          />
         </div>
       )}
     </div>

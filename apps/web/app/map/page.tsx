@@ -7,6 +7,7 @@ import {
   PropertyMap,
   type SavedPropertyData,
   type ParcelBoundary,
+  type BuildingZoneData,
 } from "@/components/map/PropertyMap";
 import { ChatPanelWithHistory } from "@/components/agent/ChatPanelWithHistory";
 import { ScoresPanel } from "@/components/scoring/ScoresPanel";
@@ -58,6 +59,10 @@ export default function MapPage() {
   const [showAssessment, setShowAssessment] = useState(false);
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(null);
   const [showAssessmentSummary, setShowAssessmentSummary] = useState(false);
+
+  // Building zones state  
+  const [showBuildingZones, setShowBuildingZones] = useState(false);
+  const [buildingZoneData, setBuildingZoneData] = useState<BuildingZoneData | null>(null);
 
   // Load saved property from URL param
   useEffect(() => {
@@ -169,6 +174,10 @@ export default function MapPage() {
     setZoneData(data);
     setSaveState("idle");
     setSavedPropertyId(null);
+  }, []);
+
+  const handleBuildingZonesCalculated = useCallback((data: BuildingZoneData) => {
+    setBuildingZoneData(data);
   }, []);
 
   const handleEditBoundary = useCallback(() => {
@@ -372,9 +381,12 @@ export default function MapPage() {
             onDrawStart={() => setStep("draw")}
             onStructureDrawn={() => setStep("zones")}
             onZonesCalculated={handleZonesCalculated}
+            onBuildingZonesCalculated={handleBuildingZonesCalculated}
             savedData={savedData}
             parcelBoundary={parcelBoundary}
             onEditBoundary={handleEditBoundary}
+            showBuildingZones={showBuildingZones}
+            onToggleBuildingZones={() => setShowBuildingZones(!showBuildingZones)}
           />
         </div>
 
