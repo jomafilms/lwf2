@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AddressSearch } from "@/components/map/AddressSearch";
+import { LazyZoneMapHero } from "@/components/map/LazyZoneMapHero";
+import { DefensibleSpaceInfo } from "@/components/zones/DefensibleSpaceInfo";
 import type { GeocodingResult } from "@/lib/geo/mapbox";
 
 export default function HomePage() {
@@ -11,6 +13,7 @@ export default function HomePage() {
   const [communityStats, setCommunityStats] = useState<{
     propertiesAssessed: number;
   } | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<GeocodingResult | null>(null);
 
   useEffect(() => {
     // Load community stats for the progress counter
@@ -38,6 +41,11 @@ export default function HomePage() {
       address: result.address,
     });
     router.push(`/map?${params.toString()}`);
+  };
+
+  const handleHeroAddressSelect = (result: GeocodingResult) => {
+    setSelectedAddress(result);
+    // Don't immediately navigate - show preview first
   };
 
   return (
@@ -70,11 +78,104 @@ export default function HomePage() {
             >
               Map My Property
             </Link>
+            <Link
+              href="/hardening"
+              className="inline-flex items-center justify-center rounded-lg border border-orange-600 px-6 py-3 text-lg font-semibold text-orange-600 hover:bg-orange-50 transition-colors"
+            >
+              Home Hardening
+            </Link>
           </div>
 
           <div className="mx-auto mt-6 hidden max-w-md sm:block">
             <AddressSearch onSelect={handleSelect} placeholder="Or start by entering your address" />
           </div>
+        </div>
+      </section>
+
+      {/* Zone Map Hero */}
+      <section className="px-4 py-12 sm:px-6 sm:py-16 bg-stone-50">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 lg:gap-12 lg:grid-cols-2 lg:items-center">
+            {/* Left: Map */}
+            <div className="order-2 lg:order-1">
+              <LazyZoneMapHero
+                onAddressSelect={handleHeroAddressSelect}
+                className="h-96 sm:h-[28rem]"
+              />
+            </div>
+            
+            {/* Right: Content + Address Search + Preview */}
+            <div className="order-1 lg:order-2">
+              <h2 className="text-3xl font-bold text-stone-900 mb-4 lg:text-4xl">
+                Visualize Your Fire Zones
+              </h2>
+              <p className="text-lg text-stone-600 mb-6 leading-relaxed">
+                See exactly where fire-reluctant plants should be placed around your property. 
+                Our interactive map shows the critical 5/10/30/100-foot defensible space zones 
+                that can protect your home from wildfire.
+              </p>
+
+              {/* Address Search */}
+              <div className="mb-6">
+                <AddressSearch
+                  onSelect={handleHeroAddressSelect}
+                  placeholder="Enter your address to see your fire zones"
+                />
+              </div>
+
+              {/* Mini Preview */}
+              {selectedAddress && (
+                <div className="mb-6 rounded-xl border-2 border-green-200 bg-green-50 p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-green-900 mb-1">Preview Ready</h3>
+                      <p className="text-sm text-green-700 truncate">{selectedAddress.address}</p>
+                      <div className="mt-3">
+                        <LazyZoneMapHero
+                          showMiniPreview={true}
+                          previewAddress={selectedAddress.address}
+                          className="h-32 rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                    <button
+                      onClick={() => handleSelect(selectedAddress)}
+                      className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors"
+                    >
+                      View Full Assessment →
+                    </button>
+                    <button
+                      onClick={() => setSelectedAddress(null)}
+                      className="text-green-700 hover:text-green-800 text-sm font-medium"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Key Stats */}
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="bg-white rounded-lg p-4 border border-stone-200">
+                  <div className="text-2xl font-bold text-red-600">4</div>
+                  <div className="text-sm text-stone-600">Defense Zones</div>
+                </div>
+                <div className="bg-white rounded-lg p-4 border border-stone-200">
+                  <div className="text-2xl font-bold text-orange-600">100ft</div>
+                  <div className="text-sm text-stone-600">Protection Radius</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Defensible Space Information */}
+      <section className="px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <DefensibleSpaceInfo />
         </div>
       </section>
 
