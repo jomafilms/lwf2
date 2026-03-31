@@ -6,14 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useSession, signOut } from '@/lib/auth-client';
 import { useDemoRole } from '@/lib/demo/use-demo-role';
 import {
-  User,
   LayoutDashboard,
-  TreePine,
+  ListChecks,
   Home,
   Settings,
   LogOut,
   ChevronDown,
-  Users,
   MessageCircle,
 } from 'lucide-react';
 
@@ -65,11 +63,8 @@ export function UserMenu() {
   // The menu will show all options and the server will handle authorization
   const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/dashboard/landscaper', label: 'Landscaper Tools', icon: Users },
     { href: '/dashboard/chat', label: 'Chat Assistant', icon: MessageCircle },
-    { href: '/dashboard/conversations', label: 'Chat History', icon: MessageCircle },
-    { href: '/my-plants', label: 'My Plants', icon: TreePine },
-    { href: '/dashboard/lists', label: 'My Lists', icon: TreePine },
+    { href: '/dashboard/lists', label: 'My Lists', icon: ListChecks },
     { href: '/dashboard', label: 'My Properties', icon: Home },
     { href: '/dashboard/preferences', label: 'My Preferences', icon: Settings },
   ];

@@ -6,10 +6,8 @@ import { eq, desc, inArray } from "drizzle-orm";
 import Link from "next/link";
 import {
   Home,
-  TreePine,
   ListChecks,
   Settings,
-  Shield,
   MapPin,
   Calendar,
   Layers,
@@ -17,15 +15,13 @@ import {
   FileText,
   Users,
 } from "lucide-react";
-
+import { DeletePropertyButton } from "./DeletePropertyButton";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
-  const role = (await getCurrentUserRole()) || 'homeowner';
-  const badgeColor = "bg-green-100 text-green-800 border-green-200";
-  const roleLabel = (role as string) === "hoa_admin" ? "HOA Admin" : "Homeowner";
+  const role = (await getCurrentUserRole()) || "homeowner";
 
   // Fetch user's saved properties
   const userProperties = await db
@@ -64,24 +60,6 @@ export default async function DashboardPage() {
     case "homeowner":
       sections = [
         {
-          href: "/dashboard",
-          label: "My Properties",
-          description: "Manage your properties and fire zones",
-          icon: Home,
-        },
-        {
-          href: "/dashboard/certification",
-          label: "Insurance & Certification",
-          description: "Track Wildfire Prepared Home certification progress",
-          icon: Shield,
-        },
-        {
-          href: "/my-plants",
-          label: "My Plants",
-          description: "Your saved plants and shopping cart",
-          icon: TreePine,
-        },
-        {
           href: "/dashboard/lists",
           label: "My Lists",
           description: "Your saved plant lists and collections",
@@ -116,12 +94,6 @@ export default async function DashboardPage() {
           description: "Submit plans for client approval",
           icon: ListChecks,
         },
-        {
-          href: "/my-plants",
-          label: "Plant Database",
-          description: "Browse fire-resistant plants",
-          icon: TreePine,
-        },
       ];
       break;
 
@@ -131,7 +103,7 @@ export default async function DashboardPage() {
           href: "/dashboard/inventory",
           label: "Inventory Management",
           description: "Manage plant stock and fire-resistance ratings",
-          icon: TreePine,
+          icon: Home,
         },
         {
           href: "/dashboard/orders",
@@ -295,13 +267,15 @@ export default async function DashboardPage() {
                   : null;
 
                 return (
-                  <Link
+                  <div
                     key={prop.id}
-                    href={`/map?property=${prop.id}`}
                     className="group rounded-lg border bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
                   >
                     <div className="flex items-start justify-between">
-                      <div className="min-w-0 flex-1">
+                      <Link
+                        href={`/map?property=${prop.id}`}
+                        className="min-w-0 flex-1"
+                      >
                         <p className="truncate text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
                           {prop.address}
                         </p>
@@ -337,10 +311,10 @@ export default async function DashboardPage() {
                             View Plan Document
                           </Link>
                         )}
-                      </div>
-                      <MapPin className="h-4 w-4 flex-shrink-0 text-gray-300 group-hover:text-orange-400 transition-colors" />
+                      </Link>
+                      <DeletePropertyButton propertyId={prop.id} />
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>

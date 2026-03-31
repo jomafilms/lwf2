@@ -26,7 +26,7 @@ interface ChatPanelProps {
 
 const SUGGESTIONS = [
   "What should I plant in Zone 0?",
-  "Low-water native plants for Ashland",
+  "Low-water native plants for Rogue Valley",
   "Deer-resistant shrubs for Zone 1",
   "Best ground covers near a house",
 ];

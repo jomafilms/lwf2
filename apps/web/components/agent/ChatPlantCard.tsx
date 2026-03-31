@@ -3,7 +3,6 @@
 import { Leaf, Droplets, Shield, Bug, ExternalLink } from "lucide-react";
 import { SavePlantButton } from "@/components/plants/SavePlantButton";
 import { AddToListButton } from "@/components/plants/AddToListButton";
-import { PlanToggleButton } from "@/components/plants/PlanToggleButton";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -62,8 +61,7 @@ export function ChatPlantCard({ plant }: ChatPlantCardProps) {
   const cat = plant.characterScore != null ? scoreCategory(plant.characterScore) : null;
 
   return (
-    <a
-      href={`/plants/${plant.id}`}
+    <div
       className="group flex gap-3 rounded-lg border border-neutral-200 bg-white p-3 hover:border-neutral-300 hover:shadow-sm transition-all"
     >
       {/* Thumbnail */}
@@ -161,24 +159,20 @@ export function ChatPlantCard({ plant }: ChatPlantCardProps) {
         )}
 
         {/* Action buttons */}
-        <div className="mt-1.5 flex items-center gap-1.5" onClick={(e) => e.preventDefault()}>
+        <div className="mt-1.5 flex items-center gap-1.5">
           <SavePlantButton plantId={plant.id} size="sm" />
           <AddToListButton plantId={plant.id} />
-          <PlanToggleButton
-            plantId={plant.id}
-            commonName={plant.commonName}
-            botanicalName={botanical}
-            imageUrl={plant.imageUrl}
-            variant="pill"
-          />
         </div>
 
         {/* View details link */}
-        <span className="mt-1 inline-flex items-center gap-0.5 text-[10px] text-neutral-400 group-hover:text-orange-500 transition-colors">
+        <a
+          href={`/plants/${plant.id}`}
+          className="mt-1 inline-flex items-center gap-0.5 text-[10px] text-neutral-400 hover:text-orange-500 transition-colors"
+        >
           View details <ExternalLink className="h-2.5 w-2.5" />
-        </span>
+        </a>
       </div>
-    </a>
+    </div>
   );
 }
 
