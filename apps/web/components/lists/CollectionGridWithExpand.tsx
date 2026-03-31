@@ -7,6 +7,7 @@ import { SlideOutPanel } from "@/components/ui/SlideOutPanel";
 import { ORG_TYPE_LABELS, ORG_TYPE_COLORS } from "@/lib/design-tokens";
 import { SaveCollectionButton } from "./SaveCollectionButton";
 import { StarButton } from "./StarButton";
+import { PlantSlideOut } from "@/components/plants/PlantSlideOut";
 import { SavePlantButton } from "@/components/plants/SavePlantButton";
 import { AddToListButton } from "@/components/plants/AddToListButton";
 
@@ -41,6 +42,7 @@ export function CollectionGridWithExpand({
   collections,
 }: CollectionGridWithExpandProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
 
   const handleCardClick = useCallback((index: number) => {
     setSelectedIndex((prev) => (prev === index ? null : index));
@@ -48,6 +50,11 @@ export function CollectionGridWithExpand({
 
   const handleClose = useCallback(() => {
     setSelectedIndex(null);
+    setSelectedPlantId(null);
+  }, []);
+
+  const handlePlantClose = useCallback(() => {
+    setSelectedPlantId(null);
   }, []);
 
   const selectedCollection =
@@ -166,13 +173,18 @@ export function CollectionGridWithExpand({
             {/* Plant grid */}
             <div className="grid grid-cols-3 gap-3">
               {selectedCollection.plants.map((plant) => (
-                <div key={plant.plantId} className="group/plant relative">
+                <button
+                  key={plant.plantId}
+                  type="button"
+                  onClick={() => setSelectedPlantId(plant.plantId)}
+                  className="group/plant relative text-left cursor-pointer"
+                >
                   <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 relative">
                     {plant.imageUrl ? (
                       <img
                         src={plant.imageUrl}
                         alt={plant.commonName}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover/plant:scale-105 transition-transform"
                         loading="lazy"
                       />
                     ) : (
@@ -181,18 +193,18 @@ export function CollectionGridWithExpand({
                       </div>
                     )}
                     {/* Action buttons on hover */}
-                    <div className="absolute top-1 right-1 flex items-center gap-0.5 opacity-0 group-hover/plant:opacity-100 transition-opacity">
+                    <div className="absolute top-1 left-1 flex items-center gap-0.5 opacity-0 group-hover/plant:opacity-100 transition-opacity z-10" onClick={(e) => e.stopPropagation()}>
                       <SavePlantButton plantId={plant.plantId} size="sm" />
                       <AddToListButton plantId={plant.plantId} />
                     </div>
                   </div>
-                  <p className="text-xs font-medium text-gray-900 mt-1 line-clamp-1">
+                  <p className="text-xs font-medium text-gray-900 mt-1 line-clamp-1 group-hover/plant:text-orange-600 transition-colors">
                     {plant.commonName}
                   </p>
                   <p className="text-[10px] text-gray-400 italic line-clamp-1">
                     {plant.botanicalName}
                   </p>
-                </div>
+                </button>
               ))}
             </div>
 
@@ -208,6 +220,13 @@ export function CollectionGridWithExpand({
           </div>
         )}
       </SlideOutPanel>
+
+      {/* Stacked plant detail — renders on top of list panel */}
+      <PlantSlideOut
+        plantId={selectedPlantId}
+        onClose={handlePlantClose}
+        zIndex={60}
+      />
     </>
   );
 }

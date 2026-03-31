@@ -1,17 +1,23 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useSwipeToDismiss } from '@/lib/hooks/use-swipe-to-dismiss';
 
 interface SlideOutPanelProps {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
   title?: string;
+  /** Higher z-index for stacked panels (default 50) */
+  zIndex?: number;
 }
 
-export function SlideOutPanel({ open, onClose, children, title }: SlideOutPanelProps) {
+export function SlideOutPanel({ open, onClose, children, title, zIndex = 50 }: SlideOutPanelProps) {
+  const dismiss = useCallback(() => onClose(), [onClose]);
+  const swipeHandlers = useSwipeToDismiss(dismiss);
+
   // Close on escape key
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {
@@ -22,7 +28,6 @@ export function SlideOutPanel({ open, onClose, children, title }: SlideOutPanelP
 
     if (open) {
       document.addEventListener('keydown', handleEscape);
-      // Prevent body scroll when panel is open
       document.body.style.overflow = 'hidden';
     }
 
@@ -35,38 +40,34 @@ export function SlideOutPanel({ open, onClose, children, title }: SlideOutPanelP
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0" style={{ zIndex }}>
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 animate-fade-in"
         onClick={onClose}
       />
-      
-      {/* Panel - Desktop: slide from right, Mobile: slide from bottom */}
+
+      {/* Panel */}
       <div
+        {...swipeHandlers}
         className={cn(
-          "fixed z-50 bg-white shadow-lg",
-          // Desktop (md and up): slide from right, 480px wide, pinned to right edge
+          "fixed bg-white shadow-lg",
           "md:top-0 md:bottom-0 md:right-0 md:left-auto md:w-[480px] md:max-h-none md:rounded-none md:animate-slide-right",
-          // Mobile: slide from bottom, max 85vh height
           "inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl animate-slide-up md:animate-none",
-          // Scrollable content
           "flex flex-col overflow-hidden"
         )}
+        style={{ zIndex: zIndex + 1 }}
       >
-        {/* Header with close button and drag handle */}
+        {/* Header */}
         <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-200">
-          {/* Mobile drag handle */}
           <div className="w-8 h-1 bg-gray-300 rounded-full mx-auto md:hidden" />
-          
-          {/* Title */}
+
           {title && (
             <h2 className="text-lg font-semibold text-gray-900 hidden md:block">
               {title}
             </h2>
           )}
-          
-          {/* Close button */}
+
           <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-100 transition-colors"

@@ -18,11 +18,20 @@
           "width": 529,
           "height": 496
         }
+      },
+      {
+        "id": "uproarious-jackal",
+        "type": "terminal",
+        "title": "uproarious-jackal",
+        "placement": {
+          "width": 529,
+          "height": 496
+        }
       }
     ],
-    "activeItemId": "interdimensional-wombat",
+    "activeItemId": "uproarious-jackal",
     "scroll": {
-      "x": -11
+      "x": 190.25
     },
     "unfocusedScale": 0.5
   },

@@ -14,9 +14,11 @@ import { getPlantClient } from '@/lib/api/lwf';
 interface PlantSlideOutProps {
   plantId: string | null;
   onClose: () => void;
+  /** Higher z-index for stacked panels */
+  zIndex?: number;
 }
 
-export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
+export function PlantSlideOut({ plantId, onClose, zIndex }: PlantSlideOutProps) {
   const [plant, setPlant] = useState<Plant | null>(null);
   const [presentation, setPresentation] = useState<PlantPresentation | null>(null);
   const [loading, setLoading] = useState(false);
@@ -54,7 +56,7 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
 
   const isOpen = !!plantId;
   return (
-    <SlideOutPanel open={isOpen} onClose={onClose}>
+    <SlideOutPanel open={isOpen} onClose={onClose} zIndex={zIndex}>
       {loading && (
         <div className="p-6 space-y-4">
           <div className="animate-pulse">
