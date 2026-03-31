@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { AddressSearch } from "@/components/map/AddressSearch";
 import {
   PropertyMap,
@@ -352,6 +353,17 @@ export default function MapPage() {
             <FileText className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Download Plan</span>
           </a>
+        )}
+
+        {/* Hardening Checklist button */}
+        {step === "zones" && (
+          <Link
+            href="/hardening"
+            className="flex items-center gap-1.5 rounded-lg bg-orange-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-orange-700 transition-colors sm:text-sm"
+          >
+            <ClipboardCheck className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Home Hardening</span>
+          </Link>
         )}
 
         {/* Chat toggle */}
