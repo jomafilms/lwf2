@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrentUserRole } from "@/lib/user-role";
-import { getEffectiveRole } from "@/lib/demo/get-effective-role";
-import { getDemoRole } from "@/lib/demo/get-demo-role";
 import { db, properties, plans } from "@lwf/database";
 import { eq, desc, inArray } from "drizzle-orm";
 import Link from "next/link";
@@ -42,9 +40,7 @@ export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
-  // Get effective role (demo override or actual user role)
-  const role = await getEffectiveRole();
-  const demoRole = await getDemoRole();
+  const role = (await getCurrentUserRole()) || 'homeowner';
   const badgeColor = roleBadgeColors[role] || roleBadgeColors.homeowner;
   const roleLabel = roleLabels[role] || "Homeowner";
 
@@ -81,7 +77,7 @@ export default async function DashboardPage() {
     icon: any;
   }> = [];
 
-  switch (role) {
+  switch (role as string) {
     case "homeowner":
       sections = [
         {
@@ -272,11 +268,6 @@ export default async function DashboardPage() {
                   <Shield className="h-3 w-3" />
                   {roleLabel}
                 </span>
-                {demoRole && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
-                    🎭 Demo Mode
-                  </span>
-                )}
               </div>
             </div>
           </div>

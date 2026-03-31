@@ -20,7 +20,7 @@ export default function HomePage() {
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-stone-500 sm:mt-6 sm:text-lg">
             1,300+ plants rated for fire safety. Built for communities
-            in the Rogue Valley — starting with Ashland, OR.
+            in the Rogue Valley.
           </p>
         </div>
       </section>
@@ -90,7 +90,7 @@ export default function HomePage() {
           <span className="text-stone-300 hidden sm:inline">·</span>
           <span className="text-stone-500">Data sourced & verified</span>
           <span className="text-stone-300 hidden sm:inline">·</span>
-          <span className="text-stone-500">Built for Ashland, OR</span>
+          <span className="text-stone-500">Built for the Rogue Valley</span>
         </div>
       </section>
 

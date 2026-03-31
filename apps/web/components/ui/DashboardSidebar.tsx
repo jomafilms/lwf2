@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useDemoRole } from '@/lib/demo/use-demo-role';
 import {
   Home,
   ListChecks,
@@ -42,10 +41,8 @@ export function DashboardSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
-  const { demoRole } = useDemoRole();
-  
-  // Determine effective role (demo role or fallback to homeowner)
-  const effectiveRole = demoRole || 'homeowner';
+  // TODO: Replace with real user role from auth when role-gating is needed
+  const effectiveRole = 'homeowner';
   
   // Filter nav items based on role
   const filteredNavItems = navItems.filter(item => 
@@ -103,14 +100,6 @@ export function DashboardSidebar() {
         })}
       </nav>
 
-      {/* Role indicator at bottom */}
-      {!isCollapsed && (
-        <div className="p-4 border-t border-gray-200">
-          <div className="text-xs text-gray-500">
-            Current role: <span className="font-medium">{effectiveRole.replace('_', ' ')}</span>
-          </div>
-        </div>
-      )}
     </>
   );
 
