@@ -94,6 +94,7 @@ export function PlantSlideOut({ plantId, onClose, zIndex }: PlantSlideOutProps) 
                 src={getPlantImageUrl(plant)}
                 alt={plant.commonName}
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100">

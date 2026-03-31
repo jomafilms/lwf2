@@ -11,7 +11,9 @@ import {
   Lock,
   Building2,
   Star,
+  StarOff,
   ExternalLink,
+  Copy,
 } from "lucide-react";
 import {
   fetchTags,
@@ -19,6 +21,7 @@ import {
   deleteTag,
   updateTag,
   fetchTagAssignments,
+  forkTag,
   type Tag,
 } from "@/lib/tags/api";
 import { CHART_COLORS } from "@/lib/design-tokens";
@@ -126,6 +129,26 @@ export default function ListsPage() {
     }
   }
 
+  async function handleUnstar(tagId: string) {
+    try {
+      await fetch(`/api/tags/${tagId}/star`, { method: "POST" });
+      toast("Star removed");
+      loadTags();
+    } catch {
+      toast("Failed to remove star");
+    }
+  }
+
+  async function handleCopyStarred(tagId: string) {
+    try {
+      const result = await forkTag(tagId);
+      toast(`Copied to My Lists! (${result.copiedItems} plants)`);
+      loadTags();
+    } catch {
+      toast("Failed to copy list");
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -222,9 +245,8 @@ export default function ListsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {starredLists.slice(0, 6).map((item) => (
-                <Link
+                <div
                   key={item.assignment.id}
-                  href={`/lists/${item.tag.id}`}
                   className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4"
                 >
                   <div className="flex items-start gap-3">
@@ -235,16 +257,34 @@ export default function ListsPage() {
                       />
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-gray-900 hover:text-orange-600 transition-colors truncate">
-                        {item.tag.name}
-                      </h3>
+                      <Link href={`/lists/${item.tag.id}`}>
+                        <h3 className="font-medium text-gray-900 hover:text-orange-600 transition-colors truncate">
+                          {item.tag.name}
+                        </h3>
+                      </Link>
                       <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
                         <ExternalLink className="w-3 h-3" />
                         <span>Public list</span>
                       </div>
                     </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <button
+                        onClick={() => handleCopyStarred(item.tag.id)}
+                        className="p-1.5 text-gray-400 hover:text-orange-500 transition-colors"
+                        title="Copy to My Lists"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleUnstar(item.tag.id)}
+                        className="p-1.5 text-gray-400 hover:text-yellow-500 transition-colors"
+                        title="Remove star"
+                      >
+                        <StarOff className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
             {starredLists.length > 6 && (

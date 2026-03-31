@@ -133,7 +133,7 @@ export function CollectionGridWithExpand({
               const heroUrl = getCollectionThumb(selectedCollection.plants);
               return heroUrl ? (
                 <div className="aspect-[16/9] rounded-lg overflow-hidden bg-gray-100">
-                  <img src={heroUrl} alt="" className="w-full h-full object-cover" />
+                  <img src={heroUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
                 </div>
               ) : null;
             })()}
@@ -170,9 +170,9 @@ export function CollectionGridWithExpand({
               {selectedCollection.plants.length} plants in this list
             </div>
 
-            {/* Plant grid */}
+            {/* Plant grid — show first 18, link to full list for more */}
             <div className="grid grid-cols-3 gap-3">
-              {selectedCollection.plants.map((plant) => (
+              {selectedCollection.plants.slice(0, 18).map((plant) => (
                 <button
                   key={plant.plantId}
                   type="button"
@@ -206,6 +206,14 @@ export function CollectionGridWithExpand({
                   </p>
                 </button>
               ))}
+              {selectedCollection.plants.length > 18 && (
+                <Link
+                  href={`/lists/featured/${selectedIndex}`}
+                  className="aspect-square rounded-lg bg-gray-100 flex items-center justify-center text-sm font-medium text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors"
+                >
+                  +{selectedCollection.plants.length - 18} more
+                </Link>
+              )}
             </div>
 
             {/* Actions */}

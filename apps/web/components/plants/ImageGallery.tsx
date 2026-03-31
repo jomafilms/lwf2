@@ -44,6 +44,7 @@ export function ImageGallery({ images, plantName }: ImageGalleryProps) {
             src={images[selectedIndex].url}
             alt={`${plantName} - ${images[selectedIndex].type || 'image'}`}
             className="w-full h-full object-cover"
+            loading="lazy"
           />
         </div>
 

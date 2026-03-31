@@ -17,11 +17,26 @@ export default function PublicListPage() {
   const params = useParams();
   const tagId = params.id as string;
 
+  const PAGE_SIZE = 24;
   const [tag, setTag] = useState<Tag | null>(null);
+  const [allPlantIds, setAllPlantIds] = useState<string[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Fetch a page of plant details from a list of IDs
+  const fetchPlantPage = useCallback(async (ids: string[]) => {
+    const results = await Promise.all(
+      ids.map(async (id) => {
+        try { return await getPlant(id); }
+        catch { return null; }
+      })
+    );
+    return results.filter((p): p is Plant => p !== null);
+  }, []);
 
   const loadData = useCallback(async () => {
     try {
@@ -34,23 +49,34 @@ export default function PublicListPage() {
 
       setTag(t);
 
-      const plantItems = items.filter((i) => i.targetType === "plant");
-      const plantResults = await Promise.all(
-        plantItems.map(async (item) => {
-          try {
-            return await getPlant(item.targetId);
-          } catch {
-            return null;
-          }
-        })
-      );
-      setPlants(plantResults.filter((p): p is Plant => p !== null));
+      const plantIds = items
+        .filter((i) => i.targetType === "plant")
+        .map((i) => i.targetId);
+      setAllPlantIds(plantIds);
+
+      // Load first page
+      const firstPage = plantIds.slice(0, PAGE_SIZE);
+      const plantResults = await fetchPlantPage(firstPage);
+      setPlants(plantResults);
+      setPage(1);
     } catch {
       setError("List not found");
     } finally {
       setLoading(false);
     }
-  }, [tagId]);
+  }, [tagId, fetchPlantPage]);
+
+  const loadMore = useCallback(async () => {
+    const start = page * PAGE_SIZE;
+    const nextIds = allPlantIds.slice(start, start + PAGE_SIZE);
+    if (nextIds.length === 0) return;
+
+    setLoadingMore(true);
+    const more = await fetchPlantPage(nextIds);
+    setPlants((prev) => [...prev, ...more]);
+    setPage((prev) => prev + 1);
+    setLoadingMore(false);
+  }, [page, allPlantIds, fetchPlantPage]);
 
   useEffect(() => {
     loadData();
@@ -122,7 +148,7 @@ export default function PublicListPage() {
                 </span>
               </div>
               <p className="text-sm text-gray-500 mt-1">
-                {plants.length} plant{plants.length !== 1 ? "s" : ""}
+                {allPlantIds.length} plant{allPlantIds.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
@@ -154,7 +180,20 @@ export default function PublicListPage() {
             <p className="text-gray-500">This list is empty</p>
           </div>
         ) : (
-          <PlantGridWithSlideOut plants={plants} valuesMap={{}} />
+          <>
+            <PlantGridWithSlideOut plants={plants} valuesMap={{}} />
+            {plants.length < allPlantIds.length && (
+              <div className="mt-6 text-center">
+                <button
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="px-6 py-2.5 text-sm font-medium text-orange-600 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors disabled:opacity-50"
+                >
+                  {loadingMore ? "Loading..." : `Load more (${allPlantIds.length - plants.length} remaining)`}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

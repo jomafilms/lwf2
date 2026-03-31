@@ -39,6 +39,7 @@ export function PlantCardCompact({ plant, onPlantClick }: PlantCardCompactProps)
             src={imgSrc}
             alt={name}
             className="h-full w-full object-cover"
+            loading="lazy"
           />
         ) : (
           <div className="flex h-full items-center justify-center">

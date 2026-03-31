@@ -209,6 +209,7 @@ export function PlantCompare({ plantIds }: PlantCompareProps) {
                       src={data.plant.primaryImage.url}
                       alt={data.plant.commonName}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      loading="lazy"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100">

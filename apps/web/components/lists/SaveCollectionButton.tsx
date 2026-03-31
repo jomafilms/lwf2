@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star } from "lucide-react";
+import { Copy } from "lucide-react";
 import { createTag, assignTag } from "@/lib/tags/api";
 import { toast } from "@/components/ui/Toast";
 
@@ -40,7 +40,7 @@ export function SaveCollectionButton({
       );
 
       setIsSaved(true);
-      toast(`"${collectionName}" saved to your lists!`);
+      toast(`"${collectionName}" copied to My Lists!`);
     } catch {
       toast("Sign in to save collections");
     } finally {
@@ -54,12 +54,12 @@ export function SaveCollectionButton({
       disabled={loading || isSaved}
       className={`inline-flex items-center justify-center p-1.5 rounded-full shadow-sm transition-colors disabled:opacity-50 ${
         isSaved
-          ? "bg-yellow-400 text-white"
-          : "bg-white/90 text-gray-600 hover:bg-white hover:text-yellow-500"
+          ? "bg-orange-500 text-white"
+          : "bg-white/90 text-gray-600 hover:bg-white hover:text-orange-500"
       } ${className}`}
-      title={isSaved ? "Saved to your lists" : "Save collection to your lists"}
+      title={isSaved ? "Copied to your lists" : "Copy to My Lists"}
     >
-      <Star className={`w-4 h-4 ${isSaved ? "fill-current" : ""}`} />
+      <Copy className="w-4 h-4" />
     </button>
   );
 }
