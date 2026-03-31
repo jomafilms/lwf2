@@ -7,11 +7,10 @@
 4. Pick next PENDING task
 
 ## ✅ COMPLETED
-_(none yet)_
+- [x] B1: Home page zone map hero — merged 04:40 UTC
+- [x] B2: Home hardening checklist — merged 04:40 UTC
 
 ## 🔄 IN PROGRESS
-- [ ] B1: Home page zone map hero — branch `feature/home-zone-hero`
-- [ ] B2: Home hardening checklist — branch `feature/hardening-checklist`
 - [ ] B3: HOA audience UX — branch `feature/hoa-dashboard`
 
 ## 📋 PENDING (priority order)
