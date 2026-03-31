@@ -10,13 +10,7 @@ import {
   Star,
   MessageSquare,
   Settings,
-  Package,
   Users,
-  FileText,
-  Send,
-  TreePine,
-  BarChart3,
-  Download,
   ShieldCheck,
   Mail,
   ChevronLeft,
@@ -37,26 +31,11 @@ const navItems: NavItem[] = [
   { href: '/dashboard/starred', label: 'Starred Lists', icon: Star, roles: ['all'] },
   { href: '/dashboard/chat', label: 'Chat Assistant', icon: MessageSquare, roles: ['all'] },
   { href: '/dashboard/preferences', label: 'My Preferences', icon: Settings, roles: ['all'] },
-  { href: '/dashboard/orders', label: 'My Orders', icon: Package, roles: ['all'] },
-  
-  // Landscaper
-  { href: '/dashboard/landscaper', label: 'Clients', icon: Users, roles: ['landscaper'] },
-  { href: '/dashboard/plans', label: 'Plans', icon: FileText, roles: ['landscaper'] },
-  { href: '/dashboard/submissions', label: 'Submissions', icon: Send, roles: ['landscaper'] },
-  
-  // Nursery Admin
-  { href: '/dashboard/nursery', label: 'Inventory', icon: TreePine, roles: ['nursery_admin'] },
-  { href: '/dashboard/nursery/demand', label: 'Demand Signals', icon: BarChart3, roles: ['nursery_admin'] },
-  { href: '/dashboard/nursery/profile', label: 'Profile', icon: Settings, roles: ['nursery_admin'] },
-  
-  // HOA Admin
+
+  // HOA / Org Admin
   { href: '/dashboard/hoa', label: 'Members', icon: Users, roles: ['hoa_admin'] },
   { href: '/dashboard/hoa/readiness', label: 'Fire Readiness', icon: ShieldCheck, roles: ['hoa_admin'] },
   { href: '/dashboard/hoa/invites', label: 'Invites', icon: Mail, roles: ['hoa_admin'] },
-  
-  // City Admin
-  { href: '/dashboard/city', label: 'Analytics', icon: BarChart3, roles: ['city_admin'] },
-  { href: '/dashboard/city/export', label: 'Export Data', icon: Download, roles: ['city_admin'] },
 ];
 
 export function DashboardSidebar() {

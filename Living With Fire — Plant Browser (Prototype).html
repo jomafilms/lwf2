@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living With Fire — Plant Browser (Prototype)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fire-score-high { background: #ef4444; }
+        .fire-score-moderate { background: #f97316; }
+        .fire-score-low { background: #22c55e; }
+        
+        .flammability-bar-high { background: linear-gradient(to bottom, #ef4444 0%, #dc2626 100%); }
+        .flammability-bar-moderate { background: linear-gradient(to bottom, #f97316 0%, #ea580c 100%); }
+        .flammability-bar-low { background: linear-gradient(to bottom, #22c55e 0%, #16a34a 100%); }
+
+        .slide-panel {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .slide-panel.open {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .slide-panel {
+                transform: translateY(100%);
+            }
+            .slide-panel.open {
+                transform: translateY(0);
+            }
+        }
+        
+        .plant-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .plant-image-large {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .plant-placeholder { 
+            width: 100%;
+            height: 120px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #9ca3af;
+            font-size: 24px;
+        }
+        
+        .plant-placeholder-large {
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #9ca3af;
+            font-size: 36px;
+        }
+        
+        .fire-score-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 10;
+        }
+        
+        .flammability-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body class="bg-green-50 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b-2 border-green-200">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <h1 class="text-3xl font-bold text-green-800">🌿 Living With Fire — Plant Browser (Prototype)</h1>
+            <p class="text-green-600 mt-2">Find fire-reluctant plants for your defensible space</p>
+            <p class="text-xs text-gray-500 mt-1">Data from LWF API v2</p>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 py-6 flex gap-6">
+        <!-- Filter Sidebar -->
+        <aside class="w-80 bg-white rounded-lg shadow-md p-6 h-fit sticky top-6 hidden lg:block">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">🔥 Fire Risk Filter</h2>
+            
+            <!-- Fire Risk Slider -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Character Score Range</label>
+                <div class="relative">
+                    <input type="range" id="fireRiskSlider" min="1" max="15" value="15" 
+                           class="w-full h-2 bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>1 (Low)</span>
+                    <span id="fireRiskValue">15</span>
+                    <span>15 (High)</span>
+                </div>
+                <div class="text-xs text-gray-600 mt-2">
+                    <span class="font-medium">Scale:</span> 1-3 Low (green), 4-6 Moderate (amber), 7+ High (red)
+                </div>
+            </div>
+
+            <!-- Plant Type Filter -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Plant Type</label>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="plant-type-filter" value="tree" checked>
+                        <span class="ml-2 text-sm">🌳 Trees</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="plant-type-filter" value="shrub" checked>
+                        <span class="ml-2 text-sm">🌿 Shrubs</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="plant-type-filter" value="perennial" checked>
+                        <span class="ml-2 text-sm">🌱 Perennials</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- HIZ Filter -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Home Ignition Zone</label>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="hiz-filter" value="0-5" checked>
+                        <span class="ml-2 text-sm">0-5 ft</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="hiz-filter" value="5-10" checked>
+                        <span class="ml-2 text-sm">5-10 ft</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="hiz-filter" value="10-30" checked>
+                        <span class="ml-2 text-sm">10-30 ft</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="hiz-filter" value="30-100" checked>
+                        <span class="ml-2 text-sm">30-100 ft</span>
+                    </label>
+                </div>
+            </div>
+
+            <button onclick="resetFilters()" class="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors">
+                Reset Filters
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Choosing Plants for Fire-Prone Yards</h2>
+                    <p class="text-gray-600" id="resultCount">Showing plants (demo data set, not pulling from all 1361 plants)</p>
+                </div>
+            </div>
+
+            <!-- Mobile Filter Button -->
+            <div class="lg:hidden mb-4">
+                <button onclick="toggleMobileFilters()" class="bg-green-600 text-white px-4 py-2 rounded-md flex items-center">
+                    🔍 Filters <span class="ml-2">▼</span>
+                </button>
+            </div>
+
+            <div id="plantGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Plants will be populated by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Slide-out Detail Panel -->
+    <div id="detailPanel" class="fixed inset-y-0 right-0 w-full md:w-[480px] bg-white shadow-2xl slide-panel z-50 overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="detailTitle" class="text-2xl font-bold text-gray-800"></h2>
+                <button onclick="closeDetailPanel()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="closeDetailPanel()"></div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t-2 border-green-200 mt-12">
+        <div class="max-w-7xl mx-auto px-4 py-6 text-center text-gray-600">
+            <p class="text-sm">All data from Charisse's LWF Plant Database — March 30, 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // VERIFIED REAL DATA FROM LWF API v2
+        const plants = [
+            {
+                name: "Aloe aristata",
+                common: "Dwarf aloe",
+                characterScore: 1,
+                type: "perennial",
+                hizZones: ["0-5", "5-10", "10-30", "30-100"],
+                image: "https://d2seqvvyy3b8p2.cloudfront.net/d68b28af2d3fd3cfaf27705dcda23c73.jpg",
+                flammabilityNotes: "Several sources claim this species has low flammability, is fire resistant, or is suitable to plant in 'high fire risk areas.' (UCFPL) See Aloe spp. flammability notes.",
+                riskReduction: "Small succulents and low flammability groundcovers less than 1 ft tall may be planted within 1-4 ft of a building, if kept 2 ft apart, watered, maintained free of dead material, and burnable mulches/debris are removed.",
+                waterNeeds: "Low to very low",
+                sunRequirements: "Full sun, Part shade",
+                height: "0.7-1 ft",
+                width: null,
+                deer: null,
+                evergreen: null,
+                benefits: null,
+                drought: null,
+                chemicalContent: null
+            },
+            {
+                name: "Cerastium tomentosum",
+                common: "Snow-in-summer",
+                characterScore: 4,
+                type: "perennial",
+                hizZones: ["0-5", "5-10", "10-30", "30-100"],
+                image: null, // No image - use placeholder
+                flammabilityNotes: "Three sources claim this species is fire resistant. Two sources claims it is suitable for planting within 5 ft of structures with noncombustible siding (e.g., cement board) and it should be monitored to keep it under 1 ft tall and well cared for.",
+                riskReduction: "Avoid planting within 5 ft of buildings and take measures not to allow it to spread into the 0-5 ft zone. Only grow on burnable mulches that are 10 or more feet from buildings. Remove dead and fine debris often.",
+                waterNeeds: "Moderate to low",
+                sunRequirements: "Full sun, Part shade",
+                height: "0.5-1 ft",
+                width: "2-3 ft",
+                deer: "Some",
+                evergreen: true,
+                benefits: "Pollinator",
+                drought: "High",
+                chemicalContent: null
+            },
+            {
+                name: "Acanthus mollis",
+                common: "Bears breeches",
+                characterScore: 2,
+                type: "perennial",
+                hizZones: ["5-10", "10-30", "30-100"],
+                image: "https://bs.plantnet.org/image/o/09cc2ba9e227a0a99082a948fca14e9d1d8a755c",
+                flammabilityNotes: "No flammability information found. It got a low flammability score based on plant characteristics. Leaves can be two ft long and due to cluster growth form, could hide flammable debris. Requires regular watering though it has some drought tolerance.",
+                riskReduction: "Avoid planting within 5 ft of buildings and take measures not to allow it to spread into the 0-5 ft zone. Only grow on burnable mulches that are 10 or more feet from buildings. Remove dead and fine debris often.",
+                waterNeeds: "Moderate",
+                sunRequirements: "Full sun, Part shade",
+                height: "3-6 ft",
+                width: "2-3 ft",
+                deer: "Some resistance",
+                evergreen: false,
+                benefits: null,
+                drought: null,
+                chemicalContent: null
+            },
+            {
+                name: "Abutilon x hybridum",
+                common: "Chinese Lantern",
+                characterScore: 4,
+                type: "shrub",
+                hizZones: ["10-30", "30-100"],
+                image: "https://bs.plantnet.org/image/o/6d23fe77d3292d87f521c7ee8319f2f5c84bf394",
+                flammabilityNotes: "No flammability information found. It got a low flammability score based on plant characteristics. A semitropical plant that is frost resistant to 25 deg F. Causes contact dermatitis (NCE).",
+                riskReduction: "There are better plant choices. Consider a plant that is better adapted (often natives), has low flammability, is not highly invasive or messy, uses little water, & does not harm the environment, animals, people or infrastructure.",
+                waterNeeds: "Moderate",
+                sunRequirements: "Full sun, Part shade",
+                height: "2-10 ft",
+                width: "2-4 ft",
+                deer: null,
+                evergreen: true,
+                benefits: "Bird food",
+                drought: null,
+                chemicalContent: null
+            },
+            {
+                name: "Acca sellowiana",
+                common: "Pineapple Guava",
+                characterScore: 6,
+                type: "tree",
+                hizZones: ["10-30", "30-100"],
+                image: "https://bs.plantnet.org/image/o/33344f34731dfeb5ea4f7f7bbce41d053fc6a93d",
+                flammabilityNotes: "Many sources claim this species is 'fire-resistant.' Safer Gardens says this species has 'very low and extremely low' leaf flammability. The plant characteristics score suggests it has low to moderate flammability.",
+                riskReduction: "Plant at least 10 ft away from buildings. Do not grow flammable plants under this plant. On flat ground, space 2 times the mature height of the plant. Increase spacing distance on slopes.",
+                waterNeeds: "Low",
+                sunRequirements: "Full sun, Part shade",
+                height: "12-25 ft",
+                width: "5-20 ft",
+                deer: "Some",
+                evergreen: false,
+                benefits: "Bird food",
+                drought: "Medium",
+                chemicalContent: null
+            },
+            {
+                name: "Abies concolor",
+                common: "White fir",
+                characterScore: 13,
+                type: "tree",
+                hizZones: ["30-100"],
+                image: "https://bs.plantnet.org/image/o/f3bd61a94db7294e0fad1eb060e1a8903b8338b7",
+                flammabilityNotes: "Oregon and California native. Multiple sources claim that all conifers are highly flammable and should not be planted within 30 ft of structures.",
+                riskReduction: "Mature tree crown is 6 ft away from buildings & 10 ft above the roof. Tree crowns are spaced 10 ft apart. Increase spacing distance on slopes. Remove dead and fine debris often.",
+                waterNeeds: "Moderate to low",
+                sunRequirements: "Full sun, Part shade",
+                height: "82-200 ft",
+                width: "20-30 ft",
+                deer: "Very High",
+                evergreen: true,
+                benefits: "Bird shelter",
+                drought: null,
+                chemicalContent: "Resins and gums, Volatile oils"
+            },
+            {
+                name: "Abies spp.",
+                common: "Firs",
+                characterScore: 14,
+                type: "tree",
+                hizZones: ["30-100"],
+                image: "https://bs.plantnet.org/image/o/8e171a19f992a34d5d44693472320f6044a5d561",
+                flammabilityNotes: "UC Forest Products Laboratory found four sources that do not recommend species in this genus for use in high fire risk areas. Several other sources claim it is highly flammable. Fire Safe Marin has identified all species of firs as having fire prone plant characteristics.",
+                riskReduction: "Mature tree crown is 6 ft away from buildings & 10 ft above the roof. Tree crowns are spaced 10 ft apart. Increase spacing distance on slopes. Remove dead and fine debris often. Plants with needles or thin, fine flammable leaves should not be used for a hedge.",
+                waterNeeds: null,
+                sunRequirements: "Full sun, Part shade",
+                height: "30-300 ft",
+                width: null,
+                deer: "Very High",
+                evergreen: true,
+                benefits: null,
+                drought: null,
+                chemicalContent: "Resins and gums, Volatile oils"
+            },
+            {
+                name: "Acacia baileyana",
+                common: "Fernleaf acacia",
+                characterScore: 15,
+                type: "tree",
+                hizZones: ["30-100"],
+                image: "https://bs.plantnet.org/image/o/0e97041ec5129dbe2d3f5163964acf67add1dd76",
+                flammabilityNotes: "According to Project Wildfire in Central Oregon, Acacias are highly flammable. A. baileyana is highly invasive according to the California Invasive Plants Council. The leaves from some species of Acacia contain resin and flammable oils, which can encourage fires.",
+                riskReduction: "Mature tree crown is 6 ft away from buildings & 10 ft above the roof. Tree crowns are spaced 10 ft apart. Increase spacing distance on slopes.",
+                waterNeeds: "Very low",
+                sunRequirements: "Full sun, Part shade",
+                height: "12-25 ft",
+                width: "25-40 ft",
+                deer: "Some",
+                evergreen: true,
+                benefits: "Pollinator, Bird food",
+                drought: "Medium",
+                chemicalContent: null
+            },
+            {
+                name: "Abelia x grandiflora",
+                common: "Glossy abelia",
+                characterScore: 6,
+                type: "shrub", 
+                hizZones: ["10-30", "30-100"],
+                image: null, // No image - use placeholder
+                flammabilityNotes: "Virginia Tech claims it is highly flammable. Fire Performance Plant Selector, University of Florida, and Safer Gardens say it is moderately flammable.",
+                riskReduction: "Short low flammability plants (<2 ft tall) are a better choice. Plant at least 10 ft away from buildings. Do not grow flammable plants under this plant.",
+                waterNeeds: "Moderate to low",
+                sunRequirements: "Full sun, Part shade",
+                height: "2-8 ft",
+                width: "3-5 ft",
+                deer: "High",
+                evergreen: true,
+                benefits: "Pollinator, Bird food",
+                drought: null,
+                chemicalContent: null
+            },
+            {
+                name: "Abies pinsapo",
+                common: "Spanish fir",
+                characterScore: 10,
+                type: "tree",
+                hizZones: ["30-100"],
+                image: "https://bs.plantnet.org/image/o/59733dc0033c93533dd69ea574d5964b59e67fce",
+                flammabilityNotes: "Multiple sources claim that all conifers are highly flammable and should not be planted within 30 ft of structures. The Spanish fir has a dense form and is 50-75 ft tall and 15-30 ft wide.",
+                riskReduction: "Mature tree crown is 6 ft away from buildings & 10 ft above the roof. Tree crowns are spaced 10 ft apart.",
+                waterNeeds: "Moderate to low",
+                sunRequirements: "Full sun, Part shade",
+                height: "50-75 ft",
+                width: "15-30 ft",
+                deer: "Very High",
+                evergreen: false,
+                benefits: null,
+                drought: "High",
+                chemicalContent: "Resins and gums, Volatile oils"
+            },
+            {
+                name: "Abeliophyllum distichum",
+                common: "White forsythia",
+                characterScore: 5,
+                type: "shrub",
+                hizZones: ["10-30", "30-100"],
+                image: "https://bs.plantnet.org/image/o/41d5e6af327497ca460667d41a69b2a28ac17f21",
+                flammabilityNotes: "Oregon State University 2023 claims this species is fire-resistant. It is multistemmed and has an 'unkempt appearance' which indicates it could be moderately flammable.",
+                riskReduction: "Do not grow flammable plants under this plant. Prune base branches up 1 to 6 feet depending on plant size. Only grow on burnable mulches that are 10 or more feet from buildings.",
+                waterNeeds: "Moderate",
+                sunRequirements: "Full sun, Part shade",
+                height: "3-5 ft",
+                width: "3-4 ft",
+                deer: "Some",
+                evergreen: false,
+                benefits: null,
+                drought: null,
+                chemicalContent: null
+            },
+            {
+                name: "Acer buergeranum",
+                common: "Trident Maple",
+                characterScore: 4,
+                type: "tree",
+                hizZones: ["10-30", "30-100"],
+                image: null, // No image - use placeholder
+                flammabilityNotes: "One source claims this species is \"firewise\" and suitable for planting within 10 ft of structures, stating that it is an [e]xcellent small shade tree for compact locations. The Idaho lab advises planting all species in this genus 60+ ft from structures though a couple of species may be planted 50+ ft from structures. Maples get a low to moderate flammability score based on characteristics. Sources differ on the drought resistance of this species, but it appears to require the lowest amount of water of the maples. The wood is considered \"weak\" (NCE). Can grow 35 ft tall and 40 ft wide so plant at least 20 ft from buildings.",
+                riskReduction: null,
+                waterNeeds: "Low",
+                sunRequirements: "Full sun to Part shade",
+                height: "12-35 feet",
+                width: "20-40 feet wide",
+                deer: null,
+                evergreen: false,
+                benefits: null,
+                drought: null,
+                chemicalContent: null
+            }
+        ];
+
+        function getFlammabilityCategory(score) {
+            if (score === null || score === undefined) return 'unknown';
+            if (score >= 1 && score <= 3) return 'low';
+            if (score >= 4 && score <= 6) return 'moderate';
+            return 'high';
+        }
+
+        function getFlammabilityColor(score) {
+            const category = getFlammabilityCategory(score);
+            switch(category) {
+                case 'low': return '#22c55e';
+                case 'moderate': return '#f97316';
+                case 'high': return '#ef4444';
+                default: return '#6b7280';
+            }
+        }
+
+        function getFlammabilityText(score) {
+            const category = getFlammabilityCategory(score);
+            switch(category) {
+                case 'low': return 'Low flammability';
+                case 'moderate': return 'Moderate flammability';
+                case 'high': return 'High flammability';
+                default: return 'No Character Score';
+            }
+        }
+
+        function createPlantCard(plant) {
+            const flammabilityCategory = getFlammabilityCategory(plant.characterScore);
+            const flammabilityColor = getFlammabilityColor(plant.characterScore);
+            const flammabilityText = getFlammabilityText(plant.characterScore);
+            
+            // Create image element or placeholder
+            let imageElement;
+            if (plant.image && plant.image !== null) {
+                imageElement = `<img src="${plant.image}" alt="${plant.common}" class="plant-image">`;
+            } else {
+                imageElement = `<div class="plant-placeholder">🌿</div>`;
+            }
+            
+            return `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" 
+                     onclick="showPlantDetails('${plant.name}')">
+                    <div class="relative">
+                        ${imageElement}
+                        <div class="flammability-bar flammability-bar-${flammabilityCategory}"></div>
+                        ${plant.characterScore !== null ? 
+                            `<div class="fire-score-badge inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white fire-score-${flammabilityCategory}" 
+                                 style="background-color: ${flammabilityColor}">
+                                ${plant.characterScore}
+                            </div>` : 
+                            `<div class="fire-score-badge inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white" 
+                                 style="background-color: #6b7280">
+                                No Score
+                            </div>`
+                        }
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">${plant.common}</h3>
+                        <p class="text-sm italic text-gray-600 mb-3">${plant.name}</p>
+                        
+                        <div class="text-xs text-gray-500 mb-3">${flammabilityText}</div>
+                        
+                        ${plant.hizZones.length > 0 ? 
+                            `<div class="mb-3">
+                                <span class="text-xs font-medium text-gray-700">HIZ:</span>
+                                <div class="flex flex-wrap gap-1 mt-1">
+                                    ${plant.hizZones.map(zone => {
+                                        const is05Zone = zone === "0-5";
+                                        const bgColor = is05Zone ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800";
+                                        return `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs ${bgColor}">
+                                            ${zone}
+                                        </span>`;
+                                    }).join('')}
+                                </div>
+                            </div>` : ''
+                        }
+                        
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span class="capitalize">${plant.type}</span>
+                            <span>Score: ${plant.characterScore !== null ? plant.characterScore : 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showPlantDetails(plantName) {
+            const plant = plants.find(p => p.name === plantName);
+            if (!plant) return;
+            
+            const flammabilityText = getFlammabilityText(plant.characterScore);
+            const flammabilityColor = getFlammabilityColor(plant.characterScore);
+            
+            document.getElementById('detailTitle').textContent = plant.common;
+            
+            // Create large image element or placeholder for detail panel
+            let largeImageElement;
+            if (plant.image && plant.image !== null) {
+                largeImageElement = `<img src="${plant.image}" alt="${plant.common}" class="plant-image-large mb-3">`;
+            } else {
+                largeImageElement = `<div class="plant-placeholder-large mb-3">🌿</div>`;
+            }
+            
+            document.getElementById('detailContent').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Plant Image & Name -->
+                    <div class="text-center">
+                        ${largeImageElement}
+                        <h3 class="text-xl font-bold text-gray-800">${plant.common}</h3>
+                        <p class="italic text-gray-600 text-lg">${plant.name}</p>
+                    </div>
+                    
+                    <!-- 🔥 FIRE RISK Section (RED BACKGROUND) -->
+                    <div class="bg-red-50 border-l-4 border-red-500 rounded-lg p-4">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-xl">🔥</span>
+                            <h4 class="font-bold text-red-800 text-lg">FIRE RISK</h4>
+                            ${plant.characterScore !== null ? 
+                                `<span class="px-4 py-2 rounded-full text-lg font-bold text-white ml-auto" 
+                                      style="background-color: ${flammabilityColor}">
+                                    Score: ${plant.characterScore}
+                                </span>` :
+                                `<span class="px-4 py-2 rounded-full text-lg font-bold text-white bg-gray-500 ml-auto">
+                                    No Score
+                                </span>`
+                            }
+                        </div>
+                        
+                        ${plant.flammabilityNotes ? 
+                            `<div class="mb-4">
+                                <h5 class="font-semibold text-red-800 mb-2">Flammability Notes:</h5>
+                                <p class="text-sm text-red-900 leading-relaxed">${plant.flammabilityNotes}</p>
+                            </div>` : ''
+                        }
+                        
+                        ${plant.riskReduction ? 
+                            `<div class="mb-4">
+                                <h5 class="font-semibold text-red-800 mb-2">Risk Reduction:</h5>
+                                <p class="text-sm text-red-900 leading-relaxed">${plant.riskReduction}</p>
+                            </div>` : ''
+                        }
+                        
+                        ${plant.chemicalContent ? 
+                            `<div class="text-red-700 text-sm font-medium">
+                                <span class="font-semibold">Chemical Content:</span> ${plant.chemicalContent}
+                            </div>` : ''
+                        }
+                    </div>
+                    
+                    <!-- Zone Badges -->
+                    ${plant.hizZones.length > 0 ? 
+                        `<div>
+                            <h4 class="font-medium mb-3 text-gray-800">Home Ignition Zones</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${plant.hizZones.map(zone => {
+                                    const is05Zone = zone === "0-5";
+                                    const bgColor = is05Zone ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800";
+                                    const label = `${zone} ft`;
+                                    return `<span class="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium ${bgColor}">
+                                        ${label}
+                                    </span>`;
+                                }).join('')}
+                            </div>
+                        </div>` : ''
+                    }
+                    
+                    <!-- Plant Details Section -->
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-green-800 mb-4">Plant Details</h4>
+                        <div class="grid grid-cols-1 gap-3 text-sm">
+                            ${plant.height ? `<div class="flex justify-between"><span class="font-medium text-green-700">Height:</span><span class="text-green-900">${plant.height}</span></div>` : ''}
+                            ${plant.width ? `<div class="flex justify-between"><span class="font-medium text-green-700">Width:</span><span class="text-green-900">${plant.width}</span></div>` : ''}
+                            ${plant.sunRequirements ? `<div class="flex justify-between"><span class="font-medium text-green-700">Light:</span><span class="text-green-900">${plant.sunRequirements}</span></div>` : ''}
+                            ${plant.waterNeeds ? `<div class="flex justify-between"><span class="font-medium text-green-700">Water:</span><span class="text-green-900">${plant.waterNeeds}</span></div>` : ''}
+                            ${plant.drought ? `<div class="flex justify-between"><span class="font-medium text-green-700">Drought:</span><span class="text-green-900">${plant.drought}</span></div>` : ''}
+                            ${plant.deer ? `<div class="flex justify-between"><span class="font-medium text-green-700">Deer:</span><span class="text-green-900">${plant.deer}</span></div>` : ''}
+                            ${plant.benefits ? `<div class="flex justify-between"><span class="font-medium text-green-700">Benefits:</span><span class="text-green-900">${plant.benefits}</span></div>` : ''}
+                            ${plant.evergreen !== null ? `<div class="flex justify-between"><span class="font-medium text-green-700">Evergreen:</span><span class="text-green-900">${plant.evergreen ? 'Yes' : 'No'}</span></div>` : ''}
+                            ${plant.name === "Aloe aristata" ? `<div class="flex justify-between"><span class="font-medium text-green-700">Type:</span><span class="text-green-900">Succulent</span></div>` : ''}
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="text-xs text-gray-500 border-t pt-4 text-center">
+                        <p class="font-medium">Data from Charisse's LWF Plant Database</p>
+                        <p class="mt-1"><strong>Plant Type:</strong> ${plant.type}</p>
+                        <p class="mt-2">Always consult local fire authorities for safety recommendations</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detailPanel').classList.add('open');
+            document.getElementById('overlay').classList.remove('hidden');
+        }
+
+        function closeDetailPanel() {
+            document.getElementById('detailPanel').classList.remove('open');
+            document.getElementById('overlay').classList.add('hidden');
+        }
+
+        function renderPlants() {
+            const fireRiskValue = parseInt(document.getElementById('fireRiskSlider').value);
+            const selectedTypes = Array.from(document.querySelectorAll('.plant-type-filter:checked')).map(cb => cb.value);
+            const selectedHizZones = Array.from(document.querySelectorAll('.hiz-filter:checked')).map(cb => cb.value);
+            
+            const filteredPlants = plants.filter(plant => {
+                // Fire risk filter
+                if (plant.characterScore !== null && plant.characterScore > fireRiskValue) return false;
+                
+                // Type filter
+                if (!selectedTypes.includes(plant.type)) return false;
+                
+                // HIZ filter - only apply if plant has HIZ data
+                if (plant.hizZones.length > 0 && !plant.hizZones.some(zone => selectedHizZones.includes(zone))) return false;
+                
+                return true;
+            });
+            
+            const plantGrid = document.getElementById('plantGrid');
+            plantGrid.innerHTML = filteredPlants.map(createPlantCard).join('');
+            
+            document.getElementById('resultCount').textContent = 
+                `Showing ${filteredPlants.length} of ${plants.length} plants (demo data set, not pulling from all 1361 plants)`;
+        }
+
+        function resetFilters() {
+            document.getElementById('fireRiskSlider').value = 15;
+            document.getElementById('fireRiskValue').textContent = '15';
+            document.querySelectorAll('.plant-type-filter').forEach(cb => cb.checked = true);
+            document.querySelectorAll('.hiz-filter').forEach(cb => cb.checked = true);
+            renderPlants();
+        }
+
+        function toggleMobileFilters() {
+            // Mobile filter functionality would go here
+            alert('Mobile filters not implemented in prototype');
+        }
+
+        // Event listeners
+        document.getElementById('fireRiskSlider').addEventListener('input', function(e) {
+            document.getElementById('fireRiskValue').textContent = e.target.value;
+            renderPlants();
+        });
+
+        document.querySelectorAll('.plant-type-filter, .hiz-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', renderPlants);
+        });
+
+        // Initial render
+        renderPlants();
+    </script>
+</body>
+</html>

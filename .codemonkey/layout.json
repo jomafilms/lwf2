@@ -1,0 +1,42 @@
+{
+  "dock": {
+    "items": [
+      {
+        "id": "interdimensional-wombat",
+        "type": "terminal",
+        "title": "interdimensional-wombat",
+        "placement": {
+          "width": 794,
+          "height": 672
+        }
+      }
+    ],
+    "activeItemId": "interdimensional-wombat",
+    "scroll": {
+      "x": -55.75
+    },
+    "unfocusedScale": 0.5
+  },
+  "editor": {
+    "openFiles": [],
+    "placement": {
+      "height": 500
+    }
+  },
+  "projectExplorer": {
+    "placement": {
+      "width": 220
+    },
+    "scroll": {
+      "y": 0
+    },
+    "viewMode": "changes"
+  },
+  "gitTree": {
+    "visible": false,
+    "placement": {
+      "width": 300
+    }
+  },
+  "focusedPanel": "terminal"
+}

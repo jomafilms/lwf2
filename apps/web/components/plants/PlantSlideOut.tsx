@@ -7,8 +7,7 @@ import { SlideOutPanel } from '@/components/ui/SlideOutPanel';
 import { presentPlant, type PlantPresentation } from '@/lib/plants/present';
 import { PlantAttributeBadges, FlammabilityBadge } from './PlantAttributeBadges';
 import { AddToListButton } from './AddToListButton';
-import { NurseryAvailability } from './NurseryAvailability';
-import { PlanToggleButton } from './PlanToggleButton';
+import { SavePlantButton } from './SavePlantButton';
 import { getPlantClient } from '@/lib/api/lwf';
 
 interface PlantSlideOutProps {
@@ -174,14 +173,8 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
           {/* Actions */}
           <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
             <div className="flex gap-3">
+              <SavePlantButton plantId={plant.id} />
               <AddToListButton plantId={plant.id} />
-              <PlanToggleButton
-                plantId={plant.id}
-                commonName={plant.commonName}
-                botanicalName={getBotanicalName(plant)}
-                imageUrl={plant.primaryImage?.url || null}
-                className="!px-4 !py-2.5 !text-sm"
-              />
             </div>
             <Link
               href={`/plants/${plant.id}`}
@@ -189,12 +182,6 @@ export function PlantSlideOut({ plantId, onClose }: PlantSlideOutProps) {
             >
               View Full Details
             </Link>
-          </div>
-
-          {/* Nursery availability */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-gray-900">Local Availability</h3>
-            <NurseryAvailability lwfPlantId={plant.id} variant="full" />
           </div>
         </div>
       )}

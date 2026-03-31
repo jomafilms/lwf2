@@ -4,11 +4,8 @@ import Link from 'next/link';
 import type { Plant, ResolvedValue } from '@lwf/types';
 import { presentPlant } from '@/lib/plants/present';
 import { PlantAttributeBadges, FlammabilityBadge } from './PlantAttributeBadges';
-import { NurseryAvailability } from './NurseryAvailability';
 import { SavePlantButton } from './SavePlantButton';
 import { AddToListButton } from './AddToListButton';
-import { PlanToggleButton } from './PlanToggleButton';
-import { CompareButton } from './CompareButton';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -92,16 +89,8 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
         </div>
         {/* Action buttons — visible on hover */}
         <div className="absolute top-1.5 right-1.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <CompareButton plant={plant} size="sm" />
           <SavePlantButton plantId={plant.id} size="sm" />
           <AddToListButton plantId={plant.id} />
-          <PlanToggleButton
-            plantId={plant.id}
-            commonName={plant.commonName}
-            botanicalName={getBotanicalName(plant)}
-            imageUrl={plant.primaryImage?.url || null}
-            variant="pill"
-          />
         </div>
         <div className="p-2.5">
           <h3 className="text-xs font-semibold text-gray-900 group-hover:text-orange-600 transition-colors leading-tight line-clamp-1">
@@ -164,16 +153,8 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
 
       {/* Action buttons */}
       <div className="absolute top-2 right-2 flex items-center gap-1.5">
-        <CompareButton plant={plant} size="sm" />
         <SavePlantButton plantId={plant.id} />
         <AddToListButton plantId={plant.id} />
-        <PlanToggleButton
-          plantId={plant.id}
-          commonName={plant.commonName}
-          botanicalName={getBotanicalName(plant)}
-          imageUrl={plant.primaryImage?.url || null}
-          variant="pill"
-        />
       </div>
 
       <div className="p-3">
@@ -202,7 +183,6 @@ export function PlantCard({ plant, values = [], onPlantClick, compact = false }:
           <FlammabilityBadge presentation={presentation} size="sm" />
         </div>
 
-        <NurseryAvailability lwfPlantId={plant.id} variant="summary" />
       </div>
     </div>
   );

@@ -3,13 +3,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { useCart } from '@/lib/cart/store';
-import { TreePine, Flame, MessageSquare, X, Maximize2, Search } from 'lucide-react';
+import { Flame, MessageSquare, Map, X, Maximize2, Search } from 'lucide-react';
 import { UserMenu } from './UserMenu';
 import { ChatPanel } from '@/components/agent/ChatPanel';
 
 export function SiteNav() {
-  const { count } = useCart();
   const [chatOpen, setChatOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -95,17 +93,9 @@ export function SiteNav() {
           <Link href="/plants" className="text-gray-600 hover:text-gray-900 transition-colors">
             Plants
           </Link>
-          <Link
-            href="/my-plants"
-            className="relative inline-flex items-center gap-1.5 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <TreePine className="h-4 w-4" />
-            My Plants
-            {count > 0 && (
-              <span className="absolute -top-1.5 -right-3 flex h-4 min-w-4 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white">
-                {count}
-              </span>
-            )}
+          <Link href="/map" className="inline-flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors">
+            <Map className="h-4 w-4" />
+            Map
           </Link>
           <div className="relative" ref={panelRef}>
             <button
