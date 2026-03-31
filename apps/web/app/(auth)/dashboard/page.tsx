@@ -18,31 +18,14 @@ import {
   Users,
 } from "lucide-react";
 
-const roleBadgeColors: Record<string, string> = {
-  homeowner: "bg-green-100 text-green-800",
-  landscaper: "bg-blue-100 text-blue-800",
-  nursery_admin: "bg-purple-100 text-purple-800",
-  city_admin: "bg-amber-100 text-amber-800",
-  platform_admin: "bg-red-100 text-red-800",
-};
-
-const roleLabels: Record<string, string> = {
-  homeowner: "Homeowner",
-  landscaper: "Landscaper",
-  nursery_admin: "Nursery Admin",
-  hoa_admin: "HOA Admin",
-  city_admin: "City Admin",
-  platform_admin: "Platform Admin",
-  not_signed_in: "Not Signed In",
-};
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
   const role = (await getCurrentUserRole()) || 'homeowner';
-  const badgeColor = roleBadgeColors[role] || roleBadgeColors.homeowner;
-  const roleLabel = roleLabels[role] || "Homeowner";
+  const badgeColor = "bg-green-100 text-green-800 border-green-200";
+  const roleLabel = (role as string) === "hoa_admin" ? "HOA Admin" : "Homeowner";
 
   // Fetch user's saved properties
   const userProperties = await db
@@ -261,14 +244,6 @@ export default async function DashboardPage() {
             <div>
               <h1 className="text-xl font-bold text-gray-900">{user.name}</h1>
               <p className="text-sm text-gray-500">{user.email}</p>
-              <div className="mt-1.5 flex items-center gap-2">
-                <span
-                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeColor}`}
-                >
-                  <Shield className="h-3 w-3" />
-                  {roleLabel}
-                </span>
-              </div>
             </div>
           </div>
         </div>

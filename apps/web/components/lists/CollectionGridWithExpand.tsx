@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Leaf, X } from "lucide-react";
 import { SlideOutPanel } from "@/components/ui/SlideOutPanel";
 import { SaveCollectionButton } from "./SaveCollectionButton";
+import { StarButton } from "./StarButton";
+import { SavePlantButton } from "@/components/plants/SavePlantButton";
+import { AddToListButton } from "@/components/plants/AddToListButton";
 
 interface CollectionPlant {
   plantId: string;
@@ -146,9 +149,15 @@ export function CollectionGridWithExpand({
 
             {/* Header */}
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                {selectedCollection.name}
-              </h2>
+              <div className="flex items-start justify-between gap-2">
+                <h2 className="text-xl font-bold text-gray-900">
+                  {selectedCollection.name}
+                </h2>
+                <SaveCollectionButton
+                  collectionName={selectedCollection.name}
+                  plants={selectedCollection.plants}
+                />
+              </div>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-sm text-gray-500">
                   {selectedCollection.organization.name}
@@ -171,10 +180,10 @@ export function CollectionGridWithExpand({
             </div>
 
             {/* Plant grid */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-3">
               {selectedCollection.plants.map((plant) => (
-                <div key={plant.plantId} className="group/plant">
-                  <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
+                <div key={plant.plantId} className="group/plant relative">
+                  <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 relative">
                     {plant.imageUrl ? (
                       <img
                         src={plant.imageUrl}
@@ -187,6 +196,11 @@ export function CollectionGridWithExpand({
                         <Leaf className="h-5 w-5 text-gray-300" />
                       </div>
                     )}
+                    {/* Action buttons on hover */}
+                    <div className="absolute top-1 right-1 flex items-center gap-0.5 opacity-0 group-hover/plant:opacity-100 transition-opacity">
+                      <SavePlantButton plantId={plant.plantId} size="sm" />
+                      <AddToListButton plantId={plant.plantId} />
+                    </div>
                   </div>
                   <p className="text-xs font-medium text-gray-900 mt-1 line-clamp-1">
                     {plant.commonName}
@@ -199,17 +213,13 @@ export function CollectionGridWithExpand({
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
+            <div className="pt-4 border-t border-gray-200">
               <Link
                 href={`/lists/featured/${selectedIndex}`}
-                className="w-full px-4 py-2.5 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 transition-colors text-center"
+                className="block w-full px-4 py-2.5 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 transition-colors text-center"
               >
                 View Full List
               </Link>
-              <SaveCollectionButton
-                collectionName={selectedCollection.name}
-                plants={selectedCollection.plants}
-              />
             </div>
           </div>
         )}
