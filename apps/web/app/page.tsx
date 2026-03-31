@@ -78,11 +78,20 @@ export default function HomePage() {
             >
               Map My Property
             </Link>
+          </div>
+          
+          <div className="mx-auto mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/hardening"
               className="inline-flex items-center justify-center rounded-lg border border-orange-600 px-6 py-3 text-lg font-semibold text-orange-600 hover:bg-orange-50 transition-colors"
             >
               Home Hardening
+            </Link>
+            <Link
+              href="/hoa"
+              className="inline-flex items-center justify-center rounded-lg border border-blue-600 px-6 py-3 text-lg font-semibold text-blue-600 hover:bg-blue-50 transition-colors"
+            >
+              For HOAs
             </Link>
           </div>
 
