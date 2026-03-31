@@ -22,6 +22,7 @@ interface ChatItem {
 
 interface ChatPanelProps {
   className?: string;
+  onPlantClick?: (plantId: string) => void;
 }
 
 const SUGGESTIONS = [
@@ -31,7 +32,7 @@ const SUGGESTIONS = [
   "Best ground covers near a house",
 ];
 
-export function ChatPanel({ className = "" }: ChatPanelProps) {
+export function ChatPanel({ className = "", onPlantClick }: ChatPanelProps) {
   const [items, setItems] = useState<ChatItem[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -195,11 +196,11 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
 
         {items.map((item, i) => {
           if (item.type === "rich_plants" && item.richPlants) {
-            return <ChatPlantCardRow key={i} plants={item.richPlants} />;
+            return <ChatPlantCardRow key={i} plants={item.richPlants} onPlantClick={onPlantClick} />;
           }
 
           if (item.type === "plants" && item.plants) {
-            return <PlantCardRow key={i} plants={item.plants} />;
+            return <PlantCardRow key={i} plants={item.plants} onPlantClick={onPlantClick} />;
           }
 
           return (

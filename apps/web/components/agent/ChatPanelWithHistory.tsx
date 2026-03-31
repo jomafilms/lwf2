@@ -33,20 +33,22 @@ interface ChatPanelWithHistoryProps {
   conversationId?: string; // Load specific conversation
   propertyId?: string; // Link new conversations to property
   showHistory?: boolean; // Show conversation list sidebar
+  onPlantClick?: (plantId: string) => void;
 }
 
 const SUGGESTIONS = [
   "What should I plant in Zone 0?",
-  "Low-water native plants for Ashland",
+  "Low-water native plants for Rogue Valley",
   "Deer-resistant shrubs for Zone 1",
   "Best ground covers near a house",
 ];
 
-export function ChatPanelWithHistory({ 
+export function ChatPanelWithHistory({
   className = "",
   conversationId,
   propertyId,
   showHistory = true,
+  onPlantClick,
 }: ChatPanelWithHistoryProps) {
   const [items, setItems] = useState<ChatItem[]>([]);
   const [input, setInput] = useState("");
@@ -422,11 +424,11 @@ export function ChatPanelWithHistory({
 
           {items.map((item, i) => {
             if (item.type === "rich_plants" && item.richPlants) {
-              return <ChatPlantCardRow key={i} plants={item.richPlants} />;
+              return <ChatPlantCardRow key={i} plants={item.richPlants} onPlantClick={onPlantClick} />;
             }
 
             if (item.type === "plants" && item.plants) {
-              return <PlantCardRow key={i} plants={item.plants} />;
+              return <PlantCardRow key={i} plants={item.plants} onPlantClick={onPlantClick} />;
             }
 
             return (

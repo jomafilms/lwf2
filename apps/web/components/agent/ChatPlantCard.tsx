@@ -1,6 +1,6 @@
 "use client";
 
-import { Leaf, Droplets, Shield, Bug, ExternalLink } from "lucide-react";
+import { Leaf, Droplets, Shield, Bug } from "lucide-react";
 import { SavePlantButton } from "@/components/plants/SavePlantButton";
 import { AddToListButton } from "@/components/plants/AddToListButton";
 import { HIZ_BADGE_COLORS } from "@/lib/design-tokens";
@@ -47,15 +47,18 @@ function scoreLabel(score: number): string {
 
 interface ChatPlantCardProps {
   plant: ChatPlantData;
+  onPlantClick?: (plantId: string) => void;
 }
 
-export function ChatPlantCard({ plant }: ChatPlantCardProps) {
+export function ChatPlantCard({ plant, onPlantClick }: ChatPlantCardProps) {
   const botanical = `${plant.genus} ${plant.species}`.trim();
   const cat = plant.characterScore != null ? scoreCategory(plant.characterScore) : null;
 
   return (
-    <div
-      className="group flex gap-3 rounded-lg border border-neutral-200 bg-white p-3 hover:border-neutral-300 hover:shadow-sm transition-all"
+    <button
+      type="button"
+      onClick={() => onPlantClick?.(plant.id)}
+      className="group flex gap-3 rounded-lg border border-neutral-200 bg-white p-3 hover:border-neutral-300 hover:shadow-sm transition-all text-left w-full cursor-pointer"
     >
       {/* Thumbnail */}
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-neutral-100">
@@ -152,20 +155,12 @@ export function ChatPlantCard({ plant }: ChatPlantCardProps) {
         )}
 
         {/* Action buttons */}
-        <div className="mt-1.5 flex items-center gap-1.5">
+        <div className="mt-1.5 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
           <SavePlantButton plantId={plant.id} size="sm" />
           <AddToListButton plantId={plant.id} />
         </div>
-
-        {/* View details link */}
-        <a
-          href={`/plants/${plant.id}`}
-          className="mt-1 inline-flex items-center gap-0.5 text-[10px] text-neutral-400 hover:text-orange-500 transition-colors"
-        >
-          View details <ExternalLink className="h-2.5 w-2.5" />
-        </a>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -173,15 +168,16 @@ export function ChatPlantCard({ plant }: ChatPlantCardProps) {
 
 interface ChatPlantCardRowProps {
   plants: ChatPlantData[];
+  onPlantClick?: (plantId: string) => void;
 }
 
-export function ChatPlantCardRow({ plants }: ChatPlantCardRowProps) {
+export function ChatPlantCardRow({ plants, onPlantClick }: ChatPlantCardRowProps) {
   if (plants.length === 0) return null;
 
   return (
     <div className="ml-0 flex flex-col gap-2 max-w-[440px]">
       {plants.map((plant) => (
-        <ChatPlantCard key={plant.id} plant={plant} />
+        <ChatPlantCard key={plant.id} plant={plant} onPlantClick={onPlantClick} />
       ))}
     </div>
   );

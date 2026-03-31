@@ -15,20 +15,25 @@ export interface CompactPlant {
 
 interface PlantCardCompactProps {
   plant: CompactPlant;
+  onPlantClick?: (plantId: string) => void;
 }
 
-export function PlantCardCompact({ plant }: PlantCardCompactProps) {
+export function PlantCardCompact({ plant, onPlantClick }: PlantCardCompactProps) {
   const name = plant.commonName || `${plant.genus} ${plant.species}`;
   const botanical =
     plant.commonName ? `${plant.genus} ${plant.species}` : null;
   const imgSrc = plant.imageUrl || plant.images?.[0]?.imageUrl;
+
+  const handleClick = onPlantClick
+    ? (e: React.MouseEvent) => { e.preventDefault(); onPlantClick(plant.id); }
+    : undefined;
 
   return (
     <div
       className="group relative flex w-40 flex-shrink-0 flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-sm"
     >
       {/* Image */}
-      <a href={`/plants/${plant.id}`} className="relative h-24 w-full bg-neutral-100 block">
+      <a href={`/plants/${plant.id}`} onClick={handleClick} className="relative h-24 w-full bg-neutral-100 block">
         {imgSrc ? (
           <img
             src={imgSrc}
@@ -48,7 +53,7 @@ export function PlantCardCompact({ plant }: PlantCardCompactProps) {
       </div>
 
       {/* Info */}
-      <a href={`/plants/${plant.id}`} className="flex flex-1 flex-col px-2.5 py-2">
+      <a href={`/plants/${plant.id}`} onClick={handleClick} className="flex flex-1 flex-col px-2.5 py-2">
         <p className="text-xs font-medium leading-tight text-neutral-800 line-clamp-2">
           {name}
         </p>
@@ -64,15 +69,16 @@ export function PlantCardCompact({ plant }: PlantCardCompactProps) {
 
 interface PlantCardRowProps {
   plants: CompactPlant[];
+  onPlantClick?: (plantId: string) => void;
 }
 
-export function PlantCardRow({ plants }: PlantCardRowProps) {
+export function PlantCardRow({ plants, onPlantClick }: PlantCardRowProps) {
   if (plants.length === 0) return null;
 
   return (
     <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
       {plants.map((plant) => (
-        <PlantCardCompact key={plant.id} plant={plant} />
+        <PlantCardCompact key={plant.id} plant={plant} onPlantClick={onPlantClick} />
       ))}
     </div>
   );

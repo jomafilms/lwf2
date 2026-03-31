@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { Flame, MessageSquare, Map, ListChecks, X, Maximize2, Search } from 'lucide-react';
 import { UserMenu } from './UserMenu';
 import { ChatPanel } from '@/components/agent/ChatPanel';
+import { PlantSlideOut } from '@/components/plants/PlantSlideOut';
 
 export function SiteNav() {
   const [chatOpen, setChatOpen] = useState(false);
+  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -131,13 +133,14 @@ export function SiteNav() {
                     </button>
                   </div>
                 </div>
-                <ChatPanel className="flex-1 min-h-0" />
+                <ChatPanel className="flex-1 min-h-0" onPlantClick={(id) => setSelectedPlantId(id)} />
               </div>
             )}
           </div>
           <UserMenu />
         </div>
       </div>
+      <PlantSlideOut plantId={selectedPlantId} onClose={() => setSelectedPlantId(null)} />
     </nav>
   );
 }

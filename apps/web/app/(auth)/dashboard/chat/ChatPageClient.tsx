@@ -1,12 +1,24 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { ChatPanelWithHistory } from "@/components/agent/ChatPanelWithHistory";
+import { PlantSlideOut } from "@/components/plants/PlantSlideOut";
 
 interface ChatPageClientProps {
   conversationId?: string;
 }
 
 export function ChatPageClient({ conversationId }: ChatPageClientProps) {
+  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
+
+  const handlePlantClick = useCallback((plantId: string) => {
+    setSelectedPlantId((prev) => (prev === plantId ? null : plantId));
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setSelectedPlantId(null);
+  }, []);
+
   return (
     <div className="h-screen flex flex-col">
       {/* Header */}
@@ -21,12 +33,15 @@ export function ChatPageClient({ conversationId }: ChatPageClientProps) {
 
       {/* Chat Panel */}
       <div className="flex-1 min-h-0">
-        <ChatPanelWithHistory 
+        <ChatPanelWithHistory
           className="h-full"
           conversationId={conversationId}
           showHistory={true}
+          onPlantClick={handlePlantClick}
         />
       </div>
+
+      <PlantSlideOut plantId={selectedPlantId} onClose={handleClose} />
     </div>
   );
 }
