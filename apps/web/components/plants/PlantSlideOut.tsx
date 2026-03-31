@@ -105,9 +105,15 @@ export function PlantSlideOut({ plantId, onClose, zIndex }: PlantSlideOutProps) 
             )}
           </div>
 
-          {/* Name */}
+          {/* Name + actions */}
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{plant.commonName}</h1>
+            <div className="flex items-start justify-between gap-2">
+              <h1 className="text-2xl font-bold text-gray-900">{plant.commonName}</h1>
+              <div className="flex items-center gap-1 shrink-0">
+                <SavePlantButton plantId={plant.id} />
+                <AddToListButton plantId={plant.id} />
+              </div>
+            </div>
             <p className="text-lg text-gray-600 italic mt-1">{getBotanicalName(plant)}</p>
           </div>
 
@@ -158,14 +164,10 @@ export function PlantSlideOut({ plantId, onClose, zIndex }: PlantSlideOutProps) 
           <FlammabilityBadge presentation={presentation} size="md" />
 
           {/* Actions */}
-          <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
-            <div className="flex gap-3">
-              <SavePlantButton plantId={plant.id} />
-              <AddToListButton plantId={plant.id} />
-            </div>
+          <div className="pt-4 border-t border-gray-200">
             <Link
               href={`/plants/${plant.id}`}
-              className="w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-center"
+              className="block w-full px-4 py-2.5 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 transition-colors text-center"
             >
               View Full Details
             </Link>
