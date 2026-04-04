@@ -9,9 +9,10 @@
 ## ✅ COMPLETED
 - [x] B1: Home page zone map hero — merged 04:40 UTC
 - [x] B2: Home hardening checklist — merged 04:40 UTC
+- [x] B3: HOA audience UX — merged 04:43 UTC
 
 ## 🔄 IN PROGRESS
-- [ ] B3: HOA audience UX — branch `feature/hoa-dashboard`
+_(none)_
 
 ## 📋 PENDING (priority order)
 - [ ] B4: Mobile property assessment (camera upload + analysis)
