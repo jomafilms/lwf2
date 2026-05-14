@@ -8,6 +8,7 @@ import {
 } from "@/lib/api/lwf";
 import { db, userProfiles } from "@lwf/database";
 import { eq } from "drizzle-orm";
+import { retrieve, formatChunksForContext } from "@/lib/rag/retrieve";
 
 // HIZ attribute ID from IMPLEMENTATION.md
 const HIZ_ATTRIBUTE_ID = "b908b170-70c9-454d-a2ed-d86f98cb3de1";
@@ -165,6 +166,34 @@ export const toolDefinitions: Anthropic.Tool[] = [
         },
       },
       required: ["plantIds"],
+    },
+  },
+  {
+    name: "search_knowledge_base",
+    description:
+      "Search regional fire preparedness documents, CWPPs, CC&Rs, HOA rules, defensible space guidelines, and educational resources. Use this when the user asks about regulations, community plans, fire codes, HOA requirements, defensible space standards, or regional fire preparedness — anything beyond specific plant data. Returns relevant document excerpts with citations.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        query: {
+          type: "string",
+          description:
+            "Semantic search query describing what information you need",
+        },
+        doc_type: {
+          type: "string",
+          enum: ["pdf", "web", "cwpp", "ccr", "guide"],
+          description:
+            "Optional: filter by document type (cwpp, ccr, guide, pdf, web)",
+        },
+        trust_tier: {
+          type: "number",
+          enum: [1, 2, 3, 4],
+          description:
+            "Optional: filter by trust tier (1=local code, 2=agency guidance, 3=fire science, 4=general)",
+        },
+      },
+      required: ["query"],
     },
   },
 ];
@@ -478,6 +507,37 @@ export async function executeTool(
           summary,
           plants: validPlants,
           message: `[View detailed comparison](${compareUrl})`,
+        });
+      }
+
+      case "search_knowledge_base": {
+        const results = await retrieve({
+          query: input.query as string,
+          limit: 10,
+          docType: input.doc_type as string | undefined,
+          trustTier: input.trust_tier as number | undefined,
+        });
+
+        if (results.length === 0) {
+          return JSON.stringify({
+            results: [],
+            note: "No matching documents found in the knowledge base. Try a broader query or different terms.",
+          });
+        }
+
+        const formatted = formatChunksForContext(results);
+        return JSON.stringify({
+          resultCount: results.length,
+          sources: results.map((r, i) => ({
+            citation: `[${i + 1}]`,
+            document: r.documentTitle,
+            section: r.sectionTitle,
+            page: r.pageNumber,
+            trustTier: r.trustTier,
+            score: Math.round(r.score * 100) / 100,
+          })),
+          context: formatted,
+          note: "Use inline citations like [Source: Document Name, p.X] when referencing this information. Prioritize higher trust tiers (Tier 1 = local code > Tier 2 = agency > Tier 3 = science > Tier 4 = general).",
         });
       }
 

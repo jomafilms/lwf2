@@ -1,10 +1,25 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { SYSTEM_PROMPT } from "@/lib/agent/system-prompt";
+import { buildSystemPrompt } from "@/lib/agent/system-prompt";
 import { toolDefinitions, executeTool } from "@/lib/agent/tools";
 import type { ToolContext } from "@/lib/agent/tools";
 import { getCurrentUser } from "@/lib/auth";
+import { db, userProfiles } from "@lwf/database";
+import { eq } from "drizzle-orm";
 
 const client = new Anthropic();
+
+async function loadUserProfile(
+  userId: string | undefined
+): Promise<Record<string, unknown> | undefined> {
+  if (!userId) return undefined;
+  const rows = await db
+    .select({ preferences: userProfiles.preferences })
+    .from(userProfiles)
+    .where(eq(userProfiles.userId, userId))
+    .limit(1);
+  const prefs = rows[0]?.preferences as Record<string, unknown> | undefined;
+  return prefs && Object.keys(prefs).length > 0 ? prefs : undefined;
+}
 
 export async function POST(req: Request) {
   const { messages } = (await req.json()) as {
@@ -17,6 +32,9 @@ export async function POST(req: Request) {
     userId: user?.id,
   };
 
+  // Load user preferences upfront so they're injected into the system prompt
+  const userProfile = await loadUserProfile(user?.id);
+
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
@@ -27,7 +45,7 @@ export async function POST(req: Request) {
       };
 
       try {
-        await runAgentLoop(messages, send, toolContext);
+        await runAgentLoop(messages, send, toolContext, userProfile);
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         send({ type: "error", error: message });
@@ -50,11 +68,14 @@ export async function POST(req: Request) {
 async function runAgentLoop(
   messages: Anthropic.MessageParam[],
   send: (data: Record<string, unknown>) => void,
-  toolContext: ToolContext
+  toolContext: ToolContext,
+  userProfile?: Record<string, unknown>
 ) {
   let currentMessages = [...messages];
   let iterations = 0;
   const maxIterations = 10;
+
+  const systemPromptText = buildSystemPrompt(userProfile);
 
   while (iterations < maxIterations) {
     iterations++;
@@ -62,7 +83,13 @@ async function runAgentLoop(
     const response = await client.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4096,
-      system: SYSTEM_PROMPT,
+      system: [
+        {
+          type: "text",
+          text: systemPromptText,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
       tools: toolDefinitions,
       messages: currentMessages,
     });

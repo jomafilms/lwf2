@@ -16,6 +16,8 @@
     "db:studio": "npm run -w @lwf/database db:studio"
   },
   "devDependencies": {
+    "dotenv": "^17.4.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.0"
   },
   "dependencies": {
@@ -24,6 +26,7 @@
     "@turf/area": "^7.3.4",
     "@turf/union": "^7.3.4",
     "class-variance-authority": "^0.7.1",
+    "pdf-parse": "^1.1.1",
     "react-markdown": "^10.1.0"
   }
 }
