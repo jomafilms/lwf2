@@ -12,3 +12,5 @@ data/parcels/
 .remade/
 .playwright-mcp/
 .codemonkey/
+.claude/projects/
+transcripts/
