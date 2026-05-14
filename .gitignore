@@ -10,3 +10,5 @@ data/parcels/
 .DS_Store
 .vercel
 .remade/
+.playwright-mcp/
+.codemonkey/
