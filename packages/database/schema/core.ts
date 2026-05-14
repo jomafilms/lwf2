@@ -11,7 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 // Custom pgvector type — Neon supports pgvector natively
-const vector = customType<{ data: number[]; dpiverType: string }>({
+const vector = customType<{ data: number[]; driverData: string }>({
   dataType() {
     return "vector(1536)";
   },
