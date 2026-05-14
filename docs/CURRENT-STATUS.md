@@ -1,7 +1,7 @@
 # lwf2 — Current Status
 
 **Last Updated:** 2026-05-13
-**Last Commit:** `8d18a73` (Replace manual draw flow with automatic building detection via Overpass API)
+**Last Commit:** `3b5172c` (Add agent workflow scaffolding + ignore local-only dirs)
 **Branch:** main
 
 ---
@@ -18,18 +18,20 @@
 
 ## What's In Progress
 
-### ⚠️ PARKED: RAG knowledge base bundle (do NOT commit without Annie's go-ahead)
+### ⚠️ PARKED: RAG knowledge base bundle — on `rag-bundle` branch
 
-A ~930-line feature that adds a retrieval-augmented chat agent. It's written but
-unverified — no migration generated, no end-to-end test, and there's a likely
-typo in the pgvector customType (`dpiverType`) in `packages/database/schema/core.ts`.
+A ~2,400-line feature (16 files) that adds a retrieval-augmented chat agent.
+Lives on the **`rag-bundle` branch** (commit `2509573`, pushed to origin).
+**Do NOT merge to main without working through the checklist below.**
+
+To resume: `git checkout rag-bundle`
 
 **What it does:** lets the chat agent answer with citations from authoritative
 fire-safety docs (PDFs, web pages, .docx, .rtf). Hybrid retrieval (vector + FTS)
 with a trust-tier boost (local code > agency > science > general). Also adds
 per-conversation summaries for cross-session memory.
 
-**Files in the bundle (leave uncommitted until verified):**
+**Files in the bundle (on `rag-bundle` branch, not on main):**
 - `apps/web/lib/rag/` — chunker, embeddings, ingest, parsers, rerank, retrieve, summaries
 - `apps/web/app/api/conversations/[id]/summarize/route.ts`
 - `apps/web/app/api/chat/route.ts` (modified — chat endpoint refactor)
@@ -38,11 +40,11 @@ per-conversation summaries for cross-session memory.
 - `scripts/ingest-resources.ts` — ingest CLI
 - `package.json`, `apps/web/package.json`, `package-lock.json` — new deps: `pdf-parse`, `mammoth`, `cheerio`, `tsx`, `dotenv`
 
-**Before committing this bundle:**
+**Before merging to main:**
 1. Fix the `dpiverType` typo in `packages/database/schema/core.ts`
 2. Run `npm run db:generate` so the migration ships with the code
 3. Verify the chat actually uses RAG end-to-end (golden path test)
-4. Confirm with Annie whether this is on the critical path or should move to a feature branch
+4. Confirm with Annie whether this is on the critical path
 
 ### Other in-flight
 
