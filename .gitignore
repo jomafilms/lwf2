@@ -9,3 +9,4 @@ data/parcels/
 *.pdf
 .DS_Store
 .vercel
+.remade/
