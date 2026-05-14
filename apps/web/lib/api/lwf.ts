@@ -12,6 +12,7 @@ import type {
   ApiStatus,
   Attribute,
   FilterPreset,
+  FireAssessment,
   KeyTerm,
   Nursery,
   PaginatedResponse,
@@ -129,6 +130,11 @@ export async function getPlantImages(id: string): Promise<PlantImagesResponse> {
   // v2 returns images inline on plant detail
   const res = await request<{ data: { images?: PlantImagesResponse['images'] } }>(`/plants/${id}`);
   return { plantId: id, images: res.data.images || [] };
+}
+
+export async function getFireAssessment(id: string): Promise<FireAssessment> {
+  const res = await request<{ data: FireAssessment }>(`/fire-assessment/${id}`);
+  return res.data;
 }
 
 export async function getPlantRiskReduction(id: string): Promise<RiskReduction> {

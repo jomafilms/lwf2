@@ -27,6 +27,18 @@ export interface PlantImage {
   source: string;
 }
 
+export interface PlantComputed {
+  characterScore: number;
+  placementCode: string | null;
+  placementMeaning: string | null;
+  placementMinDistance: number | null;
+  riskReductionText: string | null;
+  triggeredRules: string[];
+  invasiveScore: number;
+  wildlifeSum: number;
+  idahoZoneTier: number | null;
+}
+
 export interface Plant {
   id: string;
   genus: string;
@@ -37,6 +49,7 @@ export interface Plant {
   notes: string | null;
   lastUpdated: string;
   primaryImage: PlantImage | null;
+  computed?: PlantComputed | null;
 }
 
 export interface PlantImagesResponse {
@@ -85,6 +98,43 @@ export interface ResolvedValue {
   urls: string[] | null;
   notes: string | null;
   metadata: Record<string, unknown> | null;
+}
+
+// ─── Fire Assessment (per-criterion breakdown) ──────────────────────────────
+
+export interface FireAssessmentCriterion {
+  criterion: string;
+  legacyCode: string;
+  label: string;
+  score: number;
+  maxScore: number;
+  applicable: boolean;
+  source: {
+    attributeId: string;
+    attributeName: string;
+    rawValue: string;
+    displayValue: string;
+  } | null;
+  derivation: string | null;
+  reason: string | null;
+  appliesTo: string;
+}
+
+export interface FireAssessment {
+  plantId: string;
+  methodology: string;
+  characterScore: number;
+  placement: {
+    code: string;
+    meaning: string;
+    minDistance: number;
+    unit: string;
+  };
+  plantType: {
+    determined: string[];
+    derivedFrom: Record<string, unknown>;
+  };
+  breakdown: FireAssessmentCriterion[];
 }
 
 // ─── Risk Reduction ──────────────────────────────────────────────────────────

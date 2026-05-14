@@ -6,7 +6,7 @@
  * Everything else is backend-only.
  */
 
-import type { Plant, ResolvedValue } from "@lwf/types";
+import type { Plant, PlantComputed, ResolvedValue } from "@lwf/types";
 
 // ─── Shared Helpers ─────────────────────────────────────────────────────────
 
@@ -114,12 +114,10 @@ function findBoolean(values: ResolvedValue[], name: string): boolean | null {
 // ─── Character Score ─────────────────────────────────────────────────────────
 
 function parseCharacterScore(
-  values: ResolvedValue[]
+  computed: PlantComputed | null | undefined
 ): PlantPresentation["characterScore"] {
-  const raw = findValue(values, "Character Score");
-  if (!raw) return null;
-  const num = parseInt(raw, 10);
-  if (isNaN(num)) return null;
+  const num = computed?.characterScore;
+  if (typeof num !== "number" || isNaN(num)) return null;
 
   let label: string;
   let level: "low" | "moderate" | "high";
@@ -199,23 +197,47 @@ function parseZones(values: ResolvedValue[]): ZoneBadge[] {
 
 // ─── Main Presenter ──────────────────────────────────────────────────────────
 
-export function presentPlant(values: ResolvedValue[]): PlantPresentation {
-  // Filter to only displayable values for "all values" section
-  const displayableValues = values
-    .filter((v) => !HIDDEN_ATTRIBUTES.has(v.attributeName || ""))
-    .filter((v) => v.attributeName !== "Home Ignition Zone (HIZ)") // shown as badges
-    .filter((v) => v.attributeName !== "Character Score") // shown as score widget
-    .filter((v) => v.attributeName !== "List Choice") // shown separately
-    .map((v) => ({
-      label: v.attributeName || "Unknown",
-      value: v.resolved?.value?.toString() || v.rawValue || "",
-      sourceId: v.sourceId || undefined,
-      notes: v.notes || undefined,
-    }));
+export function presentPlant(
+  values: ResolvedValue[],
+  computed?: PlantComputed | null
+): PlantPresentation {
+  // Build "show all data" list: filter empties, hide internal/duplicated fields,
+  // then group multi-value attributes (e.g. Hardiness Zone 4–9) into one row.
+  const groups = new Map<string, { label: string; values: string[]; sourceId?: string; notes?: string }>();
+  for (const v of values) {
+    const name = v.attributeName || "Unknown";
+    if (HIDDEN_ATTRIBUTES.has(name)) continue;
+    if (name === "Home Ignition Zone (HIZ)") continue; // shown as badges
+    if (name === "Character Score") continue;          // computed, shown as score widget
+    if (name === "List Choice") continue;              // shown separately
+
+    const value = v.resolved?.value?.toString() || v.rawValue || "";
+    if (!value) continue; // skip source-attribution-only rows
+
+    const key = v.attributeId || name;
+    const existing = groups.get(key);
+    if (existing) {
+      if (!existing.values.includes(value)) existing.values.push(value);
+    } else {
+      groups.set(key, {
+        label: name,
+        values: [value],
+        sourceId: v.sourceId || undefined,
+        notes: v.notes || undefined,
+      });
+    }
+  }
+
+  const displayableValues: DisplayValue[] = Array.from(groups.values()).map((g) => ({
+    label: g.label,
+    value: g.values.join(", "),
+    sourceId: g.sourceId,
+    notes: g.notes,
+  }));
 
   return {
     zones: parseZones(values),
-    characterScore: parseCharacterScore(values),
+    characterScore: parseCharacterScore(computed),
     listChoice: findValue(values, "List Choice"),
 
     flammabilityNotes: findValue(values, "Flammability Notes"),

@@ -41,7 +41,7 @@ export function PlantSlideOut({ plantId, onClose, zIndex }: PlantSlideOutProps) 
         const valuesData = plantData.values || [];
 
         setPlant(plantData as Plant);
-        setPresentation(presentPlant(valuesData));
+        setPresentation(presentPlant(valuesData, plantData.computed));
       } catch (err) {
         console.error('Error fetching plant data:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');

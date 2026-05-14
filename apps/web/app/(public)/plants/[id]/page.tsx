@@ -5,9 +5,10 @@ import {
   getPlantValues,
   getPlantImages,
   getSources,
+  getFireAssessment,
   LwfApiError,
 } from '@/lib/api/lwf';
-import type { PlantImage, Source } from '@lwf/types';
+import type { FireAssessment, PlantImage, Source } from '@lwf/types';
 import { presentPlant } from '@/lib/plants/present';
 import { HIZ_BADGE_COLORS } from '@/lib/design-tokens';
 import { NurseryAvailability } from '@/components/plants/NurseryAvailability';
@@ -67,14 +68,15 @@ export default async function PlantDetailPage({
   }
 
   // Fetch everything in parallel
-  const [values, imagesResponse, sourcesResponse] = await Promise.all([
+  const [values, imagesResponse, sourcesResponse, assessment] = await Promise.all([
     getPlantValues(id).catch(() => []),
     getPlantImages(id).catch(() => ({ plantId: id, images: [] as PlantImage[] })),
     getSources({ limit: 1000 }).catch(() => ({ data: [] as Source[], meta: { pagination: { total: 0, limit: 1000, offset: 0, hasMore: false } } })),
+    getFireAssessment(id).catch(() => null as FireAssessment | null),
   ]);
 
   // Use presentation layer to transform raw data
-  const presented = presentPlant(values);
+  const presented = presentPlant(values, plant.computed);
   const allSources = sourcesResponse.data;
 
   const images = imagesResponse.images || [];
@@ -270,10 +272,44 @@ export default async function PlantDetailPage({
                   </summary>
                   <div className="mt-2 text-xs text-orange-700 leading-relaxed">
                     <p className="mb-2">
-                      Character score: <strong>{presented.characterScore.value}</strong> — based on leaf moisture content, volatile compounds, dead material retention, and growth characteristics.
+                      Character score: <strong>{presented.characterScore.value}</strong>
                     </p>
+                    {(() => {
+                      const contributors = (assessment?.breakdown || [])
+                        .filter((c) => c.applicable && c.score > 0)
+                        .sort((a, b) => b.score - a.score);
+                      const otherApplicable = (assessment?.breakdown || []).filter(
+                        (c) => c.applicable && c.score === 0
+                      ).length;
+
+                      if (contributors.length === 0) {
+                        return (
+                          <p className="mb-2">
+                            This plant scored 0 on all {otherApplicable} applicable criteria.
+                          </p>
+                        );
+                      }
+
+                      return (
+                        <>
+                          <p className="mb-1 font-medium">Contributing factors:</p>
+                          <ul className="mb-2 ml-4 list-disc space-y-0.5">
+                            {contributors.map((c) => (
+                              <li key={c.criterion}>
+                                {c.label} — {c.score} of {c.maxScore}
+                              </li>
+                            ))}
+                          </ul>
+                          {otherApplicable > 0 && (
+                            <p className="mb-2">
+                              Scored 0 on the other {otherApplicable} applicable criteria.
+                            </p>
+                          )}
+                        </>
+                      );
+                    })()}
                     <p>
-                      <strong>Scale:</strong> 1–3 Low · 4–6 Moderate · 7–10 High · 10+ Very High
+                      <strong>Scale:</strong> 1–4 Low · 5–12 Moderate · 13+ High
                     </p>
                   </div>
                 </details>
