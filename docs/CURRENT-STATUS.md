@@ -21,7 +21,7 @@
 ### ⚠️ PARKED: RAG knowledge base bundle — on `rag-bundle` branch
 
 A ~2,400-line feature (16 files) that adds a retrieval-augmented chat agent.
-Lives on the **`rag-bundle` branch** (commit `2509573`, pushed to origin).
+Lives on the **`rag-bundle` branch** (latest: `5774d3c`, pushed to origin).
 **Do NOT merge to main without working through the checklist below.**
 
 To resume: `git checkout rag-bundle`
@@ -41,10 +41,9 @@ per-conversation summaries for cross-session memory.
 - `package.json`, `apps/web/package.json`, `package-lock.json` — new deps: `pdf-parse`, `mammoth`, `cheerio`, `tsx`, `dotenv`
 
 **Before merging to main:**
-1. Fix the `dpiverType` typo in `packages/database/schema/core.ts`
-2. Run `npm run db:generate` so the migration ships with the code
-3. Verify the chat actually uses RAG end-to-end (golden path test)
-4. Confirm with Annie whether this is on the critical path
+1. Run `npm run db:generate` so the migration ships with the code
+2. Verify the chat actually uses RAG end-to-end (golden path test)
+3. Confirm with Annie whether this is on the critical path
 
 ### Other in-flight
 
